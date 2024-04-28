@@ -1,0 +1,7 @@
+/target/
+/Cargo.lock
+/output.ll
+/src/backend/codegen/target/
+/.vscode/
+/.DS_Store
+/regression_testing/basic_test/target/
