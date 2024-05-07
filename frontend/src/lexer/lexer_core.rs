@@ -97,21 +97,27 @@ impl Lexer {
             '-' => {
                 if self.peek_char() == '>' {
                     self.read_char();
-                    Ok(Token::RETARROW)
+                    Ok(Token::POINTER)
+                } else if self.peek_char() == '-' {
+                    self.read_char();
+                    Ok(Token::MINUSMINUS)
                 }
                 else{
                     Ok(Token::DASH)
                 }
             },
-            '+' => Ok(Token::PLUS),
+            '+' => {
+                if self.peek_char() == '+' {
+                    self.read_char();
+                    Ok(Token::PLUSPLUS)
+                } else {
+                    Ok(Token::PLUS)
+                }
+	        },
             '=' => {
                 if self.peek_char() == '=' {
                     self.read_char();
                     Ok(Token::EQUALEQUAL)
-                }
-                else if self.peek_char() == '>' {
-                    self.read_char();
-                    Ok(Token::ARROW)
                 }
                 else {
                     Ok(Token::EQUAL)
@@ -123,20 +129,13 @@ impl Lexer {
             '(' => Ok(Token::LPAREN),   //      the rustc compiler is fine with this
             ')' => Ok(Token::RPAREN),
             ';' => Ok(Token::SEMICOLON),
-            ':' => {
-                if self.peek_char() == ':' {
-                    self.read_char();
-                    Ok(Token::COLONCOLON)
-                }
-                else {
-                    Ok(Token::COLON)
-                }
-            },
+            ':' => Ok(Token::COLON),
             ',' => Ok(Token::COMMA),
             '%' => Ok(Token::MOD),
             '[' => Ok(Token::LBRACE),
             ']' => Ok(Token::RBRACE),
             '.' => Ok(Token::DOT),
+	    '?' => Ok(Token::CTRUE),
             '!' => {
                 if self.peek_char() == '=' {
                     self.read_char();
@@ -154,7 +153,7 @@ impl Lexer {
                     Ok(Token::MULTIPLY)
                 }
             },
-            '^' => Ok(Token::EXPONENT),
+            '^' => Ok(Token::XOR),
             
             '<' => {
                 if self.peek_char() == '=' {
@@ -179,9 +178,7 @@ impl Lexer {
                     self.read_char(); 
                     Ok(Token::LOGICALAND)
                 } else {
-                    let mut err_token = String::new();
-                    err_token.push(self.current);
-                    Err(ErrorType::UnrecognizedToken { token: err_token })
+                    Ok(Token::BITAND)
                 }
             },
             '|' => {
@@ -190,9 +187,7 @@ impl Lexer {
                     self.read_char(); 
                     Ok(Token::LOGICALOR)
                 } else {
-                    let mut err_token = String::new();
-                    err_token.push(self.current);
-                    Err(ErrorType::UnrecognizedToken { token: err_token })
+                    Ok(Token::BITOR)
                 }
             },
             _ if is_letter(self.current) => {
@@ -258,51 +253,27 @@ fn is_digit(current: char) -> bool {
 fn get_token(raw_text: &Vec<char>) -> Result<Token, ErrorType> {
     let identifier: String = raw_text.into_iter().collect();
     match &identifier[..] {
-        "let" => Ok(Token::LET),
-        "true" => Ok(Token::TRUE),
-        "false" => Ok(Token::FALSE),
         "if" => Ok(Token::IF),
         "else" => Ok(Token::ELSE),
+        "int" => Ok(Token::TINTEGER),
+        "float" => Ok(Token::TFLOAT),
+        "long" => Ok(Token::TLONG),
         "return" => Ok(Token::RETURN),
-        "Integer" => Ok(Token::TINTEGER),
-        "Double" => Ok(Token::TDOUBLE),
-        "Float" => Ok(Token::TFLOAT),
-        "Long" => Ok(Token::TLONG),
-        "Boolean" => Ok(Token::TBOOLEAN),
-        "fn" => Ok(Token::FUNCTION),
+        "unsigned" => Ok(Token::TUSIGN),
+        "signed" => Ok(Token::TSIGNINT),
+        "switch" => Ok(Token::SWITCH),
         "struct" => Ok(Token::STRUCT),
         "enum" => Ok(Token::ENUM),
-        "String" => Ok(Token::TSTRING),
-        "Void" => Ok(Token::TVOID),
-        "Char" => Ok(Token::TCHAR),
-        "elif" => Ok(Token::ELIF),
+        "void" => Ok(Token::TVOID),
+        "char" => Ok(Token::TCHAR),
         "for" => Ok(Token::FOR),
         "break" => Ok(Token::BREAK),
         "do" => Ok(Token::DO),
         "while" => Ok(Token::WHILE),
-        "match" => Ok(Token::MATCH),
         "continue" => Ok(Token::CONTINUE),
-        "Signed" => Ok(Token::TSIGN),
-        "Unsigned" => Ok(Token::TUSIGN),
-        "Object" => Ok(Token::TOBJECT),
-        "Array" => Ok(Token::TARRAY),
-        "self" => Ok(Token::SELF),
-        "class" => Ok(Token::CLASS),
-        "init" => Ok(Token::INIT),
-        "mod" => Ok(Token::MODULE),
-        "use" => Ok(Token::USE), 
-        "as" => Ok(Token::AS), 
-        "pri" => Ok(Token::PRIVATE), 
-        "pub" => Ok(Token::PUBLIC),
-	    "async" => Ok(Token::ASYNC),
-	    "await" => Ok(Token::AWAIT),
-	    "try" => Ok(Token::TRY),
-	    "catch" => Ok(Token::CATCH),
-	    "finally" => Ok(Token::FINALLY),
         "case" => Ok(Token::CASE),
-        "switch" => Ok(Token::SWITCH),
-        "default" => Ok(Token::DEFAULT),
-
+        "const" => Ok(Token::CONST),
+        "double" => Ok(Token::TDOUBLE),
         _ => Err(ErrorType::UnrecognizedToken { token: String::from("Unrecognized token") }),
     }
 }

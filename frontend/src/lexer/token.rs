@@ -1,33 +1,18 @@
 use std::fmt;
 
 /// Defines acceptable tokens in the program
-#[derive(PartialEq, Debug, Clone)]
+#[derive(PartialEq, Debug, Clone, Default)]
 pub enum Token {
+    /// Default token type
+    #[default]
+    DEFAULT,
+    
     /// End of file
     EOF,
     /// End of line
     EOL,
 
     /// --- ASSIGNMENT SECTION --- ///
-    /// Let
-    LET,
-
-    /// Increment (+=)
-    PLUSASSIGN, 
-
-    /// Decrement (-=)
-    MINUSASSIGN,
-
-    /// Multiply increment (*=)
-    MULTIPLYASSIGN,
-
-    /// Divide increment (/=) 
-    DIVIDEASSIGN,
-
-    /// Modulo decrement (%=) 
-    MODASSIGN,
-
-
     /// --- MULTI-CHARACTER SECTION --- ///
     /// Integer
     INT(Vec<char>),
@@ -37,6 +22,13 @@ pub enum Token {
 
     /// Identifier
     IDENTIFIER(Vec<char>),
+
+    /// --- ASSIGNMENT OPERATORS --- ///
+    /// Increment (++)
+    PLUSPLUS,
+
+    /// Decrement (--)
+    MINUSMINUS,
 
     /// --- BINARY OP SECTION --- ///
     /// Division
@@ -60,14 +52,7 @@ pub enum Token {
     /// Multiply
     MULTIPLY,
 
-    /// Exponent
-    EXPONENT,
-
-
     /// --- SCOPE CHANGING SECTION --- ///
-    /// Function 
-    FUNCTION,
-    
     /// Struct
     STRUCT,
 
@@ -76,9 +61,6 @@ pub enum Token {
 
     /// If
     IF,
-
-    /// Else if
-    ELIF,
 
     /// Else
     ELSE,
@@ -100,36 +82,6 @@ pub enum Token {
 
     /// Continue
     CONTINUE,
-
-    /// Match expression
-    MATCH,
-
-    /// Arrow
-    ARROW,
-
-    /// Class declaration
-    CLASS,
-
-    /// Constructor
-    INIT,
-
-    /// Module
-    MODULE,
-
-    /// Use
-    USE,
-
-    /// As
-    AS, 
-
-    /// Public
-    PUBLIC, 
-
-    /// Private
-    PRIVATE,
-
-    /// Switch
-    SWITCH,
 
     ///  --- SPECIAL CHARACTER SECTION --- ///
     /// Right bracket }
@@ -162,9 +114,6 @@ pub enum Token {
     /// Dot
     DOT,
     
-    /// Double colon ::
-    COLONCOLON,
-
     /// Block Comment Begin
     BCOMMENTBEGIN,
 
@@ -179,17 +128,11 @@ pub enum Token {
     /// Logical and (&&)
     LOGICALAND,
 
-    /// Logical or (|)
+    /// Logical or (||)
     LOGICALOR,
 
     /// Logical not (!)
     LOGICALNOT,
-
-    /// 1
-    TRUE,
-
-    /// 0
-    FALSE,
 
     /// Less than (<)
     LESSTHAN,
@@ -197,7 +140,7 @@ pub enum Token {
     /// Greater than (>)
     GREATERTHAN,
 
-    /// Not equal (!=)
+    /// Not equals (!=)
     NOTEQUAL,
 
     /// Equality check (==)
@@ -220,15 +163,6 @@ pub enum Token {
     /// Float type
     TFLOAT,
 
-    /// Long type
-    TLONG,
-
-    /// Boolean type
-    TBOOLEAN,
-
-    /// String type
-    TSTRING,
-
     /// Character type
     TCHAR,
 
@@ -241,39 +175,37 @@ pub enum Token {
     /// Unsigned Integer type
     TUSIGN,
 
-    /// Base Object
-    TOBJECT,
+    /// Signed Int type
+    TSIGNINT,
 
-    /// Array Type
-    TARRAY,
+    /// Long type
+    TLONG,
 
-    /// Function Return Arrow (->)
-    RETARROW,
+    /// --- BITWISE OPERATORS --- ///
+    /// Bitwise and, address of
+    BITAND,
 
-    ///  --- MISC SECTION --- ///
-    /// Self
-    SELF,
+    /// Bitwise or
+    BITOR,
 
-    /// Async
-    ASYNC,
+    /// Bitwise xor
+    XOR,
 
-    /// Await
-    AWAIT,
+    /// --- MISC SECTION --- ///
+    /// Pointer to member (->)
+    POINTER,
 
-    /// Try
-    TRY,
-
-    /// Catch
-    CATCH,
-
-    /// Finally
-    FINALLY,
+    /// Switch
+    SWITCH,
 
     /// Case
     CASE,
 
-    /// Default
-    DEFAULT,
+    /// Constant
+    CONST,
+
+    /// Conditional True (?)
+    CTRUE,
 }
 
 impl fmt::Display for Token {
