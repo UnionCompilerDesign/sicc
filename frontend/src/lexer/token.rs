@@ -1,210 +1,153 @@
 use std::fmt;
 
-/// Defines acceptable tokens in the program
+/// Represents all possible tokens that can be recognized by the lexer.
 #[derive(PartialEq, Debug, Clone, Default)]
 pub enum Token {
-    /// Default token type
+    /// The default token state.
     #[default]
     DEFAULT,
     
-    /// End of file
+    /// Token indicating the end of the file.
     EOF,
-    /// End of line
+    /// Token indicating the end of a line.
     EOL,
 
-    /// --- ASSIGNMENT SECTION --- ///
-    /// --- MULTI-CHARACTER SECTION --- ///
-    /// Integer
+    // ----- Dynamically Sized Tokens -----
+    /// Represents a whole integer.
     INT(Vec<char>),
-
-    /// Double
+    /// Represents a floating-point double.
     Double(Vec<char>),
-
-    /// Identifier
+    /// Represents identifiers like variable names.
     IDENTIFIER(Vec<char>),
 
-    /// --- ASSIGNMENT OPERATORS --- ///
-    /// Increment (++)
+    // ----- Assignment Operators -----
+    /// Increment operator `++`.
     PLUSPLUS,
-
-    /// Decrement (--)
+    /// Decrement operator `--`.
     MINUSMINUS,
 
-    /// --- BINARY OP SECTION --- ///
-    /// Division
+    // ----- Binary Operators -----
+    /// Division operator `/`.
     DIVIDE,
-
-    /// Floor division
-    FLOORDIVISION,
-
-    /// Subtraction and Negative (Unary and Binary "-")
+    /// Noth subtraction and unary negative `-`.
     DASH,
-
-    /// Addition
+    /// Addition operator `+`.
     PLUS,
-
-    /// Assignment
+    /// Assignment operator `=`.
     EQUAL,
-
-    /// Modulo (%)
+    /// Modulo operator `%`.
     MOD,
-
-    /// Multiply
+    /// Multiplication operator `*`.
     MULTIPLY,
 
-    /// --- SCOPE CHANGING SECTION --- ///
-    /// Struct
+    // ----- Scope Definition Tokens -----
+    /// A struct definition.
     STRUCT,
-
-    /// Enum
+    /// An enum definition.
     ENUM,
-
-    /// If
+    /// If conditional.
     IF,
-
-    /// Else
+    /// Else branch.
     ELSE,
-
-    /// Return
+    /// Return statement.
     RETURN,
-
-    /// For
+    /// For loop.
     FOR,
-
-    /// While
+    /// While loop.
     WHILE,
-
-    /// Do
+    /// Do-while loop.
     DO,
-
-    /// Break
+    /// Break keyword to exit loops.
     BREAK,
-
-    /// Continue
+    /// Continue keyword to skip to the next loop iteration.
     CONTINUE,
-
-    ///  --- SPECIAL CHARACTER SECTION --- ///
-    /// Right bracket }
-    RBRACKET,
-
-    /// Left bracket {
-    LBRACKET,
-
-    /// Left parenthesis (
-    LPAREN,
-
-    /// Right parenthesis
-    RPAREN,
-
-    /// Semicolon
-    SEMICOLON,
-
-    /// Comma
-    COMMA,
-
-    /// Colon
-    COLON,
-
-    /// Left bracket [
-    LBRACE,
-
-    ///  Right bracket ]
-    RBRACE,
-
-    /// Dot
-    DOT,
-    
-    /// Block Comment Begin
-    BCOMMENTBEGIN,
-
-    /// Block Comment End
-    BCOMMENTEND,
-
-    /// Single Comment
-    SCOMMENT,
-
-
-    /// --- BOOLEAN SECTION --- ///
-    /// Logical and (&&)
-    LOGICALAND,
-
-    /// Logical or (||)
-    LOGICALOR,
-
-    /// Logical not (!)
-    LOGICALNOT,
-
-    /// Less than (<)
-    LESSTHAN,
-
-    /// Greater than (>)
-    GREATERTHAN,
-
-    /// Not equals (!=)
-    NOTEQUAL,
-
-    /// Equality check (==)
-    EQUALEQUAL, 
-
-    /// Less than or equal to (<=)
-    LESSTHANEQUAL,
-
-    /// Greater than or equal to (>=)
-    GREATERTHANEQUAL,
-
-    
-    /// --- TYPE ANNOTATION SECTION --- ///
-    /// Integer type
-    TINTEGER,
-
-    /// Double Type
-    TDOUBLE,
-
-    /// Float type
-    TFLOAT,
-
-    /// Character type
-    TCHAR,
-
-    /// Void type
-    TVOID,
-
-    /// Signed Integer type
-    TSIGN, 
-
-    /// Unsigned Integer type
-    TUSIGN,
-
-    /// Signed Int type
-    TSIGNINT,
-
-    /// Long type
-    TLONG,
-
-    /// --- BITWISE OPERATORS --- ///
-    /// Bitwise and, address of
-    BITAND,
-
-    /// Bitwise or
-    BITOR,
-
-    /// Bitwise xor
-    XOR,
-
-    /// --- MISC SECTION --- ///
-    /// Pointer to member (->)
-    POINTER,
-
-    /// Switch
+    /// Switch statement.
     SWITCH,
-
-    /// Case
+    /// Case keyword for switch cases.
     CASE,
 
-    /// Constant
-    CONST,
+    // ----- Special Character Tokens -----
+    /// Right curly bracket `}`.
+    RBRACKET,
+    /// Left curly bracket `{`.
+    LBRACKET,
+    /// Left parenthesis `(`.
+    LPAREN,
+    /// Right parenthesis `)`.
+    RPAREN,
+    /// Semicolon `;`.
+    SEMICOLON,
+    /// Comma `,`.
+    COMMA,
+    /// Colon `:`.
+    COLON,
+    /// Left square bracket `[`.
+    LBRACE,
+    /// Right square bracket `]`.
+    RBRACE,
+    /// Period `.`.
+    DOT,
+    /// Start of a block comment `/*`.
+    BCOMMENTBEGIN,
+    /// End of a block comment `*/`.
+    BCOMMENTEND,
+    /// Single line comment `//`.
+    SCOMMENT,
 
-    /// Conditional True (?)
+    // ----- Boolean and Comparison Operators -----
+    /// Logical AND `&&`.
+    LOGICALAND,
+    /// Logical OR `||`.
+    LOGICALOR,
+    /// Logical NOT `!`.
+    LOGICALNOT,
+    /// Less than `<`.
+    LESSTHAN,
+    /// Greater than `>`.
+    GREATERTHAN,
+    /// Not equal `!=`.
+    NOTEQUAL,
+    /// Equality `==`.
+    EQUALEQUAL,
+    /// Less than or equal to `<=`.
+    LESSTHANEQUAL,
+    /// Greater than or equal to `>=`.
+    GREATERTHANEQUAL,
+
+    // ----- Type Annotation Tokens -----
+    /// Integer type annotation.
+    TINTEGER,
+    /// Double type annotation.
+    TDOUBLE,
+    /// Float type annotation.
+    TFLOAT,
+    /// Char type annotation.
+    TCHAR,
+    /// Void type annotation.
+    TVOID,
+    /// Signed type annotation.
+    TSIGN, 
+    /// Unsigned type annotation.
+    TUSIGN,
+    /// Signed integer type annotation.
+    TSIGNINT,
+    /// Long type annotation.
+    TLONG,
+
+    // ----- Bitwise Operators -----
+    /// Bitwise AND and address-of `&`.
+    BITAND,
+    /// Bitwise OR `|`.
+    BITOR,
+    /// Bitwise XOR `^`.
+    XOR,
+
+    // ----- Miscellaneous -----
+    /// Pointer to member operator `->`.
+    POINTER,
+    /// Constant declaration.
+    CONST,
+    /// Conditional true `?`.
     CTRUE,
 }
 

@@ -7,18 +7,6 @@ use frontend::{
 /// cargo test --test lexer_tests
 
 #[test]
-fn test_keywords() {
-    let inputs = "let true false if else return fn";
-    let expected = vec![
-        Token::LET, Token::TRUE, Token::FALSE,
-        Token::IF, Token::ELSE, Token::RETURN, Token::FUNCTION, Token::EOF
-    ];
-    
-    let result = Lexer::lex(inputs);
-    assert_eq!(result, Ok(expected));
-}
-
-#[test]
 fn test_eol() {
     let input = "* / /* */\n * /* * / \n\n/*\n";
     let result = Lexer::lex(input);
@@ -70,10 +58,9 @@ fn test_operators_and_special_chars() {
 
 #[test]
 fn test_complex_expressions() {
-    let input: &str = "let x = 5 + 10 / 5 % 3;";
+    let input: &str = "x = 5 + 10 / 5 % 3;";
     let result: Result<Vec<Token>, Vec<ErrorType>> = Lexer::lex(input);
     let expected: Vec<Token> = vec![
-        Token::LET,
         Token::IDENTIFIER(vec!['x']),
         Token::EQUAL,
         Token::INT(vec!['5']),
@@ -91,10 +78,9 @@ fn test_complex_expressions() {
 
 #[test]
 fn test_whitespace_handling() {
-    let input = "   let    x   = 5  ;  ";
+    let input = "     x   = 5  ;  ";
     let result = Lexer::lex(input);
     let expected = vec![
-        Token::LET,
         Token::IDENTIFIER(vec!['x']),
         Token::EQUAL,
         Token::INT(vec!['5']),
@@ -115,10 +101,9 @@ fn test_invalid_char() {
 
 #[test]
 fn test_assignment() {
-    let input = "let x: Integer = 5;";
+    let input = "x: int = 5;";
     let result = Lexer::lex(input);
     let expected = vec![
-        Token::LET,
         Token::IDENTIFIER(vec!['x']),
         Token::COLON,
         Token::TINTEGER, 
@@ -131,41 +116,10 @@ fn test_assignment() {
 }
 
 #[test]
-fn test_function_declarations() {
-    let input: &str = "fn add(a: Integer, b: Integer) -> Integer { return a + b; }";
-    let result: Result<Vec<Token>, Vec<ErrorType>> = Lexer::lex(input);
-    let expected: Vec<Token> = vec![
-        Token::FUNCTION,
-        Token::IDENTIFIER(vec!['a', 'd', 'd']),
-        Token::LPAREN,
-        Token::IDENTIFIER(vec!['a']),
-        Token::COLON,
-        Token::TINTEGER,
-        Token::COMMA,
-        Token::IDENTIFIER(vec!['b']),
-        Token::COLON,
-        Token::TINTEGER,
-        Token::RPAREN,
-        Token::RETARROW,
-        Token::TINTEGER,
-        Token::LBRACKET,
-        Token::RETURN,
-        Token::IDENTIFIER(vec!['a']),
-        Token::PLUS,
-        Token::IDENTIFIER(vec!['b']),
-        Token::SEMICOLON,
-        Token::RBRACKET,
-        Token::EOF,
-    ];
-    assert_eq!(result, Ok(expected));
-}
-
-#[test]
 fn test_if_else_in_function() {
-    let input: &str = "fn check(x: Integer) { if x > 0 { return true; } else { return false; } }";
+    let input: &str = "check(x: int) { if x > 0 { return 1; } else { return 0; } }";
     let result: Result<Vec<Token>, Vec<ErrorType>> = Lexer::lex(input);
     let expected: Vec<Token> = vec![
-        Token::FUNCTION,
         Token::IDENTIFIER(vec!['c', 'h', 'e', 'c', 'k']),
         Token::LPAREN,
         Token::IDENTIFIER(vec!['x']),
@@ -179,71 +133,16 @@ fn test_if_else_in_function() {
         Token::INT(vec!['0']),
         Token::LBRACKET,
         Token::RETURN,
-        Token::TRUE,
+        Token::INT(vec!['1']),
         Token::SEMICOLON,
         Token::RBRACKET,
         Token::ELSE,
         Token::LBRACKET,
         Token::RETURN,
-        Token::FALSE,
+        Token::INT(vec!['0']),
         Token::SEMICOLON,
         Token::RBRACKET,
         Token::RBRACKET,
-        Token::EOF,
-    ];
-    assert_eq!(result, Ok(expected));
-}
-
-#[test]
-fn test_async() {
-    let input: &str = "async";
-    let result: Result<Vec<Token>, Vec<ErrorType>> = Lexer::lex(input);
-    let expected: Vec<Token> = vec![
-	Token::ASYNC,
-	Token::EOF,
-    ];
-    assert_eq!(result, Ok(expected));
-}
-
-#[test]
-fn test_await() {
-    let input: &str = "await";
-    let result: Result<Vec<Token>, Vec<ErrorType>> = Lexer::lex(input);
-    let expected: Vec<Token> = vec![
-        Token::AWAIT,
-        Token::EOF,
-    ];
-    assert_eq!(result, Ok(expected));
-}
-
-#[test]
-fn test_try() {
-    let input: &str = "try";
-    let result: Result<Vec<Token>, Vec<ErrorType>> = Lexer::lex(input);
-    let expected: Vec<Token> = vec![
-        Token::TRY,
-        Token::EOF,
-    ];
-    assert_eq!(result, Ok(expected));
-}
-
-#[test]
-fn test_catch() {
-    let input: &str = "catch";
-    let result: Result<Vec<Token>, Vec<ErrorType>> = Lexer::lex(input);
-    let expected: Vec<Token> = vec![
-        Token::CATCH,
-        Token::EOF,
-    ];
-    assert_eq!(result, Ok(expected));
-}
-
-#[test]
-fn test_finally() {
-    let input: &str = "finally";
-    let result: Result<Vec<Token>, Vec<ErrorType>> = Lexer::lex(input);
-    let expected: Vec<Token> = vec![
-        Token::FINALLY,
         Token::EOF,
     ];
     assert_eq!(result, Ok(expected));
@@ -251,10 +150,9 @@ fn test_finally() {
 
 #[test]
 fn test_logical_operators_and_parentheses() {
-    let input: &str = "let result = (5 > 3) && (2 < 4);";
+    let input: &str = "result = (5 > 3) && (2 < 4);";
     let result: Result<Vec<Token>, Vec<ErrorType>> = Lexer::lex(input);
     let expected: Vec<Token> = vec![
-        Token::LET,
         Token::IDENTIFIER(vec!['r', 'e', 's', 'u', 'l', 't']),
         Token::EQUAL,
         Token::LPAREN,
@@ -276,10 +174,9 @@ fn test_logical_operators_and_parentheses() {
 
 #[test]
 fn test_nested_function_calls() {
-    let input: &str = "let val = add(multiply(2, 3), 4);";
+    let input: &str = "val = add(multiply(2, 3), 4);";
     let result: Result<Vec<Token>, Vec<ErrorType>> = Lexer::lex(input);
     let expected: Vec<Token> = vec![
-        Token::LET,
         Token::IDENTIFIER(vec!['v', 'a', 'l']),
         Token::EQUAL,
         Token::IDENTIFIER(vec!['a', 'd', 'd']),
@@ -300,16 +197,6 @@ fn test_nested_function_calls() {
 }
 
 #[test]
-fn test_boolean_literals() {
-    let input = "true false";
-    let result = Lexer::lex(input);
-    let expected = vec![
-        Token::TRUE, Token::FALSE, Token::EOF,
-    ];
-    assert_eq!(result, Ok(expected));
-}
-
-#[test]
 fn test_comparison_operators() {
     let input = "< > <= >= == !=";
     let result = Lexer::lex(input);
@@ -323,11 +210,11 @@ fn test_comparison_operators() {
 
 #[test]
 fn test_arithmetic_operators() {
-    let input = "+ * / % ^";
+    let input = "+ - * / %";
     let result = Lexer::lex(input);
     let expected = vec![
-        Token::PLUS, Token::MULTIPLY,
-        Token::DIVIDE, Token::MOD, Token::EXPONENT,
+        Token::PLUS, Token::DASH, Token::MULTIPLY,
+        Token::DIVIDE, Token::MOD,
         Token::EOF,
     ];
     assert_eq!(result, Ok(expected));
@@ -366,12 +253,12 @@ fn test_struct_enum_declarations() {
 
 #[test]
 fn test_control_flow_tokens() {
-    let input = "if elif else for while do break continue";
+    let input = "if else for while do break continue switch";
     let result = Lexer::lex(input);
     let expected = vec![
-        Token::IF, Token::ELIF, Token::ELSE,
+        Token::IF, Token::ELSE,
         Token::FOR, Token::WHILE, Token::DO,
-        Token::BREAK, Token::CONTINUE,
+        Token::BREAK, Token::CONTINUE, Token::SWITCH,
         Token::EOF,
     ];
     assert_eq!(result, Ok(expected));
@@ -391,24 +278,21 @@ fn test_braces_and_parentheses() {
 
 #[test]
 fn test_type_annotations() {
-    let input = "Integer Float Boolean String Char Void Unsigned Signed Object Array Double Long Char";
+    let input = "int float char void unsigned long double";
     let result = Lexer::lex(input);
     let expected = vec![
-        Token::TINTEGER, Token::TFLOAT, Token::TBOOLEAN,
-        Token::TSTRING, Token::TCHAR, Token::TVOID,
-        Token::TUSIGN, Token::TSIGN, Token::TOBJECT, Token::TARRAY,
-        Token::TDOUBLE, Token::TLONG, Token::TCHAR, 
-        Token::EOF,
+        Token::TINTEGER, Token::TFLOAT, Token::TCHAR, Token::TVOID,
+        Token::TUSIGN, Token::TLONG, Token::TDOUBLE, Token::EOF,
     ];
     assert_eq!(result, Ok(expected));
 }
 
 #[test]
-fn test_dot_and_coloncolon_operators() {
-    let input = ". ::";
+fn test_dot_operators() {
+    let input = ".";
     let result = Lexer::lex(input);
     let expected = vec![
-        Token::DOT, Token::COLONCOLON, Token::EOF,
+        Token::DOT, Token::EOF,
     ];
     assert_eq!(result, Ok(expected));
 }
@@ -426,31 +310,6 @@ fn test_block_comments() {
 }
 
 #[test]
-fn test_use_as_pri(){
-    let input: &str = "use greetings::hello as greeting";
-    let result = Lexer::lex(input);
-    let expected = vec![
-        Token::USE, Token::IDENTIFIER(vec!['g','r','e','e','t','i','n','g','s']),
-        Token::COLONCOLON, Token::IDENTIFIER(vec!['h','e','l','l','o']), Token::AS,
-        Token::IDENTIFIER(vec!['g','r','e','e','t','i','n','g']), Token::EOF,
-
-    ];
-    assert_eq!(result, Ok(expected));
-}
-
-#[test]
-fn test_module_creation_and_pub(){
-    let input: &str = "mod greetings {pub fn hello(){}}";
-    let result = Lexer::lex(input);
-    let expected = vec![
-        Token::MODULE, Token::IDENTIFIER(vec!['g','r','e','e','t','i','n','g','s']),
-        Token::LBRACKET, Token::PUBLIC, Token::FUNCTION, Token::IDENTIFIER(vec!['h','e','l','l','o']),
-        Token::LPAREN, Token::RPAREN, Token::LBRACKET, Token::RBRACKET, Token::RBRACKET, Token::EOF,
-    ];
-    assert_eq!(result, Ok(expected));
-}
-
-#[test]
 fn test_single_line_comment() {
     let input = "//";
     let result = Lexer::lex(input);
@@ -461,49 +320,12 @@ fn test_single_line_comment() {
 }
 
 #[test]
-fn test_class() {
-    let input = "class foo {}";
+fn test_misc_tokens() {
+    let input = "break case const continue switch void";
     let result = Lexer::lex(input);
     let expected = vec![
-        Token::CLASS, Token::IDENTIFIER(vec!['f', 'o', 'o']), 
-        Token::LBRACKET, Token::RBRACKET, Token::EOF
-    ];
-    assert_eq!(result, Ok(expected));
-}
-
-#[test]
-fn test_init_and_self() {
-    let input = "class foo { 
-                    Integer x; 
-                    fn init () {
-                        self.x = 10;
-                    }}";
-    let result = Lexer::lex(input);
-    let expected = vec![
-        Token::CLASS, 
-        Token::IDENTIFIER(vec!['f', 'o', 'o']), 
-        Token::LBRACKET, 
-        Token::EOL,
-        Token::TINTEGER, 
-        Token::IDENTIFIER(vec!['x']), 
-        Token::SEMICOLON, 
-        Token::EOL,
-        Token::FUNCTION, 
-        Token::INIT, 
-        Token::LPAREN, 
-        Token::RPAREN, 
-        Token::LBRACKET, 
-        Token::EOL,
-        Token::SELF, 
-        Token::DOT, 
-        Token::IDENTIFIER(vec!['x']), 
-        Token::EQUAL, 
-        Token::INT(vec!['1', '0']), 
-        Token::SEMICOLON, 
-        Token::EOL,
-        Token::RBRACKET, 
-        Token::RBRACKET, 
-        Token::EOF
+	Token::BREAK, Token::CASE, Token::CONST,
+	Token::CONTINUE, Token::SWITCH, Token::TVOID, Token::EOF
     ];
     assert_eq!(result, Ok(expected));
 }
