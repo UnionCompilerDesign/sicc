@@ -1,4 +1,6 @@
 /target/
+/frontend/Cargo.lock
+/frontend/target
 /Cargo.lock
 /output.ll
 /src/backend/codegen/target/
