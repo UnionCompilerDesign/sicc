@@ -9,19 +9,16 @@ pub enum Token {
     
     /// Token indicating the end of the file.
     EOF,
+    /// Token indicating the end of a line.
+    EOL,
 
     // ----- Dynamically Sized Tokens -----
-    /// Represents a number.
-    NUMBER(Vec<char>),
-
+    /// Represents a whole integer.
+    INT(Vec<char>),
+    /// Represents a floating-point double.
+    Double(Vec<char>),
     /// Represents identifiers like variable names.
     IDENTIFIER(Vec<char>),
-
-    /// Represents a string literal like "hello world"
-    STRINGLITERAL(Vec<char>),
-
-    /// Character literal like 'a'
-    CHAR(char),
 
     // ----- Assignment Operators -----
     /// Increment operator `++`.
@@ -31,170 +28,125 @@ pub enum Token {
 
     // ----- Binary Operators -----
     /// Division operator `/`.
-    FSLASH,
-
+    DIVIDE,
     /// Noth subtraction and unary negative `-`.
     DASH,
-
     /// Addition operator `+`.
     PLUS,
-
     /// Assignment operator `=`.
     EQUAL,
-
     /// Modulo operator `%`.
-    PERCENT,
-
+    MOD,
     /// Multiplication operator `*`.
-    ASTERISK,
+    MULTIPLY,
 
-     // ----- Scope Definition Tokens -----
+    // ----- Scope Definition Tokens -----
     /// A struct definition.
     STRUCT,
-
     /// An enum definition.
     ENUM,
-
     /// If conditional.
     IF,
-
     /// Else branch.
     ELSE,
-
     /// Return statement.
     RETURN,
-
     /// For loop.
     FOR,
-
     /// While loop.
     WHILE,
-
     /// Do-while loop.
     DO,
-
     /// Break keyword to exit loops.
     BREAK,
-
     /// Continue keyword to skip to the next loop iteration.
     CONTINUE,
-
     /// Switch statement.
     SWITCH,
-
     /// Case keyword for switch cases.
     CASE,
 
     // ----- Special Character Tokens -----
     /// Right curly bracket `}`.
     RBRACKET,
-
     /// Left curly bracket `{`.
     LBRACKET,
-
     /// Left parenthesis `(`.
     LPAREN,
-
     /// Right parenthesis `)`.
     RPAREN,
-
     /// Semicolon `;`.
     SEMICOLON,
-
     /// Comma `,`.
     COMMA,
-
     /// Colon `:`.
     COLON,
-
     /// Left square bracket `[`.
     LBRACE,
-
     /// Right square bracket `]`.
     RBRACE,
-
     /// Period `.`.
     DOT,
-
+    /// Start of a block comment `/*`.
+    BCOMMENTBEGIN,
+    /// End of a block comment `*/`.
+    BCOMMENTEND,
+    /// Single line comment `//`.
+    SCOMMENT,
 
     // ----- Boolean and Comparison Operators -----
-    /// Logical and (&&)
-    ANDAND,
-
-    /// Logical or (||)
-    BARBAR,
-
-    /// Logical not (!)
-    EXCLAMATIONPOINT,
-
-    /// Less than (<)
+    /// Logical AND `&&`.
+    LOGICALAND,
+    /// Logical OR `||`.
+    LOGICALOR,
+    /// Logical NOT `!`.
+    LOGICALNOT,
+    /// Less than `<`.
     LESSTHAN,
-
-    /// Greater than (>)
+    /// Greater than `>`.
     GREATERTHAN,
-
-    /// Not equals (!=)
+    /// Not equal `!=`.
     NOTEQUAL,
-
-    /// Equality check (==)
-    EQUALEQUAL, 
-
-    /// Less than or equal to (<=)
+    /// Equality `==`.
+    EQUALEQUAL,
+    /// Less than or equal to `<=`.
     LESSTHANEQUAL,
-
-    /// Greater than or equal to (>=)
+    /// Greater than or equal to `>=`.
     GREATERTHANEQUAL,
 
-    
-    /// --- TYPE ANNOTATION SECTION --- ///
-    /// Integer type
+    // ----- Type Annotation Tokens -----
+    /// Integer type annotation.
     TINTEGER,
-
-    /// Double Type
+    /// Double type annotation.
     TDOUBLE,
-
-    /// Float type
+    /// Float type annotation.
     TFLOAT,
-
-    /// Character type
+    /// Char type annotation.
     TCHAR,
-
-    /// Void type
+    /// Void type annotation.
     TVOID,
-
-    /// Signed Integer type
+    /// Signed type annotation.
     TSIGN, 
-
-    /// Unsigned Integer type
+    /// Unsigned type annotation.
     TUSIGN,
-
-    /// Signed Int type
+    /// Signed integer type annotation.
     TSIGNINT,
-
-    /// Long type
+    /// Long type annotation.
     TLONG,
 
     // ----- Bitwise Operators -----
-    /// Bitwise and, address of (&)
-    AMPERSAND,
-
-    /// Bitwise or (|)
-    BAR,
-
-    /// Bitwise xor (^)
-    CARET,
-
-    /// Bitwise not (~)
-    TILDE,
-
+    /// Bitwise AND and address-of `&`.
+    BITAND,
+    /// Bitwise OR `|`.
+    BITOR,
+    /// Bitwise XOR `^`.
+    XOR,
 
     // ----- Miscellaneous -----
     /// Pointer to member operator `->`.
     POINTER,
-
     /// Constant declaration.
     CONST,
-    
     /// Conditional true `?`.
     CTRUE,
 }
