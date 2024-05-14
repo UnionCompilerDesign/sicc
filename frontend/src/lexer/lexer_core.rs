@@ -28,7 +28,7 @@ impl Lexer {
         Self {
             input,
             position: 0,
-            current: '~', // EOF token
+            current: '@', // EOF token
         }
     }
 
