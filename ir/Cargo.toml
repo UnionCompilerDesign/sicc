@@ -1,0 +1,14 @@
+[package]
+name = "ir"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "ir"
+path = "src/lib.rs"
+
+[dependencies]
+symbol_table = { path = "../symbol_table" }
+safe_llvm = { git = "https://github.com/UnionCompilerDesign/safe_llvm.git", branch = "main" }
+common = { path = "../common" }
+integration = { path = "../integration" }
