@@ -1,0 +1,12 @@
+[package]
+name = "integration"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "integration"
+path = "src/lib.rs"
+
+[dependencies]
+symbol_table = { path = "../symbol_table" }
+common = { path = "../common" }
