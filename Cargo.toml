@@ -1,0 +1,38 @@
+[package]
+name = "starter_code"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "starter_code"
+path = "src/lib.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+llvm-sys = "170"
+threadpool = "1.0"
+clap = { version = "4.4.18", features = ["derive"] }
+safe_llvm = { git = "https://github.com/UnionCompilerDesign/safe_llvm.git", branch = "main" }
+
+lexer = { path = "./lexer" }
+parser = { path = "./parser" }
+sem_analysis = { path = "./semantic_analysis" }
+symbol_table = { path = "./symbol_table" }
+common = { path = "./common" }
+ir = { path = "./ir"}
+integration = { path = "./integration" }
+
+[workspace]
+members = [
+    "./common",
+    "./integration",
+    "./ir",
+    "./lexer",
+    "./parser",
+    "./semantic_analysis",
+    "./symbol_table",
+]
+
+[profile.dev]
+debug = true
