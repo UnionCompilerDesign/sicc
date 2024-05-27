@@ -1,55 +1,62 @@
-/// Errors in the compilation process
+//! This file defines the errors that can occur during the compilation process.
+
+use std::fmt;
+
+/// Defines types of errors that can occur during compilation.
+///
+/// Each error represents a different kind of issue that can be encountered during the lexing, parsing, analysis, 
+/// or ir phases, such as type mismatches, undefined variables, and others. 
 #[derive(Debug, PartialEq, Clone)]
 pub enum ErrorType {    
-    /// Binary operation has incompatible types
+    /// Occurs due to a type mismatch in a binary operation.
     TypeMismatch {
-        /// Left type in comparison
+        /// The type of the left operand.
         left_type: String,
-
-        /// Right type in comparison
+        /// The type of the right operand.
         right_type: String,
     },
 
-    /// Variable used but not declared
+    /// Occurs due to a variable being used in the code but not been declared.
     UndefinedVariable {
-        /// The requested variable's name
+        /// The name of the variable that was not defined.
         variable_name: String,
     },
 
-    /// Unsupported operator on types given
+    /// Occurs due to an operator being use with a type that does not support it.
     UnsupportedOperator {
-        /// Operator type
+        /// The operator used.
         operator: String,
-        /// Type of operand in operation
+        /// The type of the operand with which the operator is incompatible.
         operand_type: String,
     },
 
-    /// Divisor is zero
+    /// Occurs due to an operation attempting to divide by zero.
     DivisionByZero {
-        /// Attempted operation
+        /// Describes the operation that attempted the division by zero.
         operation: String,
     },
 
-    /// Invalid assignment to a target 
+    /// Occurs due to an attempted assignment of a value to a non-assignable target.
     InvalidAssignment {
-        /// The name of the target variable
+        /// The target of the assignment which was invalid.
         target: String,
     },
 
-    /// Unrecognized token
+    /// Occurs due to a token being encountered in the source code that the lexer/parser does not recognize.
     UnrecognizedToken {
-        /// The unrecognized token
+        /// The token that was not recognized.
         token: String,
     },
 
-    /// Stand-in errors that need to be updated for better error handling
+    /// A placeholder error for development use.
     DevError {
-        /// Message for specifying error
+        /// A message describing what needs to be addressed.
         message: String,
     },
 }
 
 impl From<ErrorType> for Vec<ErrorType> {
+    /// Converts an `ErrorType` into a vector containing that error.
     fn from(err: ErrorType) -> Self {
         vec![err]
     }

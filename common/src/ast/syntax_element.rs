@@ -1,176 +1,147 @@
-use crate::ast::data_type::DataType;
+//! This file defines the syntax elements that can be used in our Abstract Syntax Tree (`AST`).
+//! These syntax elements represent the types of expressions that can appear in a program.
 
 use std::fmt;
+use crate::ast::data_type::DataType;
 
+/// Defines acceptable syntax elements as part of an `AST`.
+///
+/// Each element A different kind of syntactic construct that can appear in source code, such as constants, identifiers, 
+/// operators, and control structures. These elements are used to build a tree representation of the code's syntactic structure.
 #[derive(Debug, Clone, PartialEq, Default, Eq, Hash)]
-/// Defines acceptable syntax elements, as part of an AST
 pub enum SyntaxElement {
-    /// No expression
+    /// A lack of expression, often used as a placeholder.
     #[default]
     NoExpression,
 
-    /// --- BASE EXPRESSION SECTION --- ///
-    /// Literal
+    /// A literal value, stored as a string.
     Literal(String),
 
-    /// Identifier
+    /// An identifier, such as a variable name, stored as a string.
     Identifier(String),
 
-    /// Operator
+    /// An operator, such as '+', '-', etc., stored as a string.
     Operator(String),
 
-    /// Type
+    /// A data type, linking directly to the `DataType` enum.
     Type(DataType),
 
-    /// Constant
+    /// A constant value, stored as a string.
     Constant(String),
 
-    /// --- CONTROL FLOW SECTION --- ///
-    /// If statement
+    /// An `if` statement.
     IfStatement,
 
-    /// Else statement
+    /// An `else` statement.
     ElseStatement,
 
-    /// For loop
+    /// A `for` loop.
     ForLoop,
 
-    /// While loop
+    /// A `while` loop.
     WhileLoop,
 
-    /// Do while loop
+    /// A `do-while` loop.
     DoWhileLoop,
 
-    /// Break statement
+    /// A `break` statement.
     Break,
 
-    /// Continue statement
+    /// A `continue` statement.
     Continue,
 
-    /// Return statement
+    /// A `return` statement.
     Return,
 
-    /// Switch statement
+    /// A `switch` statement.
     SwitchStatement,
 
-    /// Case of switch
+    /// A case in a `switch` statement.
     Case,
 
-    /// Default branch of switch
+    /// The default branch in a `switch` statement.
     Default,
 
-    /// --- DECLARATION SECTION --- ///
-    /// Assignment of an existing variable
+    /// An assignment of a value to an existing variable.
     Assignment,
 
-    /// Initialization of a variable
+    /// The initialization of a variable.
     Initialization,
 
-    /// Function declaration
+    /// A function declaration.
     FunctionDeclaration,
 
-    /// Struct declaration
+    /// A struct declaration.
     StructDeclaration,
 
-    /// Enum declaration
+    /// An enum declaration.
     EnumDeclaration,
 
-    /// --- MODULE & SCOPING SECTION --- ///
-    /// Module expression
+    /// A module-level expression, often used for scoping.
     ModuleExpression,
 
-    /// Top level expression
+    /// A top-level expression in a module or file.
     TopLevelExpression,
 
-    /// Block
+    /// A block of expressions or statements.
     BlockExpression,
 
-    /// --- STATEMENT SECTION --- ///
-    /// Condition,
+    /// A condition in control flows.
     Condition,
 
-    /// Action,
+    /// An action to be taken, typically in control structures.
     Action,
 
-    /// Variant,
+    /// A variant in enums or other similar structures.
     Variant,
 
-    /// Assigned value (used in: initialization, assignment, return)
+    /// A value assigned in statements like initialization and assignment.
     AssignedValue,
 
-    /// Field of a struct
+    /// A field in a struct or similar data structure.
     Field,
 
-    /// Parameter
+    /// A parameter in function declarations.
     Parameter,
 
-    /// Variable
+    /// A variable, used in various expressions and statements.
     Variable,
 
-    /// Binary expression
+    /// A binary expression, involving two operands and an operator.
     BinaryExpression,
 
-    /// Unary expression
+    /// A unary expression, involving one operand and an operator.
     UnaryExpression,
 
-    /// Function call
+    /// A function call.
     FunctionCall,
 
-    /// Operand
+    /// An operand in an expression.
     Operand,
 
-    /// --- LOOP CONTROL SECTION --- ///
-    /// Initializer to a loop
+    /// The initializer section of a loop.
     LoopInitializer,
 
-    /// Incrementer on a loop
+    /// The increment section of a loop.
     LoopIncrement,
-
-
 }
 
-
+/// Provides a display implementation for `DataType`.
+///
+/// # Parameters
+/// * `f` - The formatter.
+///
+/// # Returns
+/// * `fmt::Result` - The result of the formatting operation.
 impl fmt::Display for SyntaxElement {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            SyntaxElement::NoExpression => write!(f, "NoExpression"),
             SyntaxElement::Literal(value) => write!(f, "Literal({})", value),
-            SyntaxElement::Constant(value) => write!(f, "Constant({})", value),
-            SyntaxElement::Variable => write!(f, "Variable)"),
-            SyntaxElement::BinaryExpression => write!(f, "BinaryExpression"),
-            SyntaxElement::UnaryExpression => write!(f, "UnaryExpression"),
             SyntaxElement::Identifier(id) => write!(f, "Identifier({})", id),
-            SyntaxElement::FunctionCall => write!(f, "FunctionCall"),
             SyntaxElement::Operator(op) => write!(f, "Operator({})", op),
-            SyntaxElement::Operand => write!(f, "Operand"),
             SyntaxElement::Type(data_type) => write!(f, "Type({})", data_type),
-            SyntaxElement::IfStatement => write!(f, "IfStatement"),
-            SyntaxElement::ElseStatement => write!(f, "ElseStatement"),
-            SyntaxElement::ForLoop => write!(f, "ForLoop"),
-            SyntaxElement::WhileLoop => write!(f, "WhileLoop"),
-            SyntaxElement::DoWhileLoop => write!(f, "DoWhileLoop"),
-            SyntaxElement::SwitchStatement => write!(f, "SwitchStatement"),
-            SyntaxElement::Case => write!(f, "Case"),
-            SyntaxElement::Break => write!(f, "Break"),
-            SyntaxElement::Continue => write!(f, "Continue"),
-            SyntaxElement::Return => write!(f, "Return"),
-            SyntaxElement::Assignment => write!(f, "Assignment"),
-            SyntaxElement::Initialization => write!(f, "Initialization"),
-            SyntaxElement::FunctionDeclaration => write!(f, "FunctionDeclaration"),
-            SyntaxElement::Parameter => write!(f, "Parameter"),
-            SyntaxElement::StructDeclaration => write!(f, "StructDeclaration"),
-            SyntaxElement::EnumDeclaration => write!(f, "EnumDeclaration"),
-            SyntaxElement::ModuleExpression => write!(f, "ModuleExpression"),
-            SyntaxElement::TopLevelExpression => write!(f, "TopLevelExpression"),
-            SyntaxElement::BlockExpression => write!(f, "BlockExpression"),
-            SyntaxElement::LoopInitializer => write!(f, "LoopInitializer"),
-            SyntaxElement::LoopIncrement => write!(f, "LoopIncrement"),
-            SyntaxElement::Condition => write!(f, "Condition"),
-            SyntaxElement::Action => write!(f, "Action"),
-            SyntaxElement::Variant => write!(f, "Variant"),
-            SyntaxElement::AssignedValue => write!(f, "AssignedValue"),
-            SyntaxElement::Field => write!(f, "Field"),
-            SyntaxElement::Default => write!(f, "Default"),
+            SyntaxElement::Constant(value) => write!(f, "Constant({})", value),
+            _ => write!(f, "{:?}", self) 
         }
     }
 }
