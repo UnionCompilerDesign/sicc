@@ -5,7 +5,3 @@
 /ir/Cargo.lock
 /lexer/target/
 /lexer/Cargo.lock
-/parser/target/
-/parser/Cargo.lock
-/semantic_analysis/target/
-/semantic_analysis/Cargo.lock
