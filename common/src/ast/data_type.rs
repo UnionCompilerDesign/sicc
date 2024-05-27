@@ -1,5 +1,5 @@
 //! This file defines the data types that can be used in our Abstract Syntax Tree (`AST`).
-//! These data types represent the various types of values that can be part of the syntax in a program.
+//! These data types represent the types of values that can be part of the syntax in a program.
 
 use std::fmt;
 
