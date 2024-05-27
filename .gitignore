@@ -1,9 +1,11 @@
 /target/
-/frontend/Cargo.lock
-/frontend/target
 /Cargo.lock
-/output.ll
-/src/backend/codegen/target/
 /.vscode/
-/.DS_Store
-/regression_testing/basic_test/target/
+/ir/target/
+/ir/Cargo.lock
+/lexer/target/
+/lexer/Cargo.lock
+/parser/target/
+/parser/Cargo.lock
+/semantic_analysis/target/
+/semantic_analysis/Cargo.lock
