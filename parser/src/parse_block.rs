@@ -1,270 +1,234 @@
-//! The driver for the parsing process, uses the method of recursive descent to systematically iterate through 
-//! tokens and routes to appropriate helper methods in the parser to construct an abstract syntax tree.
-                                 
+//! Contains functions which turn a stream of tokens representing a block or blocks of code into a corresponding abstract syntax tree. 
+
 use common::{ 
+    error::ErrorType,
     ast::{
-        ast_struct::{ASTNode, AST}, 
+        ast_struct::ASTNode, 
         syntax_element::SyntaxElement,
-    }, error::ErrorType
+    },
 };
 
 use lexer::token::Token;
 
-/// Parses an input of tokens into an AST   
-pub struct Parser {
-    input: Vec<Token>,
-    current: usize,
-}
+use crate::parser_core::Parser;
+
 
 impl Parser {
-    fn new(input: Vec<Token>) -> Self {
-        Self {
-            input,
-            current: 0,
+    /// Creates the children of an expression that changes scope. Used for all scope changing expressions except structs and enums.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(Some(ASTNode))` - The parsed block expression node if successful.
+    /// * `Err(Vec<ErrorType>)` - A list of errors if parsing fails.
+    ///
+    /// # Errors
+    ///
+    /// * Will return an error if a token is missing or if parsing fails at any point.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let mut parser = Parser::new(tokens);
+    /// let block = parser.parse_block()?;
+    /// ```
+    pub fn parse_block(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
+        self.consume_token(Token::LBRACKET)?; 
+        let mut block_exp = ASTNode::new(SyntaxElement::BlockExpression);
+
+        let mut children: Vec<ASTNode> = Vec::new();
+
+        while self.get_current() < self.get_input().len() && self.get_input().get(self.get_current()) != Some(&Token::RBRACKET) {
+            match self.parse_router() {
+                Ok(Some(expr_node)) => {
+                    children.push(expr_node);
+                }
+                Ok(None) => {}
+                _ => panic!("parse_block parse problem")
+            }
         }
+        if self.get_input().get(self.get_current()) == Some(&Token::RBRACKET) {
+            self.consume_token(Token::RBRACKET)?;
+        } else {
+            panic!("failed to reach stop token")
+        }
+        block_exp.add_children(children);
+
+        Ok(Some(block_exp))
     }
 
-    /// Parses an input of tokens into an AST using recursive descent parsing.
-    /// Iterates through tokens and routes to appropriate helper methods to construct an AST.
-    ///
-    /// # Parameters
-    ///
-    /// - `input`: A vector of `Token` representing the input to be parsed.
+    /// Parses the initialization of a variable or function. 
+    /// Such a statement is characterized by a leading type annotation, representing either the type of the variable or the return type of the function.
     ///
     /// # Returns
     ///
-    /// Returns a `Result<AST, Vec<ErrorType>>` containing the constructed AST if successful, 
-    /// or a vector of `ErrorType` if there are parsing errors.
+    /// * `Ok(Some(ASTNode))` - The parsed initialization node if successful.
+    /// * `Err(Vec<ErrorType>)` - A list of errors if parsing fails.
     ///
     /// # Errors
     ///
-    /// - Returns a vector of errors if there are issues during parsing, such as unexpected tokens.
+    /// * Will return an error if a token is missing or if parsing fails at any point.
     ///
     /// # Examples
     ///
     /// ```
-    /// let tokens: Vec<Token> = vec![/* tokens */];
-    /// let ast = Parser::parse(tokens);
+    /// let mut parser = Parser::new(tokens);
+    /// let initialization = parser.parse_initialization()?;
     /// ```
-    pub fn parse(input: Vec<Token>) -> Result<AST, Vec<ErrorType>> {
-        let mut parser = Parser::new(input);
-        let mut root_children: Vec<ASTNode> = Vec::new();  
-        let mut errors: Vec<ErrorType> = Vec::new();
-
-        todo!();
-    }  
-
-    /// Steps the current token position back by 1.
-    pub fn step_current_back(&mut self) {
+    pub fn parse_initialization(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
         todo!();
     }
 
-    /// Gets the current input vector.
-    ///
-    /// # Returns
-    ///
-    /// Returns a vector of `Token` representing the input.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use parser::Parser;
-    /// let parser = Parser::new(vec![/* tokens */]);
-    /// let input = parser.get_input();
-    /// assert!(!input.is_empty());
-    /// ```
-    pub fn get_input(&mut self) -> Vec<Token> {
+    fn parse_initialization_with_value(&mut self, var_node: ASTNode) -> Result<Option<ASTNode>, Vec<ErrorType>> {
         todo!();
     }
 
-    /// Gets the current position in the input vector.
+    /// Parses an if statement. Such a statement is characterized by a leading 'Token::IF', with a subsequent condition expression and body. 
     ///
     /// # Returns
     ///
-    /// Returns the current position as a `usize`.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use parser::Parser;
-    /// let parser = Parser::new(vec![/* tokens */]);
-    /// let current_position = parser.get_current();
-    /// assert_eq!(current_position, 0);
-    /// ```
-    pub fn get_current(&mut self) -> usize {
-        todo!();
-    }
-
-    /// Consumes a token if the expected token matches the current token in the input.
-    ///
-    /// # Parameters
-    ///
-    /// - `expected_token`: The `Token` that is expected to be consumed.
-    ///
-    /// # Returns
-    ///
-    /// Returns `Result<(), ErrorType>` indicating whether the token was successfully consumed.
+    /// * `Ok(Some(ASTNode))` - The parsed if statement node if successful.
+    /// * `Err(Vec<ErrorType>)` - A list of errors if parsing fails.
     ///
     /// # Errors
     ///
-    /// - Returns an error if the expected token does not match the current token or if there is no token to consume.
+    /// * Will return an error if a token is missing or if parsing fails at any point.
     ///
     /// # Examples
     ///
     /// ```
-    /// let mut parser = Parser::new(vec![Token::LPAREN]);
-    /// let result = parser.consume_token(Token::LPAREN);
+    /// let mut parser = Parser::new(tokens);
+    /// let if_statement = parser.parse_if_statement()?;
     /// ```
-    pub fn consume_token(&mut self, expected_token: Token) -> Result<(), ErrorType> {
-        todo!();
-    }
-    
-    /// Peeks at the next token in the input (current position + 1).
-    ///
-    /// # Returns
-    ///
-    /// Returns an `Option<Token>` containing the next token if available, or `None` if there is no next token.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// let mut parser = Parser::new(vec![Token::LPAREN, Token::RPAREN]);
-    /// let next_token = parser.peek_token();
-    /// assert_eq!(next_token, Some(Token::RPAREN));
-    /// ```
-    pub fn peek_token(&mut self) -> Option<Token> {
-        todo!();
-    }
-
-    /// Peeks at the previous token in the input (current position - 1).
-    ///
-    /// # Returns
-    ///
-    /// Returns an `Option<Token>` containing the previous token if available, or `None` if there is no previous token.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// let mut parser = Parser::new(vec![Token::LPAREN, Token::RPAREN]);
-    /// parser.consume_token(Token::LPAREN).unwrap();
-    /// let last_token = parser.peek_last_token();
-    /// assert_eq!(last_token, Some(Token::LPAREN));
-    /// ```
-    pub fn peek_last_token(&mut self) -> Option<Token> {
-        todo!();
-    }  
-
-    /// Steps the current token position forward by 1.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// let mut parser = Parser::new(vec![/* tokens */]);
-    /// parser.step_current_forward();
-    /// ```
-    pub fn step_current_forward(&mut self) {
-        todo!();
-    }
-
-    /// Returns a null expression. Used to ignore tokens that aren't legal on their own but may be part of a larger expression.
-    ///
-    /// # Returns
-    ///
-    /// Returns a `Result<Option<ASTNode>, Vec<ErrorType>>` containing a `NoExpression` AST node.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// let mut parser = Parser::new(vec![/* tokens */]);
-    /// let node = parser.no_expression();
-    /// assert!(node.is_ok());
-    /// ```
-    pub fn no_expression(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
-        todo!();
-    }
-
-
-    /// Entry point to the main parsing logic. Routes the current token to the appropriate parsing method based on token type.
-    ///
-    /// # Returns
-    ///
-    /// Returns a `Result<Option<ASTNode>, Vec<ErrorType>>` containing the parsed AST node or errors encountered during parsing.
-    ///
-    /// # Errors
-    ///
-    /// - Returns a vector of errors if there are issues during parsing, such as unexpected tokens or parsing failures.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// let mut parser = Parser::new(vec![Token::IF]);
-    /// let result = parser.parse_router();
-    /// assert!(result.is_ok());
-    /// ```
-    pub fn parse_router(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
+    pub fn parse_if_statement(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
         if self.get_current() < self.get_input().len() {
             match self.get_input().get(self.get_current()) {
-                // top level expressions
-                Some(Token::STRUCT) => return self.parse_struct_declaration(), 
-                Some(Token::ENUM) => return self.parse_enum_declaration(),
+                Some(Token::IF) => {
+                    self.consume_token(Token::IF)?;
+                    self.consume_token(Token::LPAREN)?;
+                    
+                    let condition: ASTNode = match self.parse_router() {
+                        Ok(Some(value)) => {value}
+                        _ => panic!("if statement panic")
+                    };
+                    self.consume_token(Token::RPAREN)?;
 
-                // statements
-                Some(Token::IF) => return self.parse_if_statement(),
-                Some(Token::FOR) => return self.parse_for_loop(),
-                Some(Token::DO) => return self.parse_do_while_loop(), 
-                Some(Token::WHILE) => return self.parse_while_loop(),
-                Some(Token::IDENTIFIER(_)) => return self.parse_identifier(),
-                Some(Token::SWITCH) => return self.parse_switch_statement(),
+                    let mut condition_node: ASTNode = ASTNode::new(SyntaxElement::Condition);
+                    condition_node.add_child(condition);
 
-                Some(Token::DASH) => {
-                    if self.is_unary_minus() {
-                        return self.parse_unary_expression();
-                    } else {
-                        return self.parse_binary_expression();
+                    let mut if_node: ASTNode = ASTNode::new(SyntaxElement::IfStatement);
+                    if_node.add_child(condition_node);
+
+                    match self.parse_router() {
+                        Ok(Some(node)) => {
+                            if_node.add_child(node);
+                        }
+                        _ => {
+                            panic!("Missing then branch")
+                        }
                     }
-                },
-                // binary operations
-                Some(Token::PLUS) | 
-                Some(Token::ASTERISK) | 
-                Some(Token::FSLASH) |
-                Some(Token::PERCENT) |
-                Some(Token::GREATERTHAN) |
-                Some(Token::GREATERTHANEQUAL) |
-                Some(Token::LESSTHAN) |
-                Some(Token::LESSTHANEQUAL) => return self.parse_binary_expression(),
 
-                // unary operations
-                Some(Token::EXCLAMATIONPOINT) => return self.parse_unary_expression(), 
 
-                Some(Token::LBRACKET) => return self.parse_block(),
+                    if let Some(Token::ELSE) = self.get_input().get(self.get_current()) {
+                        self.consume_token(Token::ELSE)?;
+                        match self.parse_router() {
+                            Ok(Some(node)) => {
+                                if_node.add_child(node);
+                            }
+                            _ => {
+                                panic!("Missing else block exp")
+                            }
+                        }
+                    };
 
-                // data types
-                Some(Token::TINTEGER) |
-                Some(Token::TBOOLEAN) |
-                Some(Token::TDOUBLE) |
-                Some(Token::TFLOAT) |
-                Some(Token::TCHAR) |
-                Some(Token::TVOID) |
-                Some(Token::TSIGN) |
-                Some(Token::TUSIGN) |
-                Some(Token::TSIGNINT) |
-                Some(Token::TLONG) => return self.parse_initialization(),
-
-                
-                // base elements like primitives, and protected keywords
-                Some(Token::NUMBER(_)) => return self.parse_primitive(),
-                Some(Token::CTRUE) |
-                Some(Token::BREAK) |
-		        Some(Token::RETURN) |
-                Some(Token::CONTINUE) |
-                Some(Token::SEMICOLON) |
-                Some(Token::EOF) => return self.parse_protected_keyword(),
-                Some(Token::LPAREN) => return self.no_expression(),
-                _ => panic!("Are you sure this is an expression: {:?} {:?}", self.get_input().get(self.get_current()), self.get_current()),
-
+                    return Ok(Some(if_node));
+                }
+                _ => panic!("Problem parsing in if statement"),
             }
-        } else {
-            panic!("You hooligan. You're out of tokens")
-        }
+        } panic!("Problem parsing if statement 2")
+    }
+
+    /// Parses a for loop. Looks for a initialization, condition, and increment expressions, as well as a loop body.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(Some(ASTNode))` - The parsed for loop node if successful.
+    /// * `Err(Vec<ErrorType>)` - A list of errors if parsing fails.
+    ///
+    /// # Errors
+    ///
+    /// * Will return an error if a token is missing or if parsing fails at any point.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let mut parser = Parser::new(tokens);
+    /// let for_loop = parser.parse_for_loop()?;
+    /// ```
+    pub fn parse_for_loop(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
+        todo()!
+    }
+    
+
+    /// Parses a while loop. Looks for a condition expression, and a loop body.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(Some(ASTNode))` - The parsed while loop node if successful.
+    /// * `Err(Vec<ErrorType>)` - A list of errors if parsing fails.
+    ///
+    /// # Errors
+    ///
+    /// * Will return an error if a token is missing or if parsing fails at any point.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let mut parser = Parser::new(tokens);
+    /// let while_loop = parser.parse_while_loop()?;
+    /// ```
+    pub fn parse_while_loop(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
+        todo()!
+    }
+
+    /// Parses a do while loop. Looks for a condition expression and a loop body.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(Some(ASTNode))` - The parsed do while loop node if successful.
+    /// * `Err(Vec<ErrorType>)` - A list of errors if parsing fails.
+    ///
+    /// # Errors
+    ///
+    /// * Will return an error if a token is missing or if parsing fails at any point.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let mut parser = Parser::new(tokens);
+    /// let do_while_loop = parser.parse_do_while_loop()?;
+    /// ```
+    pub fn parse_do_while_loop(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
+        todo()!
+    }
+
+    /// Parses a switch statement. Looks for an identifier to switch on, and cases.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(Some(ASTNode))` - The parsed switch statement node if successful.
+    /// * `Err(Vec<ErrorType>)` - A list of errors if parsing fails.
+    ///
+    /// # Errors
+    ///
+    /// * Will return an error if a token is missing or if parsing fails at any point.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let mut parser = Parser::new(tokens);
+    /// let switch_statement = parser.parse_switch_statement()?;
+    /// ```
+    pub fn parse_switch_statement(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
+        todo!();
     }
 }
