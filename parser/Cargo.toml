@@ -1,0 +1,14 @@
+[package]
+name = "parser"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "parser"
+path = "src/lib.rs"
+
+[dependencies]
+lexer = { path = "../lexer" }
+
+lazy_static = "1.4"
+once_cell = "1.7"
