@@ -1,0 +1,153 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% fphw Assignment
+% LaTeX Template
+% Version 1.0 (27/04/2019)
+%
+% This template originates from:
+% https://www.LaTeXTemplates.com
+%
+% Authors:
+% Class by Felipe Portales-Oliva (f.portales.oliva@gmail.com) with template 
+% content and modifications by Vel (vel@LaTeXTemplates.com)
+%
+% Template (this file) License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[
+	12pt, % Default font size, values between 10pt-12pt are allowed
+	%letterpaper, % Uncomment for US letter paper size
+	%spanish, % Uncomment for Spanish
+]{fphw}
+
+% Template-specific packages
+\usepackage[utf8]{inputenc} % Required for inputting international characters
+\usepackage[T1]{fontenc} % Output font encoding for international characters
+\usepackage{mathpazo} % Use the Palatino font
+
+\usepackage{graphicx} % Required for including images
+
+\usepackage{booktabs} % Required for better horizontal rules in tables
+
+\usepackage{listings, listings-rust} % Required for insertion of code
+
+\usepackage{enumerate} % To modify the enumerate environment
+
+%----------------------------------------------------------------------------------------
+%	ASSIGNMENT INFORMATION
+%----------------------------------------------------------------------------------------
+
+\title{Assignment \#2: Building the Parser} % Assignment title
+
+
+\date{DUE DATE} % Due date
+
+\institute{Union College} % Institute or school name
+
+\class{CSC-375 Compiler Design} % Course or class name
+
+\professor{Aaron Cass} % Professor or teacher in charge of the assignment
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Output the assignment title, created automatically using the information in the custom commands above
+
+%----------------------------------------------------------------------------------------
+%	ASSIGNMENT CONTENT
+%----------------------------------------------------------------------------------------
+
+\section*{Objectives}
+
+\begin{problem}
+	\begin{itemize}
+	    \item Learn and implement top-down recursive descent parsing
+        \item Complete the second part of code compilation - construct an abstract syntax tree from a stream of tokens
+        \item Pass all tests given in \textit{base\_tests.rs}, \textit{combination.rs}, and \textit{edge\_tests.rs}
+        \item Work in groups of 2-3
+        
+	\end{itemize}
+\end{problem}
+
+%------------------------------------------------
+
+\subsection*{An explanation of parsing:}
+Converting a program into a machine-understandable language is a complicated task, and lexical analysis was just the first step. Once the lexer has done its job, we now have a list of tokens that are valid our language. However, these tokens have little semantic meaning on their own. It's the job of the parser to iterate through these tokens and construct a higher-level representation of the structure of the program.  \\
+\\
+Imagine that you're the compiler, and you come across an integer type token. What would you do with it? Such a token could indicate a variable initialization, a function declaration with an integer return type, or we could be smack in the middle of a for-loop initializer. It's impossible to know without looking at the surrounding tokens, and it's the job of the parser to use that information to find out. \\
+\\
+Once the parsing stage is complete, the parser will have generated an abstract syntax tree representing the structure of the program. The abstract syntax tree has nodes which represent certain tokens, and children which relate to each node. For example, an if statement node might have two children: a condition node, and a body node. \\
+\\
+The method you'll use to create this tree is called \textit{top-down recursive descent parsing}. Imagine you're given some code with no indentation or spacing. How would you turn the stream of garbage into a readable file? You'd start at the first word and read to the right, indenting and spacing each token as you go. Recursive descent paring works a lot like this, with different indentation levels akin to the different levels of the abstract syntax tree.\\
+\\
+It's important to note that the parser doesn't check for semantic correctness itself. If you try to assign a string to a variable of type integer, it doesn't care. However, the abstract syntax tree it creates will be invaluable for the semantic analysis that's done later on.
+\\
+
+%----------------------------------------------------------------------------------------
+
+\section*{Parser Structure}
+
+
+	\lstinputlisting[
+		caption=mod.rs, % Caption above the listing
+		label=lst:modlexer, % Label for referencing this listing
+		language=Rust, % Use Rust functions/syntax highlighting
+		frame=single, % Frame around the code listing
+		showstringspaces=false, % Don't put marks in string spaces
+		numbers=left, % Line numbers on left
+		numberstyle=\tiny, % Line numbers styling
+	]{mod.rs} % file name to list
+
+
+\section*{mod.rs:}
+As you saw for the lexer, the \textit{mod.rs} defines the modules related to the parser and makes them available for other modules to see. Unlike the lexer, there are a lot of files to be worried about. Each one deals with a different level of the parser, ensuring modularity.\\
+\\
+You don't have to do anything to this file.
+
+\section*{parser\_core.rs:}
+This file houses the main logic for the parser. Parsing is started by calling \textit{let ast = Parser::parse(tokens);}, where \textit{tokens} is the stream of tokens generated by the lexer. The \textit{parse\_router} function is the main driver of the parsing process, as it delegates to helper functions based on what token it sees. It'll be your job to write these functions. \\
+\\
+Again, you don't have to do anything here. The functions you will write are the ones called by \textit{parse\_router}, whose signatures exist in the other files.
+
+\section*{parse\_binary\_expression.rs:}
+Handling binary expressions is tricky, as there's quite a bit of ambiguity built in. It's recommended to convert the token stream to prefix before building the abstract syntax tree, and the function signatures are there to help you get started. This part isn't easy, so start early! 
+
+\section*{parse\_expression.rs:}
+This part requires you to write two functions, one to parse unary expressions, and another for assignments. Make sure your implementation allows for variables to be assigned to literals, other variables, and expressions! \\
+\\
+
+\section*{parse\_block.rs:}
+This file deals with blocks of code, which are commonly found within functions and control flow statements such as if statements and loops. \textit{parse\_if\_statement} and \textit{parse\_block} have been provided to you to help you get started. Use these functions as a guide. \\
+\\
+
+\section*{parser\_utils.rs:}
+There's only one function in here, and its been written for you. Put any useful functions you come up with in here! \\
+\\
+
+\section*{parser\_token.rs:}
+This deals with the parsing of individual tokens. Come up with implementations for the given function signatures. \\
+\\
+
+\section*{Follow these guidelines to build the lexer structure in lexer\_core.rs}
+
+\begin{problem}
+    \begin{enumerate}
+        \item Do not change any of the function signatures, i.e. leave all parameters, parameter types, and return types as you found them.
+        \item Follow all instructions given in the comments where they exist, and take any potential hints into consideration when making your design.
+        \item Look at the unit tests to see how the abstract syntax tree should be structured. You can pretty-print the expected abstract syntax tree in a failing test with \textit{println!("\{:\#?\}", expected\_ast);}.
+        \item Use helper functions.
+        \item Start early. This is a lot harder than the lexer, so give yourself appropriate time to flesh out all the details.
+        
+    \end{enumerate}
+\end{problem}
+
+\pagebreak
+
+
+\end{document}
