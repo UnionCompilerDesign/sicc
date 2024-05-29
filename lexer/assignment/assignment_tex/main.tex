@@ -91,18 +91,18 @@ The point of a lexer is to take this giant string and try to make it a little mo
 
 
 	\lstinputlisting[
-		caption=mod.rs, % Caption above the listing
+		caption=lib.rs, % Caption above the listing
 		label=lst:modlexer, % Label for referencing this listing
 		language=Rust, % Use Rust functions/syntax highlighting
 		frame=single, % Frame around the code listing
 		showstringspaces=false, % Don't put marks in string spaces
 		numbers=left, % Line numbers on left
 		numberstyle=\tiny, % Line numbers styling
-	]{mod.rs} % file name to list
+	]{lib.rs} % file name to list
 
 
-\section*{mod.rs:}
-This file defines the modules related to the lexer and makes them available for other modules to see. You can see this in the folder for the lexer inside the \textit{frontend/} folder. All modules each have documentation in this file to show what the module is used for. The lexer is relatively simple, so all it has is a module containing the tokens it can use and the lexer itself.\\
+\section*{lib.rs:}
+This file defines the modules related to the lexer and makes them available for other modules to see. You can see this in the \textit{lexer/} folder. All modules have documentation in this file to show what the module is used for. The lexer is relatively simple, so all it has is a module containing the tokens it can use and the lexer itself.\\
 \\
 You don't have to do anything to this file.
 
@@ -137,9 +137,9 @@ All of the functions here have been intentionally left blank, and none of the te
     it might not be obvious how to create tokens before pushing them to the output vector, so here are some tips on how to do this.
     \\
     \begin{enumerate}
-        \item Tokens are part of the \textbf{Token enum} as showed before, so when creating one use "Token::" to signal you want to make an item from the Token enum, followed by the token's name. For example, if I want a token for '*' the token I want would be \textbf{Token::STAR}.
-        \item For tokens that have no data (such as a left parenthesis for example) creating tokens is simple and I already showed how. If I detect a left parenthesis, then I would push \textbf{Token::LPAREN} to the output vector.
-        \item Some tokens have many characters at once, for example the integer "42". Once you have all characters collected in a vector of characters (for example we'll call it \textbf{vec}) you can create a token with data in it by specifying the name of the token like above and then, in parentheses, the data you want to attach. In our example with 42 I would create \textbf{Token::INT(vec)}.
+        \item Tokens are part of the \textbf{Token enum} as showed before, so when creating one use "Token::" to signal you want to make an item from the Token enum, followed by the token's name. For example, if I want a token for '*' the token I want would be \textbf{Token::ASTERISK}.
+        \item For tokens that have no data (such as a left parenthesis for example) creating tokens is simple. If I detect a left parenthesis, then I would push \textbf{Token::LPAREN} to the output vector.
+        \item Some tokens have many characters at once, for example the integer "42". Once you have all characters collected in a vector of characters (we'll call it \textbf{vec}) you can create a token with data in it by specifying the name of the token like above and then, in parentheses, the data you want to attach. For "42" I would create \textbf{Token::INT(vec)}.
     \end{enumerate}
 \end{problem}
 
