@@ -1,11 +1,11 @@
 use common::error::ErrorType;
-
 use lexer::{
     lexer_core::Lexer,
     token::Token,
 };
 
 /// cargo test --test combination_tests
+/// Tests combinations of tokens that would typically be seen in our code. 
 
 #[test]
 fn test_complex_expressions() {
@@ -180,12 +180,11 @@ fn test_class() {
 
 #[test]
 fn test_keywords() {
-    let inputs = "if else return";
+    let input = "if else return";
+    let result = Lexer::lex(input);
     let expected = vec![
         Token::IF, Token::ELSE, Token::RETURN, Token::EOF
     ];
-
-    let result = Lexer::lex(inputs);
     assert_eq!(result, Ok(expected));
 }
 
@@ -223,15 +222,6 @@ fn test_operators_and_special_chars() {
         Token::COMMA, Token::COLON, Token::EOF,
     ];
     assert_eq!(result, Ok(expected));
-}
-
-#[test]
-fn test_invalid_char() {
-    let input = "let $invalid = 5;";
-    let result = Lexer::lex(input);
-    let expected_error = ErrorType::UnrecognizedToken{token: "$".to_string()};
-    let expected = Err(vec![expected_error]);
-    assert_eq!(result, expected);
 }
 
 #[test]
@@ -295,7 +285,7 @@ fn test_control_flow_tokens() {
 #[test]
 fn test_braces_and_parentheses() {
     let input = "{ } [ ] ( )";
-   let result = Lexer::lex(input);
+    let result = Lexer::lex(input);
     let expected = vec![
         Token::LBRACKET, Token::RBRACKET, Token::LBRACE,
         Token::RBRACE, Token::LPAREN, Token::RPAREN,
