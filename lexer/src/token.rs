@@ -10,18 +10,14 @@ pub enum Token {
     /// Token indicating the end of the file.
     EOF,
   
-    /// --- ASSIGNMENT SECTION --- ///
-    /// --- MULTI-CHARACTER SECTION --- ///
-    /// NUMBER
+    // ---- Multi-Character Tokens ----
+    /// Number.
     NUMBER(Vec<char>),
-
-    /// Identifier
+    /// Identifier.
     IDENTIFIER(Vec<char>),
-
-    /// Represents a string literal like "hello world"
+    /// Represents a string literal like "hello world".
     STRINGLITERAL(Vec<char>),
-
-    /// Character literal like 'a'
+    /// Character literal like 'a'.
     CHAR(char),
 
     // ----- Assignment Operators -----
@@ -33,172 +29,122 @@ pub enum Token {
     // ----- Binary Operators -----
     /// Division operator `/`.
     FSLASH,
-
     /// Both subtraction and unary negative `-`.
     DASH,
-
     /// Addition operator `+`.
     PLUS,
-
     /// Assignment operator `=`.
     EQUAL,
-
     /// Modulo operator `%`.
     PERCENT,
-
     /// Multiplication operator `*`.
     ASTERISK,
 
-     // ----- Scope Definition Tokens -----
-    /// A struct definition.
+    // ----- Scope Definition Tokens -----
+    /// A "struct" definition.
     STRUCT,
-
-    /// An enum definition.
+    /// An "enum" definition.
     ENUM,
-
     /// If conditional.
     IF,
-
     /// Else branch.
     ELSE,
-
     /// Return statement.
     RETURN,
-
     /// For loop.
     FOR,
-
     /// While loop.
     WHILE,
-
     /// Do-while loop.
     DO,
-
     /// Break keyword to exit loops.
     BREAK,
-
     /// Continue keyword to skip to the next loop iteration.
     CONTINUE,
-
     /// Switch statement.
     SWITCH,
-
     /// Case keyword for switch cases.
     CASE,
 
     // ----- Special Character Tokens -----
     /// Right curly bracket `}`.
     RBRACKET,
-
     /// Left curly bracket `{`.
     LBRACKET,
-
     /// Left parenthesis `(`.
     LPAREN,
-
     /// Right parenthesis `)`.
     RPAREN,
-
-    /// Semicolon `;`.
-    SEMICOLON,
-
-    /// Comma `,`.
-    COMMA,
-
-    /// Colon `:`.
-    COLON,
-
     /// Left square bracket `[`.
     LBRACE,
-
     /// Right square bracket `]`.
-    RBRACE,
-
+    RBRACE,    
+    /// Semicolon `;`.
+    SEMICOLON,
+    /// Comma `,`.
+    COMMA,
+    /// Colon `:`.
+    COLON,
     /// Period `.`.
     DOT,
 
-
     // ----- Boolean and Comparison Operators -----
-    /// Logical and (&&)
+    /// Logical and "&&".
     ANDAND,
-
-    /// Logical or (||)
+    /// Logical or "||".
     BARBAR,
-
-    /// Logical not (!)
+    /// Logical not "!".
     EXCLAMATIONPOINT,
-
-    /// Less than (<)
+    /// Less than "<".
     LESSTHAN,
-
-    /// Greater than (>)
+    /// Greater than ">".
     GREATERTHAN,
-
-    /// Not equals (!=)
+    /// Not equals "!=".
     NOTEQUAL,
-
-    /// Equality check (==)
+    /// Equality check "==".
     EQUALEQUAL, 
-
-    /// Less than or equal to (<=)
+    /// Less than or equal to "<=".
     LESSTHANEQUAL,
-
-    /// Greater than or equal to (>=)
+    /// Greater than or equal to ">=".
     GREATERTHANEQUAL,
 
-    
     /// --- TYPE ANNOTATION SECTION --- ///
-    /// Integer type
+    /// Integer type.
     TINTEGER,
-
-    /// Boolean type
+    /// Boolean type.
     TBOOLEAN,
-
-    /// Double Type
+    /// Double Type.
     TDOUBLE,
-
-    /// Float type
+    /// Float type.
     TFLOAT,
-
-    /// Character type
+    /// Character type.
     TCHAR,
-
-    /// Void type
+    /// Void type.
     TVOID,
-
-    /// Signed Integer type
+    /// Signed Integer type.
     TSIGN, 
-
-    /// Unsigned Integer type
-    TUSIGN,
-
-    /// Signed Int type
+    /// Signed Int type.
     TSIGNINT,
-
-    /// Long type
+    /// Unsigned Integer type.
+    TUSIGN,
+    /// Long type.
     TLONG,
 
     // ----- Bitwise Operators -----
-    /// Bitwise and, address of (&)
+    /// Bitwise and "&".
     AMPERSAND,
-
-    /// Bitwise or (|)
+    /// Bitwise or "|".
     BAR,
-
-    /// Bitwise xor (^)
+    /// Bitwise xor "^".
     CARET,
-
-    /// Bitwise not (~)
+    /// Bitwise not "~".
     TILDE,
-
 
     // ----- Miscellaneous -----
     /// Pointer to member operator `->`.
     POINTER,
-
     /// Constant declaration.
     CONST,
-    
     /// Conditional true `?`.
     CTRUE,
 }
