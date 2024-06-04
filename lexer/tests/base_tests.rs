@@ -1,11 +1,21 @@
 use common::error::ErrorType;
-
 use lexer::{
     lexer_core::Lexer,
     token::Token,
 };
 
-/// cargo test --test edge_tests
+/// cargo test --test base_tests
+/// Tests tokens individually.
+
+#[test]
+fn test_EOF() {
+    let input = "";
+    let result = Lexer::lex(input);
+    let expected = vec![
+        Token::EOF,
+    ];
+    assert_eq!(result, Ok(expected));
+}
 
 #[test]
 fn test_num() {
