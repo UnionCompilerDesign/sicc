@@ -7,10 +7,10 @@
 //!
 //! The `parser` module is organized into submodules that handle different aspects parsing generation:
 //!
-//! - `core`: Drives the generation process.
-//! - `statement`: Handles generation for statements and operations within blocks.
-//! - `block`: Handles generation for code blocks.
-//! - `primitive`: Handles generation for primitive data types and operations.
+//! * `core`: Drives the generation process.
+//! * `statement`: Handles generation for statements and operations within blocks.
+//! * `block`: Handles generation for code blocks.
+//! * `primitive`: Handles generation for primitive data types and operations.
 
 /// Core of the parsing process.
 pub mod core;

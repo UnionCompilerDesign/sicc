@@ -1,7 +1,6 @@
 use common::ast::{
     ast_struct::{ASTNode, AST}, data_type::DataType, syntax_element::SyntaxElement
 };
-use std::env;
 use lexer::token::Token;
 use parser::core::Parser;
 

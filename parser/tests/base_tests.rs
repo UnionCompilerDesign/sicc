@@ -3,7 +3,6 @@
 use common::ast::{
     ast_struct::{ASTNode, AST}, data_type::DataType, syntax_element::SyntaxElement
 };
-use std::env;
 use lexer::token::Token;
 use parser::core::Parser;
 
@@ -18,7 +17,7 @@ fn test_empty_input() {
 
 /// Tests that an input with only an EOF token generates an AST with only a TopLevelExpression node.
 #[test]
-fn test_EOF() { 
+fn test_eof() { 
     let tokens: Vec<Token> = vec![Token::EOF];
     let ast = Parser::parse(tokens).expect("Failed to parse");
     assert_eq!(ast.get_root().get_element(), SyntaxElement::TopLevelExpression);
@@ -130,7 +129,6 @@ fn test_semicolon_syntax_element() {
         Token::SEMICOLON,
     ];
 
-    let tokens: Vec<Token> = vec![Token::EOF];
     let ast = Parser::parse(tokens).expect("Failed to parse");
     assert_eq!(ast.get_root().get_element(), SyntaxElement::TopLevelExpression);
     assert!(ast.get_root().get_children().is_empty());

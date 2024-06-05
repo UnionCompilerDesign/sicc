@@ -17,8 +17,7 @@ impl Parser {
     ///
     /// # Errors
     ///
-    /// - Returns an error if the current token is not a `NUMBER` or if there is a failure in token consumption.
-    ///
+    /// * Returns an error if the current token is not a `NUMBER` or if there is a failure in token consumption.
     pub fn parse_primitive(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
         unimplemented!();
     }
@@ -32,8 +31,7 @@ impl Parser {
     ///
     /// # Errors
     ///
-    /// - Returns an error if the current token is not an `IDENTIFIER` or if there is a failure in token consumption or assignment parsing.
-    ///
+    /// * Returns an error if the current token is not an `IDENTIFIER` or if there is a failure in token consumption or assignment parsing.
     pub fn parse_identifier(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
         unimplemented!();
     }
@@ -47,8 +45,7 @@ impl Parser {
     ///
     /// # Errors
     ///
-    /// - Returns an error if the current token is not an `IDENTIFIER` or if there is a failure in token consumption.
-    ///
+    /// * Returns an error if the current token is not an `IDENTIFIER` or if there is a failure in token consumption.
     pub fn parse_variable_name(&mut self) -> Result<String, Vec<ErrorType>> {
         unimplemented!();
     }
@@ -62,8 +59,7 @@ impl Parser {
     ///
     /// # Errors
     ///
-    /// - Returns an error if the current token is not a recognized keyword or if there is a failure in token consumption or value parsing.
-    ///
+    /// * Returns an error if the current token is not a recognized keyword or if there is a failure in token consumption or value parsing.
     pub fn parse_protected_keyword(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
         unimplemented!();
     }
@@ -77,8 +73,7 @@ impl Parser {
     ///
     /// # Errors
     ///
-    /// - Returns an error if the current token is not a recognized type token or if there is a failure in token consumption.
-    ///
+    /// * Returns an error if the current token is not a recognized type token or if there is a failure in token consumption.
     pub fn parse_type(&mut self) -> Result<DataType, ErrorType> {
         unimplemented!();
     }

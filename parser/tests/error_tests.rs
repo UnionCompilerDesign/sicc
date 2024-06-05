@@ -2,12 +2,7 @@
 
 use common::{ 
     error::ErrorType,
-    ast::{
-        ast_struct::AST, 
-        syntax_element::SyntaxElement,
-    },
 };
-use std::env;
 use lexer::token::Token;
 use parser::core::Parser;
 

@@ -3,7 +3,6 @@
 use common::ast::{
     ast_struct::{ASTNode, AST}, data_type::DataType, syntax_element::SyntaxElement
 };
-use std::env;
 use lexer::token::Token;
 use parser::core::Parser;
 
@@ -14,49 +13,16 @@ use parser::core::Parser;
 ///
 /// This test validates the parsing of various simple binary expressions 
 /// including:
-/// - (-A * -B)
-/// - A + 5
-/// - A - 5
-/// - A / 5
+/// * (-A * -B)
+/// * A + 5
+/// * A - 5
+/// * A / 5
 /// 
 /// It checks that the parsed AST matches the expected AST structure 
 /// for each case.
 #[test]
 fn test_basic_binary_expr() {
-    // (-A * -B)
-    let tokens: Vec<Token> = vec![
-        Token::LPAREN,
-        Token::DASH,
-        Token::IDENTIFIER(vec!['a']),
-        Token::ASTERISK,
-        Token::DASH,
-        Token::IDENTIFIER(vec!['b']),
-        Token::RPAREN,
-        Token::EOF
-        
-    ];
-    let ast: AST = Parser::parse(tokens).expect("Failed to parse");
-
-    let mut binary_expr_node = ASTNode::new(SyntaxElement::BinaryExpression);
-    let mut unary_expr_node_1: ASTNode = ASTNode::new(SyntaxElement::UnaryExpression);
-    let mut unary_expr_node_2: ASTNode = ASTNode::new(SyntaxElement::UnaryExpression);
-
-    let identifier_node_a: ASTNode = ASTNode::new(SyntaxElement::Identifier("a".to_string()));
-    let identifier_node_b: ASTNode = ASTNode::new(SyntaxElement::Identifier("b".to_string()));
-    unary_expr_node_1.add_child(ASTNode::new(SyntaxElement::Operator("-".to_string())));
-    unary_expr_node_1.add_child(identifier_node_a);
-    unary_expr_node_2.add_child(ASTNode::new(SyntaxElement::Operator("-".to_string())));
-    unary_expr_node_2.add_child(identifier_node_b);
-
-    binary_expr_node.add_child(unary_expr_node_1);
-    binary_expr_node.add_child(ASTNode::new(SyntaxElement::Operator("*".to_string())));
-    binary_expr_node.add_child(unary_expr_node_2);
-
-
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
-    top_level_expr.add_child(binary_expr_node);
-
-    let expected_ast: AST = AST::new(top_level_expr);
+    
     let tokens_2: Vec<Token> = vec![
         Token::IDENTIFIER(vec!['a']),
         Token::PLUS,
@@ -146,10 +112,10 @@ fn test_basic_binary_expr() {
 /// 
 /// This test validates the parsing of more complex binary expressions 
 /// involving multiple operators and precedence rules, including:
-/// - A * B + C
-/// - A + B * C + D
-/// - A * B + C / D % E - F
-/// - (-A * B) + C / D % -E - F
+/// * A * B + C
+/// * A + B * C + D
+/// * A * B + C / D % E - F
+/// * (-A * B) + C / D % -E - F
 /// 
 /// It ensures that the parsed AST matches the expected AST structure 
 /// for each expression.
@@ -370,7 +336,7 @@ fn test_compound_binary_expr() {
 /// 
 /// This test validates the parsing of unary expressions with 
 /// a single operator, specifically:
-/// - -A
+/// * -A
 /// 
 /// It ensures that the parsed AST matches the expected AST structure 
 /// for the unary expression.

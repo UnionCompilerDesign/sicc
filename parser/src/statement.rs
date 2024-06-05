@@ -22,8 +22,7 @@ impl Parser {
     ///
     /// # Errors
     ///
-    /// - Returns an error if parsing of the unary expression fails.
-    ///
+    /// * Returns an error if parsing of the unary expression fails.
     pub fn parse_unary_expression(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
         unimplemented!();
     }
@@ -34,7 +33,7 @@ impl Parser {
     ///
     /// # Parameters
     ///
-    /// - `name_chars`: A vector of characters representing the name of the variable to be reassigned.
+    /// * `name_chars`: A vector of characters representing the name of the variable to be reassigned.
     ///
     /// # Returns
     ///
@@ -43,8 +42,7 @@ impl Parser {
     ///
     /// # Errors
     ///
-    /// - Returns an error if parsing of the assignment fails.
-    ///
+    /// * Returns an error if parsing of the assignment fails.
     pub fn parse_assignment(&mut self, name_chars: Vec<char>) -> Result<Option<ASTNode>, Vec<ErrorType>> {
         unimplemented!();
     }
@@ -59,8 +57,7 @@ impl Parser {
     ///
     /// # Errors
     ///
-    /// - Returns an error if parsing of the assignment fails.
-    ///
+    /// * Returns an error if parsing of the assignment fails.
     pub fn parse_binary_expression(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
         unimplemented!();
     }

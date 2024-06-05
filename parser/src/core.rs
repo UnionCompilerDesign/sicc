@@ -16,7 +16,6 @@ use lexer::token::Token;
 /// # Fields
 /// * `input` - A vector of tokens from the output of the lexer representing the source code to be parsed.
 /// * `current` - The current token being considered by the parser.
-///
 pub struct Parser {
     input: Vec<Token>,
     current: usize,
@@ -30,12 +29,11 @@ impl Parser {
     ///
     /// # Parameters
     ///
-    /// - `input`: A vector of `Token` representing the sequence of tokens to be parsed.
+    /// * `input`: A vector of `Token` representing the sequence of tokens to be parsed.
     ///
     /// # Returns
     ///
     /// Returns a new `Parser` instance ready to parse the provided tokens.
-    ///
     fn new(input: Vec<Token>) -> Self {
         Self {
             input,
@@ -48,7 +46,7 @@ impl Parser {
     ///
     /// # Parameters
     ///
-    /// - `input`: A vector of `Token` representing the input to be parsed.
+    /// * `input`: A vector of `Token` representing the input to be parsed.
     ///
     /// # Returns
     ///
@@ -57,7 +55,7 @@ impl Parser {
     ///
     /// # Errors
     ///
-    /// - Returns a vector of errors if there are issues during parsing, such as unexpected tokens.
+    /// * Returns a vector of errors if there are issues during parsing, such as unexpected tokens.
     ///
     /// # Examples
     ///
@@ -81,7 +79,6 @@ impl Parser {
     /// # Returns
     ///
     /// Returns a vector of `Token` representing the input.
-    ///
     pub fn get_input(&mut self) -> Vec<Token> {
         unimplemented!();
     }
@@ -91,7 +88,6 @@ impl Parser {
     /// # Returns
     ///
     /// Returns the current position as a `usize`.
-    ///
     pub fn get_current(&mut self) -> usize {
         unimplemented!();
     }
@@ -100,7 +96,7 @@ impl Parser {
     ///
     /// # Parameters
     ///
-    /// - `expected_token`: The `Token` that is expected to be consumed.
+    /// * `expected_token`: The `Token` that is expected to be consumed.
     ///
     /// # Returns
     ///
@@ -108,8 +104,7 @@ impl Parser {
     ///
     /// # Errors
     ///
-    /// - Returns an error if the expected token does not match the current token or if there is no token to consume.
-    ///
+    /// * Returns an error if the expected token does not match the current token or if there is no token to consume.
     pub fn consume_token(&mut self, expected_token: Token) -> Result<(), ErrorType> {
         unimplemented!();
     }
@@ -129,7 +124,6 @@ impl Parser {
     /// # Returns
     ///
     /// Returns an `Option<Token>` containing the previous token if available, or `None` if there is no previous token.
-    ///
     pub fn peek_previous_token(&mut self) -> Option<Token> {
         unimplemented!();
     }
@@ -144,7 +138,6 @@ impl Parser {
     /// # Returns
     ///
     /// Returns a `Result<Option<ASTNode>, Vec<ErrorType>>` containing a `NoExpression` AST node.
-    ///
     pub fn no_expression(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
         unimplemented!();
     }
@@ -153,7 +146,7 @@ impl Parser {
     ///
     /// # Parameters
     ///
-    /// - `token`: A reference to a `Token` that represents an operator.
+    /// * `token`: A reference to a `Token` that represents an operator.
     ///
     /// # Returns
     ///
@@ -162,7 +155,6 @@ impl Parser {
     /// # Panics
     ///
     /// Panics if the provided token is not a recognized operator token (`PLUS`, `DASH`, `ASTERISK`, `FSLASH`).
-    ///
     pub fn operator_to_char(&self, token: &Token) -> Result<char, ErrorType> {
         unimplemented!();
     }
@@ -175,8 +167,7 @@ impl Parser {
     ///
     /// # Errors
     ///
-    /// - Returns a vector of errors if there are issues during parsing, such as unexpected tokens or parsing failures.
-    ///
+    /// * Returns a vector of errors if there are issues during parsing, such as unexpected tokens or parsing failures.
     pub fn parse_router(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
         unimplemented!();
     }

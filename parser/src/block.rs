@@ -23,7 +23,6 @@ impl Parser {
     /// # Errors
     ///
     /// * Will return an error if a token is missing or if parsing fails at any point.
-    ///
     pub fn parse_block(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
         unimplemented!();
     }
@@ -39,7 +38,6 @@ impl Parser {
     /// # Errors
     ///
     /// * Will return an error if a token is missing or if parsing fails at any point.
-    ///
     pub fn parse_initialization(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
         unimplemented!();
     }
@@ -54,7 +52,6 @@ impl Parser {
     /// # Errors
     ///
     /// * Will return an error if a token is missing or if parsing fails at any point.
-    ///
     pub fn parse_if_statement(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
         unimplemented!();
     }
@@ -69,7 +66,6 @@ impl Parser {
     /// # Errors
     ///
     /// * Will return an error if a token is missing or if parsing fails at any point.
-    ///
     pub fn parse_for_loop(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
         unimplemented!();
     }
@@ -85,7 +81,6 @@ impl Parser {
     /// # Errors
     ///
     /// * Will return an error if a token is missing or if parsing fails at any point.
-    ///
     pub fn parse_while_loop(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
         unimplemented!();
     }
@@ -100,7 +95,6 @@ impl Parser {
     /// # Errors
     ///
     /// * Will return an error if a token is missing or if parsing fails at any point.
-    ///
     pub fn parse_do_while_loop(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
         unimplemented!();
     }
@@ -115,7 +109,6 @@ impl Parser {
     /// # Errors
     ///
     /// * Will return an error if a token is missing or if parsing fails at any point.
-    ///
     pub fn parse_switch_statement(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
         unimplemented!();
     }
@@ -126,8 +119,8 @@ impl Parser {
     ///
     /// # Parameters
     ///
-    /// - `identifier_node`: An `ASTNode` representing the function's identifier.
-    /// - `return_type_node`: An `ASTNode` representing the function's return type.
+    /// * `identifier_node`: An `ASTNode` representing the function's identifier.
+    /// * `return_type_node`: An `ASTNode` representing the function's return type.
     ///
     /// # Returns
     ///
@@ -135,8 +128,7 @@ impl Parser {
     ///
     /// # Errors
     ///
-    /// - Returns an error if there is a failure in token consumption or block parsing.
-    ///
+    /// * Returns an error if there is a failure in token consumption or block parsing.
     pub fn parse_function_declaration(&mut self, identifier_node: ASTNode, return_type_node: ASTNode) -> Result<Option<ASTNode>, Vec<ErrorType>> {
         unimplemented!();
     }
@@ -151,8 +143,7 @@ impl Parser {
     ///
     /// # Errors
     ///
-    /// - Returns an error if there is a failure in token consumption or if the expected tokens are not found.
-    ///
+    /// * Returns an error if there is a failure in token consumption or if the expected tokens are not found.
     pub fn parse_enum_declaration(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
         unimplemented!();
     }
@@ -167,8 +158,7 @@ impl Parser {
     ///
     /// # Errors
     ///
-    /// - Returns an error if there is a failure in token consumption or if the expected tokens are not found.
-    ///
+    /// * Returns an error if there is a failure in token consumption or if the expected tokens are not found.
     pub fn parse_struct_declaration(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
         unimplemented!();
     }
