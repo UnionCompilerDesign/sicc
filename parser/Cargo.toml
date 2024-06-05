@@ -9,6 +9,6 @@ path = "src/lib.rs"
 
 [dependencies]
 lexer = { path = "../lexer" }
-
+common = { path = "../common" }
 lazy_static = "1.4"
 once_cell = "1.7"

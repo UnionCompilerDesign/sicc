@@ -1,7 +1,5 @@
 //! Contains functions for parsing expressions, such as unary expressions and variable assignments.
 
-use core::panic;
-
 use common::{ 
     error::ErrorType,
     ast::{
@@ -9,10 +7,8 @@ use common::{
         syntax_element::SyntaxElement,
     },
 };
-
 use lexer::token::Token;
-
-use crate::parser_core::Parser;
+use crate::core::Parser;
 
 impl Parser {
     /// Parses a unary expression. 
@@ -28,15 +24,8 @@ impl Parser {
     ///
     /// - Returns an error if parsing of the unary expression fails.
     ///
-    /// # Examples
-    ///
-    /// ```
-    /// use crate::parser_core::Parser;
-    /// let mut parser = Parser::new(tokens);
-    /// let result = parser.parse_unary_expression();
-    /// ```
     pub fn parse_unary_expression(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
-        todo!();
+        unimplemented!();
     }
     
     /// Parses a variable reassignment. Handles assignment to literals, expressions, and other identifiers.
@@ -56,14 +45,23 @@ impl Parser {
     ///
     /// - Returns an error if parsing of the assignment fails.
     ///
-    /// # Examples
-    ///
-    /// ```
-    /// let mut parser = Parser::new(token);
-    /// let result = parser.parse_assignment(name_chars);
-    /// ```
     pub fn parse_assignment(&mut self, name_chars: Vec<char>) -> Result<Option<ASTNode>, Vec<ErrorType>> {
-        todo!();
-    } 
-}
+        unimplemented!();
+    }
 
+    /// Entry point for the parsing of a binary expression.
+    ///
+    /// # Returns
+    /// 
+    /// * `Ok(Some(ASTNode))` - if the binary expression was successfully parsed.
+    /// * `Ok(None)` - if there was no binary expression to parse.
+    /// * `Err(Vec<ErrorType>)` - if there were errors encountered during parsing.
+    ///
+    /// # Errors
+    ///
+    /// - Returns an error if parsing of the assignment fails.
+    ///
+    pub fn parse_binary_expression(&mut self) -> Result<Option<ASTNode>, Vec<ErrorType>> {
+        unimplemented!();
+    }
+}

@@ -4,18 +4,23 @@ use common::ast::{
     ast_struct::{ASTNode, AST}, data_type::DataType, syntax_element::SyntaxElement
 };
 use std::env;
-
 use lexer::token::Token;
-use parser::parser_core::Parser;
+use parser::core::Parser;
 
-/// cargo test --test base_tests
-/// panic!("{:?}", self.get_input().get(self.get_current()));
+/// ---- Expression Section ---- 
 
-/// println!("{:#?}", ast);
-/// println!("{:#?}", expected_ast);
 
-/// --- EXPRESSION SECTION --- ///
-
+/// Test that the parser correctly handles basic binary expressions.
+///
+/// This test validates the parsing of various simple binary expressions 
+/// including:
+/// - (-A * -B)
+/// - A + 5
+/// - A - 5
+/// - A / 5
+/// 
+/// It checks that the parsed AST matches the expected AST structure 
+/// for each case.
 #[test]
 fn test_basic_binary_expr() {
     // (-A * -B)
@@ -52,9 +57,6 @@ fn test_basic_binary_expr() {
     top_level_expr.add_child(binary_expr_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
-    println!("{}", ast);
-    assert_eq!(ast, expected_ast);
-
     let tokens_2: Vec<Token> = vec![
         Token::IDENTIFIER(vec!['a']),
         Token::PLUS,
@@ -62,6 +64,7 @@ fn test_basic_binary_expr() {
         Token::EOF
         
     ];
+
     // A + B
     let ast_2: AST = Parser::parse(tokens_2).expect("Failed to parse");
 
@@ -88,6 +91,7 @@ fn test_basic_binary_expr() {
         Token::EOF
         
     ];
+
     // A - B
     let ast_3: AST = Parser::parse(tokens_3).expect("Failed to parse");
 
@@ -115,6 +119,7 @@ fn test_basic_binary_expr() {
         Token::EOF
         
     ];
+
     // A / B
     let ast_4: AST = Parser::parse(tokens_4).expect("Failed to parse");
 
@@ -137,6 +142,17 @@ fn test_basic_binary_expr() {
     assert_eq!(ast_4, expected_ast_4);
 }
 
+/// Test that the parser correctly handles compound binary expressions.
+/// 
+/// This test validates the parsing of more complex binary expressions 
+/// involving multiple operators and precedence rules, including:
+/// - A * B + C
+/// - A + B * C + D
+/// - A * B + C / D % E - F
+/// - (-A * B) + C / D % -E - F
+/// 
+/// It ensures that the parsed AST matches the expected AST structure 
+/// for each expression.
 #[test]
 fn test_compound_binary_expr() {
     // A * B + C
@@ -214,7 +230,6 @@ fn test_compound_binary_expr() {
     let expected_ast: AST = AST::new(top_level_expr);
 
     assert_eq!(ast, expected_ast);
-
 
     // A * B + C / D % E - F
     let tokens: Vec<Token> = vec![
@@ -349,9 +364,16 @@ fn test_compound_binary_expr() {
     let expected_ast: AST = AST::new(top_level_expr);
 
     assert_eq!(ast, expected_ast);
-
 }
 
+/// Test that the parser correctly handles unary expressions.
+/// 
+/// This test validates the parsing of unary expressions with 
+/// a single operator, specifically:
+/// - -A
+/// 
+/// It ensures that the parsed AST matches the expected AST structure 
+/// for the unary expression.
 #[test]
 fn test_unary_expression() {
     let tokens: Vec<Token> = vec![
@@ -360,14 +382,12 @@ fn test_unary_expression() {
         Token::EOF
     ];
 
-    // Parse the tokens into an AST
     let result = Parser::parse(tokens);
     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
-    // ast
-    let ast = result.expect("Failed to parse");
 
-    // expected_ast
+    let ast = result.expect("Failed to parse");
     let mut unary_expr_node = ASTNode::new(SyntaxElement::UnaryExpression);
+    
     unary_expr_node.add_child(ASTNode::new(SyntaxElement::Operator("-".to_string())));
     unary_expr_node.add_child(ASTNode::new(SyntaxElement::Identifier("A".to_string())));
     let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
@@ -377,6 +397,10 @@ fn test_unary_expression() {
     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
 }
 
+/// Tests the parsing of a binary expression that includes a unary negation.
+/// This test checks if the parser correctly handles the expression `-5 - 3`,
+/// ensuring that the unary negation and the binary subtraction are properly
+/// represented in the AST.
 #[test]
 fn test_binary_expr_with_unary_negation() {
     let tokens: Vec<Token> = vec![
@@ -387,12 +411,10 @@ fn test_binary_expr_with_unary_negation() {
         Token::EOF,
     ];
 
-    // Parse the tokens into an AST
     let result = Parser::parse(tokens);
     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
     let ast = result.expect("Failed to parse");
 
-    // Construct the expected AST for the expression `-5 - 3`
     let mut unary_expr_node = ASTNode::new(SyntaxElement::UnaryExpression);
     unary_expr_node.add_child(ASTNode::new(SyntaxElement::Operator("-".to_string())));
     unary_expr_node.add_child(ASTNode::new(SyntaxElement::Literal("5".to_string())));
@@ -412,51 +434,12 @@ fn test_binary_expr_with_unary_negation() {
     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
 }
 
-/// This tests the increment operator (++) [TODO]
-// #[test]
-// fn test_increment_operator() {
-//     let tokens: Vec<Token> = vec![
-//         Token::IDENTIFIER(vec!['x']),
-//         Token::PLUSPLUS,
-//         Token::SEMICOLON,
-//     ];
+/// ---- Assignment Section ----
 
-//     // Parse the tokens into an AST
-//     let result = Parser::parse(tokens);
-//     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
-//     let ast = result.expect("Failed to parse");
-
-//     let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
-
-//     let expected_ast: AST = AST::new(top_level_expr);
-
-//     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
-// }
-
-/// This tests the decrement operator (--) [TODO]
-// #[test]
-// fn test_increment_operator() {
-//     let tokens: Vec<Token> = vec![
-//         Token::IDENTIFIER(vec!['x']),
-//         Token::MINUSMINUS,
-//         Token::SEMICOLON,
-//     ];
-
-//     // Parse the tokens into an AST
-//     let result = Parser::parse(tokens);
-//     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
-//     let ast = result.expect("Failed to parse");
-
-//     let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
-
-//     let expected_ast: AST = AST::new(top_level_expr);
-
-//     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
-// }
-
-/// --- ASSIGNMENT SECTION --- ///
-
-/// This tests an variable assignment to a number.
+/// Tests the parsing of a simple assignment expression to a number.
+/// This test checks if the parser correctly handles the assignment `x = 3;`,
+/// ensuring that the assignment and the literal number are properly represented
+/// in the AST.
 #[test]
 fn test_assignment_to_number() {
     let tokens: Vec<Token> = vec![
@@ -466,12 +449,10 @@ fn test_assignment_to_number() {
         Token::SEMICOLON,
     ];
 
-    // Parse the tokens into an AST
     let result = Parser::parse(tokens);
     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
     let ast = result.expect("Failed to parse");
 
-    // Construct the expected AST for the expression `x = 3;`
     let mut assignment_node = ASTNode::new(SyntaxElement::Assignment);
     assignment_node.add_child(ASTNode::new(SyntaxElement::Identifier("x".to_string())));
     assignment_node.add_child(ASTNode::new(SyntaxElement::Literal("3".to_string())));
@@ -481,13 +462,13 @@ fn test_assignment_to_number() {
 
     let expected_ast: AST = AST::new(top_level_expr);
 
-    println!("{:#?}", ast);
-    println!("{:#?}", expected_ast);
-
     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
 }
 
-/// This tests an variable assignment to a binary addition expression.
+/// Tests the parsing of an assignment to a binary addition expression.
+/// This test checks if the parser correctly handles the assignment `x = 3 + 4;`,
+/// ensuring that the assignment and the binary addition are properly represented
+/// in the AST.
 #[test]
 fn test_assignment_to_addition_expression() {
     let tokens: Vec<Token> = vec![
@@ -499,12 +480,10 @@ fn test_assignment_to_addition_expression() {
         Token::SEMICOLON,
     ];
 
-    // Parse the tokens into an AST
     let result = Parser::parse(tokens);
     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
     let ast = result.expect("Failed to parse");
 
-    // Construct the expected AST for the expression `x = 3 + 4;`
     let mut assignment_node = ASTNode::new(SyntaxElement::Assignment);
     assignment_node.add_child(ASTNode::new(SyntaxElement::Identifier("x".to_string())));
 
@@ -520,13 +499,13 @@ fn test_assignment_to_addition_expression() {
 
     let expected_ast: AST = AST::new(top_level_expr);
 
-    println!("{:#?}", ast);
-    println!("{:#?}", expected_ast);
-
     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
 }
 
-/// This tests an variable assignment to a binary multiplication expression.
+/// Tests the parsing of an assignment to a binary multiplication expression.
+/// This test checks if the parser correctly handles the assignment `y = 5 * 6;`,
+/// ensuring that the assignment and the binary multiplication are properly
+/// represented in the AST.
 #[test]
 fn test_assignment_to_multiplication_expression() {
     let tokens: Vec<Token> = vec![
@@ -538,12 +517,10 @@ fn test_assignment_to_multiplication_expression() {
         Token::SEMICOLON,
     ];
 
-    // Parse the tokens into an AST
     let result = Parser::parse(tokens);
     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
     let ast = result.expect("Failed to parse");
 
-    // Construct the expected AST for the expression `y = 5 * 6;`
     let mut assignment_node = ASTNode::new(SyntaxElement::Assignment);
     assignment_node.add_child(ASTNode::new(SyntaxElement::Identifier("y".to_string())));
 
@@ -559,13 +536,13 @@ fn test_assignment_to_multiplication_expression() {
 
     let expected_ast: AST = AST::new(top_level_expr);
 
-    println!("{:#?}", ast);
-    println!("{:#?}", expected_ast);
-
     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
 }
 
-/// This tests an variable assignment to a binary division expression.
+/// Tests the parsing of an assignment to a binary division expression.
+/// This test checks if the parser correctly handles the assignment `z = 8 / 2;`,
+/// ensuring that the assignment and the binary division are properly represented
+/// in the AST.
 #[test]
 fn test_assignment_to_division_expression() {
     let tokens: Vec<Token> = vec![
@@ -577,12 +554,10 @@ fn test_assignment_to_division_expression() {
         Token::SEMICOLON,
     ];
 
-    // Parse the tokens into an AST
     let result = Parser::parse(tokens);
     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
     let ast = result.expect("Failed to parse");
 
-    // Construct the expected AST for the expression `z = 8 / 2;`
     let mut assignment_node = ASTNode::new(SyntaxElement::Assignment);
     assignment_node.add_child(ASTNode::new(SyntaxElement::Identifier("z".to_string())));
 
@@ -598,13 +573,13 @@ fn test_assignment_to_division_expression() {
 
     let expected_ast: AST = AST::new(top_level_expr);
 
-    println!("{:#?}", ast);
-    println!("{:#?}", expected_ast);
-
     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
 }
 
-/// This tests an variable assignment to a binary subtraction expression.
+/// Tests the parsing of an assignment to a binary subtraction expression.
+/// This test checks if the parser correctly handles the assignment `w = 10 - 4;`,
+/// ensuring that the assignment and the binary subtraction are properly
+/// represented in the AST.
 #[test]
 fn test_assignment_to_subtraction_expression() {
     let tokens: Vec<Token> = vec![
@@ -616,12 +591,10 @@ fn test_assignment_to_subtraction_expression() {
         Token::SEMICOLON,
     ];
 
-    // Parse the tokens into an AST
     let result = Parser::parse(tokens);
     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
     let ast = result.expect("Failed to parse");
 
-    // Construct the expected AST for the expression `w = 10 - 4;`
     let mut assignment_node = ASTNode::new(SyntaxElement::Assignment);
     assignment_node.add_child(ASTNode::new(SyntaxElement::Identifier("w".to_string())));
 
@@ -637,13 +610,14 @@ fn test_assignment_to_subtraction_expression() {
 
     let expected_ast: AST = AST::new(top_level_expr);
 
-    println!("{:#?}", ast);
-    println!("{:#?}", expected_ast);
-
     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
 }
 
-/// This tests an variable assignment to a binary addition expression with parentheses.
+/// Tests the parsing of an assignment to a parenthesized binary addition expression
+/// followed by a multiplication.
+/// This test checks if the parser correctly handles the assignment `a = (3 + 4) * 2;`,
+/// ensuring that the parentheses and the operations inside them are properly
+/// represented in the AST.
 #[test]
 fn test_assignment_to_parenthesized_addition_expression() {
     let tokens: Vec<Token> = vec![
@@ -659,12 +633,10 @@ fn test_assignment_to_parenthesized_addition_expression() {
         Token::SEMICOLON,
     ];
 
-    // Parse the tokens into an AST
     let result = Parser::parse(tokens);
     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
     let ast = result.expect("Failed to parse");
 
-    // Construct the expected AST for the expression `a = (3 + 4) * 2;`
     let mut assignment_node = ASTNode::new(SyntaxElement::Assignment);
     assignment_node.add_child(ASTNode::new(SyntaxElement::Identifier("a".to_string())));
 
@@ -686,13 +658,14 @@ fn test_assignment_to_parenthesized_addition_expression() {
 
     let expected_ast: AST = AST::new(top_level_expr);
 
-    println!("{:#?}", ast);
-    println!("{:#?}", expected_ast);
-
     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
 }
 
-/// This tests an variable assignment to a complex binary expression with multiple parentheses.
+/// Tests the parsing of an assignment to a complex binary expression with multiple
+/// levels of parentheses.
+/// This test checks if the parser correctly handles the assignment `b = (1 + 2) * (3 - 4);`,
+/// ensuring that the nested parentheses and the operations inside them are properly
+/// represented in the AST.
 #[test]
 fn test_assignment_to_complex_expression() {
     let tokens: Vec<Token> = vec![
@@ -712,12 +685,10 @@ fn test_assignment_to_complex_expression() {
         Token::SEMICOLON,
     ];
 
-    // Parse the tokens into an AST
     let result = Parser::parse(tokens);
     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
     let ast = result.expect("Failed to parse");
 
-    // Construct the expected AST for the expression `b = (1 + 2) * (3 - 4);`
     let mut assignment_node = ASTNode::new(SyntaxElement::Assignment);
     assignment_node.add_child(ASTNode::new(SyntaxElement::Identifier("b".to_string())));
 
@@ -744,13 +715,14 @@ fn test_assignment_to_complex_expression() {
 
     let expected_ast: AST = AST::new(top_level_expr);
 
-    println!("{:#?}", ast);
-    println!("{:#?}", expected_ast);
-
     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
 }
 
-/// This tests an variable assignment to a binary division expression with nested parentheses.
+/// Tests the parsing of an assignment to a binary division expression with nested
+/// parentheses.
+/// This test checks if the parser correctly handles the assignment `c = ((7 + 8) * 2) / 3;`,
+/// ensuring that the deeply nested parentheses and the operations inside them are
+/// properly represented in the AST.
 #[test]
 fn test_assignment_to_nested_parentheses_expression() {
     let tokens: Vec<Token> = vec![
@@ -770,12 +742,10 @@ fn test_assignment_to_nested_parentheses_expression() {
         Token::SEMICOLON,
     ];
 
-    // Parse the tokens into an AST
     let result = Parser::parse(tokens);
     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
     let ast = result.expect("Failed to parse");
 
-    // Construct the expected AST for the expression `c = ((7 + 8) * 2) / 3;`
     let mut assignment_node = ASTNode::new(SyntaxElement::Assignment);
     assignment_node.add_child(ASTNode::new(SyntaxElement::Identifier("c".to_string())));
 
@@ -802,14 +772,13 @@ fn test_assignment_to_nested_parentheses_expression() {
 
     let expected_ast: AST = AST::new(top_level_expr);
 
-    println!("{:#?}", ast);
-    println!("{:#?}", expected_ast);
-
     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
 }
 
-/// --- INITIALIZATION SECTION --- ///
+/// ---- Initialization Section ---- 
 
+/// This test ensures that the parser correctly handles the initialization of a boolean variable without an assigned value.
+/// The input is `boolean x;`, and the expected AST reflects this declaration with the appropriate type and identifier.
 #[test]
 fn test_initialization_parsing_no_value() {
     let tokens = vec![
@@ -839,6 +808,8 @@ fn test_initialization_parsing_no_value() {
     assert_eq!(ast, expected_ast);
 }
 
+/// This test ensures that the parser correctly handles the initialization of an integer variable with an assigned value.
+/// The input is `int x = 1;`, and the expected AST reflects this initialization with the appropriate type, identifier, and assigned value.
 #[test]
 fn test_initialization_parsing_int() {
     let tokens = vec![
@@ -875,6 +846,8 @@ fn test_initialization_parsing_int() {
     assert_eq!(ast, expected_ast);
 }
 
+/// This test ensures that the parser correctly handles the initialization of a long variable with an assigned value.
+/// The input is `long x = 1;`, and the expected AST reflects this initialization with the appropriate type, identifier, and assigned value.
 #[test]
 fn test_initialization_parsing_long() {
     let tokens = vec![
@@ -911,9 +884,10 @@ fn test_initialization_parsing_long() {
     assert_eq!(ast, expected_ast);
 }
 
-/// --- STRUCT SECTION --- ///
+/// ---- Struct Section ----
 
-/// This tests a struct declaration without fields.
+/// This test ensures that the parser correctly handles the declaration of a struct without any fields.
+/// The input is `struct MyStruct {};`, and the expected AST reflects this struct declaration with the appropriate identifier.
 #[test]
 fn test_struct_declaration_empty() {
     let tokens: Vec<Token> = vec![
@@ -924,12 +898,10 @@ fn test_struct_declaration_empty() {
         Token::SEMICOLON,
     ];
 
-    // Parse the tokens into an AST
     let result = Parser::parse(tokens);
     assert!(result.is_ok(), "Parser should successfully parse the struct declaration without errors.");
     let ast = result.expect("Failed to parse");
 
-    // Construct the expected AST for the struct declaration `struct MyStruct {};`
     let mut struct_node = ASTNode::new(SyntaxElement::StructDeclaration);
     struct_node.add_child(ASTNode::new(SyntaxElement::Identifier("MyStruct".to_string())));
 
@@ -938,15 +910,13 @@ fn test_struct_declaration_empty() {
 
     let expected_ast: AST = AST::new(top_level_expr);
 
-    println!("{:#?}", ast);
-    println!("{:#?}", expected_ast);
-
     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
 }
 
-/// This tests a struct declaration with fields.
+/// This test ensures that the parser correctly handles the declaration of a struct with fields of type integer.
+/// The input is `struct MyStruct { a: int, b: bool };`, and the expected AST reflects this struct declaration with the appropriate identifier and fields.
 #[test]
-fn test_struct_declaration_with_fields() {
+fn test_struct_declaration_with_int_fields() {
     let tokens: Vec<Token> = vec![
         Token::STRUCT,
         Token::IDENTIFIER(vec!['M', 'y', 'S', 't', 'r', 'u', 'c', 't']),
@@ -957,17 +927,15 @@ fn test_struct_declaration_with_fields() {
         Token::COMMA,
         Token::IDENTIFIER(vec!['b']),
         Token::COLON,
-        Token::TBOOLEAN,
+        Token::TINTEGER,
         Token::RBRACE,
         Token::SEMICOLON,
     ];
 
-    // Parse the tokens into an AST
     let result = Parser::parse(tokens);
     assert!(result.is_ok(), "Parser should successfully parse the struct declaration without errors.");
     let ast = result.expect("Failed to parse");
 
-    // Construct the expected AST for the struct declaration `struct MyStruct { a: int, b: bool };`
     let mut struct_node = ASTNode::new(SyntaxElement::StructDeclaration);
     struct_node.add_child(ASTNode::new(SyntaxElement::Identifier("MyStruct".to_string())));
 
@@ -977,7 +945,7 @@ fn test_struct_declaration_with_fields() {
     
     let mut field_b = ASTNode::new(SyntaxElement::Field);
     field_b.add_child(ASTNode::new(SyntaxElement::Literal("b".to_string())));
-    field_b.add_child(ASTNode::new(SyntaxElement::Type(DataType::Boolean)));
+    field_b.add_child(ASTNode::new(SyntaxElement::Type(DataType::Integer)));
 
     struct_node.add_child(field_a);
     struct_node.add_child(field_b);
@@ -987,98 +955,59 @@ fn test_struct_declaration_with_fields() {
 
     let expected_ast: AST = AST::new(top_level_expr);
 
-    println!("{:#?}", ast);
-    println!("{:#?}", expected_ast);
+    assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
+}
+
+/// This test ensures that the parser correctly handles the declaration of a struct with fields of type char.
+/// The input is `struct MyStruct { a: int, b: bool };`, and the expected AST reflects this struct declaration with the appropriate identifier and fields.
+#[test]
+fn test_struct_declaration_with_char_fields() {
+    let tokens: Vec<Token> = vec![
+        Token::STRUCT,
+        Token::IDENTIFIER(vec!['M', 'y', 'S', 't', 'r', 'u', 'c', 't']),
+        Token::LBRACE,
+        Token::IDENTIFIER(vec!['a']),
+        Token::COLON,
+        Token::TCHAR,
+        Token::COMMA,
+        Token::IDENTIFIER(vec!['b']),
+        Token::COLON,
+        Token::TCHAR,
+        Token::RBRACE,
+        Token::SEMICOLON,
+    ];
+
+    let result = Parser::parse(tokens);
+    assert!(result.is_ok(), "Parser should successfully parse the struct declaration without errors.");
+    let ast = result.expect("Failed to parse");
+
+    let mut struct_node = ASTNode::new(SyntaxElement::StructDeclaration);
+    struct_node.add_child(ASTNode::new(SyntaxElement::Identifier("MyStruct".to_string())));
+
+    let mut field_a = ASTNode::new(SyntaxElement::Field);
+    field_a.add_child(ASTNode::new(SyntaxElement::Literal("a".to_string())));
+    field_a.add_child(ASTNode::new(SyntaxElement::Type(DataType::Char)));
+    
+    let mut field_b = ASTNode::new(SyntaxElement::Field);
+    field_b.add_child(ASTNode::new(SyntaxElement::Literal("b".to_string())));
+    field_b.add_child(ASTNode::new(SyntaxElement::Type(DataType::Char)));
+
+    struct_node.add_child(field_a);
+    struct_node.add_child(field_b);
+
+    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    top_level_expr.add_child(struct_node);
+
+    let expected_ast: AST = AST::new(top_level_expr);
 
     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
 }
 
-/// This tests an assignment to a struct field.
-// #[test]
-// fn test_assignment_to_struct_field() {
-//     let tokens: Vec<Token> = vec![
-//         Token::IDENTIFIER(vec!['m', 'y', 'S', 't', 'r', 'u', 'c', 't']),
-//         Token::DOT,
-//         Token::IDENTIFIER(vec!['a']),
-//         Token::EQUAL,
-//         Token::NUMBER(vec!['1', '0']),
-//         Token::SEMICOLON,
-//     ];
+/// ---- Enum Section ----
 
-//     // Parse the tokens into an AST
-//     let result = Parser::parse(tokens);
-//     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
-//     let ast = result.expect("Failed to parse");
-
-//     // Construct the expected AST for the expression `myStruct.a = 10;`
-//     let mut assignment_node = ASTNode::new(SyntaxElement::Assignment);
-    
-//     let mut field_access_node = ASTNode::new(SyntaxElement::Field);
-//     field_access_node.add_child(ASTNode::new(SyntaxElement::Identifier("myStruct".to_string())));
-//     field_access_node.add_child(ASTNode::new(SyntaxElement::Identifier("a".to_string())));
-    
-//     assignment_node.add_child(field_access_node);
-//     assignment_node.add_child(ASTNode::new(SyntaxElement::Literal("10".to_string())));
-
-//     let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
-//     top_level_expr.add_child(assignment_node);
-
-//     let expected_ast: AST = AST::new(top_level_expr);
-
-//     println!("{:#?}", ast);
-//     println!("{:#?}", expected_ast);
-
-//     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
-// }
-
-/// This tests an assignment to a struct field with a binary expression.
-// #[test]
-// fn test_assignment_to_struct_field_with_binary_expression() {
-//     let tokens: Vec<Token> = vec![
-//         Token::IDENTIFIER(vec!['m', 'y', 'S', 't', 'r', 'u', 'c', 't']),
-//         Token::DOT,
-//         Token::IDENTIFIER(vec!['b']),
-//         Token::EQUAL,
-//         Token::NUMBER(vec!['5']),
-//         Token::PLUS,
-//         Token::NUMBER(vec!['3']),
-//         Token::SEMICOLON,
-//     ];
-
-//     // Parse the tokens into an AST
-//     let result = Parser::parse(tokens);
-//     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
-//     let ast = result.expect("Failed to parse");
-
-//     // Construct the expected AST for the expression `myStruct.b = 5 + 3;`
-//     let mut assignment_node = ASTNode::new(SyntaxElement::Assignment);
-    
-//     let mut field_access_node = ASTNode::new(SyntaxElement::Field);
-//     field_access_node.add_child(ASTNode::new(SyntaxElement::Identifier("myStruct".to_string())));
-//     field_access_node.add_child(ASTNode::new(SyntaxElement::Identifier("b".to_string())));
-    
-//     let mut binary_expression_node = ASTNode::new(SyntaxElement::BinaryExpression);
-//     binary_expression_node.add_child(ASTNode::new(SyntaxElement::Literal("5".to_string())));
-//     binary_expression_node.add_child(ASTNode::new(SyntaxElement::Operator("+".to_string())));
-//     binary_expression_node.add_child(ASTNode::new(SyntaxElement::Literal("3".to_string())));
-
-//     assignment_node.add_child(field_access_node);
-//     assignment_node.add_child(binary_expression_node);
-
-//     let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
-//     top_level_expr.add_child(assignment_node);
-
-//     let expected_ast: AST = AST::new(top_level_expr);
-
-//     println!("{:#?}", ast);
-//     println!("{:#?}", expected_ast);
-
-//     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
-// }
-
-/// --- ENUM SECTION --- ///
-
-/// This tests an enum declaration without variants.
+/// This test checks the parser's ability to correctly parse an empty enum declaration.
+/// The input tokens represent `enum MyEnum {};` and the expected AST should reflect
+/// this structure without any variants.
 #[test]
 fn test_enum_declaration_empty() {
     let tokens: Vec<Token> = vec![
@@ -1089,12 +1018,10 @@ fn test_enum_declaration_empty() {
         Token::SEMICOLON,
     ];
 
-    // Parse the tokens into an AST
     let result = Parser::parse(tokens);
     assert!(result.is_ok(), "Parser should successfully parse the enum declaration without errors.");
     let ast = result.expect("Failed to parse");
 
-    // Construct the expected AST for the enum declaration `enum MyEnum {};`
     let mut enum_node = ASTNode::new(SyntaxElement::EnumDeclaration);
     enum_node.add_child(ASTNode::new(SyntaxElement::Identifier("MyEnum".to_string())));
 
@@ -1103,13 +1030,12 @@ fn test_enum_declaration_empty() {
 
     let expected_ast: AST = AST::new(top_level_expr);
 
-    println!("{:#?}", ast);
-    println!("{:#?}", expected_ast);
-
     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
 }
 
-/// This tests an enum declaration with variants.
+/// This test checks the parser's ability to correctly parse an enum declaration with variants.
+/// The input tokens represent `enum Color { Red, Green, Blue };` and the expected AST should
+/// reflect this structure with the specified variants.
 #[test]
 fn test_enum_declaration_with_variants() {
     let tokens: Vec<Token> = vec![
@@ -1125,12 +1051,10 @@ fn test_enum_declaration_with_variants() {
         Token::SEMICOLON,
     ];
 
-    // Parse the tokens into an AST
     let result = Parser::parse(tokens);
     assert!(result.is_ok(), "Parser should successfully parse the enum declaration without errors.");
     let ast = result.expect("Failed to parse");
 
-    // Construct the expected AST for the enum declaration `enum Color { Red, Green, Blue };`
     let mut enum_node = ASTNode::new(SyntaxElement::EnumDeclaration);
     enum_node.add_child(ASTNode::new(SyntaxElement::Identifier("Color".to_string())));
 
@@ -1152,14 +1076,13 @@ fn test_enum_declaration_with_variants() {
 
     let expected_ast: AST = AST::new(top_level_expr);
 
-    println!("{:#?}", ast);
-    println!("{:#?}", expected_ast);
-
     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
 }
 
-/// --- FUNCTION SECTION --- ///
+/// ---- Function Section ----
 
+/// This test checks the parser's ability to correctly parse a simple function declaration without parameters.
+/// The input tokens represent `void my_func() {}` and the expected AST should reflect this structure with an empty block.
 #[test]
 fn test_single_function_declaration() {
     let tokens: Vec<Token> = vec![
@@ -1194,6 +1117,9 @@ fn test_single_function_declaration() {
     assert_eq!(ast, expected_ast);
 }
 
+/// This test checks the parser's ability to correctly parse a function declaration with parameters and a return type.
+/// The input tokens represent `boolean calculate(int x, int y) {}` and the expected AST should reflect this structure,
+/// including the function name, parameters, and return type.
 #[test]
 fn test_function_with_parameters_and_return_type() {
     let tokens: Vec<Token> = vec![
@@ -1242,6 +1168,9 @@ fn test_function_with_parameters_and_return_type() {
     assert_eq!(ast, expected_ast);
 }
 
+/// This test checks the parser's ability to correctly parse a function with a body containing variable initialization.
+/// The input tokens represent `void test() { int x = 1; }` and the expected AST should reflect this structure with the
+/// initialization of variable `x` inside the function body.
 #[test]
 fn test_function_with_body() {
     let tokens: Vec<Token> = vec![
@@ -1299,6 +1228,9 @@ fn test_function_with_body() {
     assert_eq!(ast, expected_ast);
 }
 
+/// This test checks the parser's ability to correctly parse a function containing an if-else statement.
+/// The input tokens represent a function `boolean foo(int a, int b) { if (x) { return x; } else { return x; } }`
+/// and the expected AST should reflect this structure with the if-else control flow.
 #[test]
 fn test_function_with_if_else_statement() {
     let tokens: Vec<Token> = vec![
@@ -1390,11 +1322,14 @@ fn test_function_with_if_else_statement() {
     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
 }
 
-/// --- CONTROL FLOW SECTION --- ///
+/// ---- Control Flow Section ----
 
+
+/// This test checks the parser's ability to correctly parse a for-loop statement.
+/// The input tokens represent `for (x = 0; x < 1; x = x + 1) { break; }` and the expected AST should
+/// reflect this structure including the initialization, condition, increment, and body of the loop.
 #[test]
 fn test_for_loop_parsing() {
-    env::set_var("RUST_BACKTRACE", "1");
 
     let tokens: Vec<Token> = vec![
         Token::FOR,
@@ -1466,6 +1401,9 @@ fn test_for_loop_parsing() {
     assert_eq!(ast, expected_ast);
 }
 
+/// This test checks the parser's ability to correctly parse a while-loop statement.
+/// The input tokens represent `while (x) { break; }` and the expected AST should reflect this structure,
+/// including the loop condition and body.
 #[test]
 fn test_while_loop_parsing() {
     let tokens: Vec<Token> = vec![
@@ -1503,6 +1441,9 @@ fn test_while_loop_parsing() {
     assert_eq!(actual_ast, expected_ast);
 }
 
+/// This test checks the parser's ability to correctly parse a do-while loop statement.
+/// The input tokens represent `do { break; } while (x);` and the expected AST should reflect this structure,
+/// including the loop body and condition.
 #[test]
 fn test_do_while_loop_parsing() {
     let tokens: Vec<Token> = vec![
@@ -1541,6 +1482,9 @@ fn test_do_while_loop_parsing() {
     assert_eq!(ast, expected_ast)
 }
 
+/// This test checks the parser's ability to correctly parse an if statement.
+/// The input tokens represent `if (x) { return x; }` and the expected AST should reflect this structure,
+/// including the condition and the body of the if statement.
 #[test]
 fn test_if_statement_parsing() {
     let tokens: Vec<Token> = vec![
@@ -1586,22 +1530,81 @@ fn test_if_statement_parsing() {
     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
 }
 
+/// This test checks the parser's ability to correctly parse an if statement with an else block.
+/// The input tokens represent `if (x) { return x; } else { return y; }` and the expected AST should reflect this structure,
+/// including the condition and the body of the if statement.
+#[test]
+fn test_if_statement_parsing_with_else() {
+    let tokens: Vec<Token> = vec![
+        Token::IF,
+        Token::LPAREN,
+        Token::IDENTIFIER(vec!('x')),
+        Token::RPAREN,
+        Token::LBRACKET,
+        Token::RETURN,
+        Token::IDENTIFIER(vec!('x')),
+        Token::SEMICOLON,
+        Token::RBRACKET,
+        Token::ELSE,
+        Token::LBRACKET,
+        Token::RETURN,
+        Token::IDENTIFIER(vec!('y')),
+        Token::SEMICOLON,
+        Token::RBRACKET,
+        Token::EOF,
+    ];
+
+    let ast: AST = Parser::parse(tokens).expect("Failed to parse");
+
+    let mut if_statement_node: ASTNode = ASTNode::new(SyntaxElement::IfStatement);
+
+    let mut condition_node: ASTNode = ASTNode::new(SyntaxElement::Condition);
+    let inner_condition_node = ASTNode::new(SyntaxElement::Identifier("x".to_string()));
+    condition_node.add_child(inner_condition_node);
+
+
+    let mut then_branch_node: ASTNode = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut return_node: ASTNode = ASTNode::new(SyntaxElement::Return);
+    let mut assigned_value_node: ASTNode = ASTNode::new(SyntaxElement::AssignedValue);
+
+    let return_value_node: ASTNode = ASTNode::new(SyntaxElement::Identifier("x".to_string()));
+    assigned_value_node.add_child(return_value_node);
+
+    return_node.add_child(assigned_value_node);
+    then_branch_node.add_child(return_node);
+
+    if_statement_node.add_child(condition_node);
+
+    let mut else_branch_node: ASTNode = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut return_node2: ASTNode = ASTNode::new(SyntaxElement::Return);
+    let mut assigned_value_node2: ASTNode = ASTNode::new(SyntaxElement::AssignedValue);
+
+    let return_value_node2: ASTNode = ASTNode::new(SyntaxElement::Identifier("y".to_string()));
+    assigned_value_node2.add_child(return_value_node2);
+
+    return_node2.add_child(assigned_value_node2);
+    else_branch_node.add_child(return_node2);
+
+    if_statement_node.add_child(then_branch_node);
+
+    if_statement_node.add_child(else_branch_node);
+
+    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    top_level_expr.add_child(if_statement_node);
+
+    let expected_ast: AST = AST::new(top_level_expr);
+
+    assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
+}
+
+/// Test the parsing of a switch statement with multiple cases and a default case.
+///
+/// The input source code includes a switch statement that switches on a variable `y`.
+/// The switch statement contains two case blocks (`case 1` and `case 2`) and a default block.
+/// Each case block and the default block contain an integer variable declaration and assignment
+/// followed by a `break` statement.
 #[test]
 fn test_switch_statement_parsing() {
-
-    /*
-    let input = "switch (y) {
-        case 1:
-            let x: Integer = 6;
-            break;
-        case 2:
-            let x: Integer = 7;
-            break;
-        default:
-            let x: Integer = 8;
-            break;
-    }";
-    */
 
     let tokens: Vec<Token> = vec![
         Token::SWITCH,
@@ -1735,16 +1738,13 @@ fn test_switch_statement_parsing() {
     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
 }
 
+/// Test the parsing of a switch statement with multiple cases and without break statements.
+///
+/// The input source code includes a switch statement that switches on a variable `y`.
+/// The switch statement contains two case blocks (`case 1` and `case 2`).
+/// Each case block contains an integer variable declaration and assignment, but no `break` statements.
 #[test]
 fn test_switch_statement_parsing_without_break_statements() {
-    /*
-    let input = "switch (y) {
-      case 1:
-          let x: Integer = 1;
-      case 2:
-          let x: Integer = 2;
-    }";
-    */
 
     let tokens: Vec<Token> = vec![
         Token::SWITCH,
@@ -1839,327 +1839,62 @@ fn test_switch_statement_parsing_without_break_statements() {
     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
 }
 
-// /// --- Boolean and Comparison Tests --- ///
-
-// /// This tests a simple boolean expression using logical AND.
-// #[test]
-// fn test_logical_and_expression() {
-//     let tokens: Vec<Token> = vec![
-//         Token::IDENTIFIER(vec!['a']),
-//         Token::ANDAND,
-//         Token::IDENTIFIER(vec!['b']),
-//         Token::SEMICOLON,
-//     ];
-
-//     // Parse the tokens into an AST
-//     let result = Parser::parse(tokens);
-//     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
-//     let ast = result.expect("Failed to parse");
-
-//     // Construct the expected AST for the expression `a && b;`
-//     let mut binary_expression_node = ASTNode::new(SyntaxElement::BinaryExpression);
-//     binary_expression_node.add_child(ASTNode::new(SyntaxElement::Identifier("a".to_string())));
-//     binary_expression_node.add_child(ASTNode::new(SyntaxElement::Operator("&&".to_string())));
-//     binary_expression_node.add_child(ASTNode::new(SyntaxElement::Identifier("b".to_string())));
-
-//     let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
-//     top_level_expr.add_child(binary_expression_node);
-
-//     let expected_ast: AST = AST::new(top_level_expr);
-
-//     println!("{:#?}", ast);
-//     println!("{:#?}", expected_ast);
-
-//     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
-// }
-
-// /// This tests a simple comparison expression using equality.
-// #[test]
-// fn test_equality_expression() {
-//     let tokens: Vec<Token> = vec![
-//         Token::IDENTIFIER(vec!['x']),
-//         Token::EQUALEQUAL,
-//         Token::NUMBER(vec!['1', '0']),
-//         Token::SEMICOLON,
-//     ];
-
-//     // Parse the tokens into an AST
-//     let result = Parser::parse(tokens);
-//     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
-//     let ast = result.expect("Failed to parse");
-
-//     // Construct the expected AST for the expression `x == 10;`
-//     let mut binary_expression_node = ASTNode::new(SyntaxElement::BinaryExpression);
-//     binary_expression_node.add_child(ASTNode::new(SyntaxElement::Identifier("x".to_string())));
-//     binary_expression_node.add_child(ASTNode::new(SyntaxElement::Operator("==".to_string())));
-//     binary_expression_node.add_child(ASTNode::new(SyntaxElement::Literal("10".to_string())));
-
-//     let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
-//     top_level_expr.add_child(binary_expression_node);
-
-//     let expected_ast: AST = AST::new(top_level_expr);
-
-//     println!("{:#?}", ast);
-//     println!("{:#?}", expected_ast);
-
-//     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
-// }
-
-// /// This tests a complex boolean expression using logical OR and comparison.
-// #[test]
-// fn test_logical_or_comparison_expression() {
-//     let tokens: Vec<Token> = vec![
-//         Token::IDENTIFIER(vec!['a']),
-//         Token::GREATERTHAN,
-//         Token::NUMBER(vec!['5']),
-//         Token::BARBAR,
-//         Token::IDENTIFIER(vec!['b']),
-//         Token::LESSTHAN,
-//         Token::NUMBER(vec!['1', '0']),
-//         Token::SEMICOLON,
-//     ];
-
-//     // Parse the tokens into an AST
-//     let result = Parser::parse(tokens);
-//     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
-//     let ast = result.expect("Failed to parse");
-
-//     // Construct the expected AST for the expression `a > 5 || b < 10;`
-//     let mut or_expression_node = ASTNode::new(SyntaxElement::BinaryExpression);
-    
-//     let mut greater_than_expression_node = ASTNode::new(SyntaxElement::BinaryExpression);
-//     greater_than_expression_node.add_child(ASTNode::new(SyntaxElement::Identifier("a".to_string())));
-//     greater_than_expression_node.add_child(ASTNode::new(SyntaxElement::Operator(">".to_string())));
-//     greater_than_expression_node.add_child(ASTNode::new(SyntaxElement::Literal("5".to_string())));
-
-//     let mut less_than_expression_node = ASTNode::new(SyntaxElement::BinaryExpression);
-//     less_than_expression_node.add_child(ASTNode::new(SyntaxElement::Identifier("b".to_string())));
-//     less_than_expression_node.add_child(ASTNode::new(SyntaxElement::Operator("<".to_string())));
-//     less_than_expression_node.add_child(ASTNode::new(SyntaxElement::Literal("10".to_string())));
-
-//     or_expression_node.add_child(greater_than_expression_node);
-//     or_expression_node.add_child(ASTNode::new(SyntaxElement::Operator("||".to_string())));
-//     or_expression_node.add_child(less_than_expression_node);
-
-//     let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
-//     top_level_expr.add_child(or_expression_node);
-
-//     let expected_ast: AST = AST::new(top_level_expr);
-
-//     println!("{:#?}", ast);
-//     println!("{:#?}", expected_ast);
-
-//     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
-// }
-
-// /// This tests a comparison expression with logical NOT.
-// #[test]
-// fn test_logical_not_comparison_expression() {
-//     let tokens: Vec<Token> = vec![
-//         Token::EXCLAMATIONPOINT,
-//         Token::IDENTIFIER(vec!['x']),
-//         Token::NOTEQUAL,
-//         Token::NUMBER(vec!['0']),
-//         Token::SEMICOLON,
-//     ];
-
-//     // Parse the tokens into an AST
-//     let result = Parser::parse(tokens);
-//     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
-//     let ast = result.expect("Failed to parse");
-
-//     // Construct the expected AST for the expression `!x != 0;`
-//     let mut not_expression_node = ASTNode::new(SyntaxElement::UnaryExpression);
-//     not_expression_node.add_child(ASTNode::new(SyntaxElement::Operator("!".to_string())));
-    
-//     let mut not_equal_expression_node = ASTNode::new(SyntaxElement::BinaryExpression);
-//     not_equal_expression_node.add_child(ASTNode::new(SyntaxElement::Identifier("x".to_string())));
-//     not_equal_expression_node.add_child(ASTNode::new(SyntaxElement::Operator("!=".to_string())));
-//     not_equal_expression_node.add_child(ASTNode::new(SyntaxElement::Literal("0".to_string())));
-
-//     not_expression_node.add_child(not_equal_expression_node);
-
-//     let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
-//     top_level_expr.add_child(not_expression_node);
-
-//     let expected_ast: AST = AST::new(top_level_expr);
-
-//     println!("{:#?}", ast);
-//     println!("{:#?}", expected_ast);
-
-//     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
-// }
-
-// /// --- Bitwise Operator Section --- ///
-
-// /// This tests a simple bitwise AND expression.
-// #[test]
-// fn test_bitwise_and_expression() {
-//     let tokens: Vec<Token> = vec![
-//         Token::IDENTIFIER(vec!['a']),
-//         Token::AMPERSAND,
-//         Token::IDENTIFIER(vec!['b']),
-//         Token::SEMICOLON,
-//     ];
-
-//     // Parse the tokens into an AST
-//     let result = Parser::parse(tokens);
-//     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
-//     let ast = result.expect("Failed to parse");
-
-//     // Construct the expected AST for the expression `a & b;`
-//     let mut binary_expression_node = ASTNode::new(SyntaxElement::BinaryExpression);
-//     binary_expression_node.add_child(ASTNode::new(SyntaxElement::Identifier("a".to_string())));
-//     binary_expression_node.add_child(ASTNode::new(SyntaxElement::Operator("&".to_string())));
-//     binary_expression_node.add_child(ASTNode::new(SyntaxElement::Identifier("b".to_string())));
-
-//     let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
-//     top_level_expr.add_child(binary_expression_node);
-
-//     let expected_ast: AST = AST::new(top_level_expr);
-
-//     println!("{:#?}", ast);
-//     println!("{:#?}", expected_ast);
-
-//     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
-// }
-
-// /// This tests a simple bitwise OR expression.
-// #[test]
-// fn test_bitwise_or_expression() {
-//     let tokens: Vec<Token> = vec![
-//         Token::IDENTIFIER(vec!['x']),
-//         Token::BAR,
-//         Token::IDENTIFIER(vec!['y']),
-//         Token::SEMICOLON,
-//     ];
-
-//     // Parse the tokens into an AST
-//     let result = Parser::parse(tokens);
-//     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
-//     let ast = result.expect("Failed to parse");
-
-//     // Construct the expected AST for the expression `x | y;`
-//     let mut binary_expression_node = ASTNode::new(SyntaxElement::BinaryExpression);
-//     binary_expression_node.add_child(ASTNode::new(SyntaxElement::Identifier("x".to_string())));
-//     binary_expression_node.add_child(ASTNode::new(SyntaxElement::Operator("|".to_string())));
-//     binary_expression_node.add_child(ASTNode::new(SyntaxElement::Identifier("y".to_string())));
-
-//     let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
-//     top_level_expr.add_child(binary_expression_node);
-
-//     let expected_ast: AST = AST::new(top_level_expr);
-
-//     println!("{:#?}", ast);
-//     println!("{:#?}", expected_ast);
-
-//     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
-// }
-
-// /// This tests a simple bitwise XOR expression.
-// #[test]
-// fn test_bitwise_xor_expression() {
-//     let tokens: Vec<Token> = vec![
-//         Token::IDENTIFIER(vec!['a']),
-//         Token::CARET,
-//         Token::IDENTIFIER(vec!['b']),
-//         Token::SEMICOLON,
-//     ];
-
-//     // Parse the tokens into an AST
-//     let result = Parser::parse(tokens);
-//     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
-//     let ast = result.expect("Failed to parse");
-
-//     // Construct the expected AST for the expression `a ^ b;`
-//     let mut binary_expression_node = ASTNode::new(SyntaxElement::BinaryExpression);
-//     binary_expression_node.add_child(ASTNode::new(SyntaxElement::Identifier("a".to_string())));
-//     binary_expression_node.add_child(ASTNode::new(SyntaxElement::Operator("^".to_string())));
-//     binary_expression_node.add_child(ASTNode::new(SyntaxElement::Identifier("b".to_string())));
-
-//     let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
-//     top_level_expr.add_child(binary_expression_node);
-
-//     let expected_ast: AST = AST::new(top_level_expr);
-
-//     println!("{:#?}", ast);
-//     println!("{:#?}", expected_ast);
-
-//     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
-// }
-
-// /// This tests a bitwise NOT expression.
-// #[test]
-// fn test_bitwise_not_expression() {
-//     let tokens: Vec<Token> = vec![
-//         Token::TILDE,
-//         Token::IDENTIFIER(vec!['x']),
-//         Token::SEMICOLON,
-//     ];
-
-//     // Parse the tokens into an AST
-//     let result = Parser::parse(tokens);
-//     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
-//     let ast = result.expect("Failed to parse");
-
-//     // Construct the expected AST for the expression `~x;`
-//     let mut unary_expression_node = ASTNode::new(SyntaxElement::UnaryExpression);
-//     unary_expression_node.add_child(ASTNode::new(SyntaxElement::Operator("~".to_string())));
-//     unary_expression_node.add_child(ASTNode::new(SyntaxElement::Identifier("x".to_string())));
-
-//     let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
-//     top_level_expr.add_child(unary_expression_node);
-
-//     let expected_ast: AST = AST::new(top_level_expr);
-
-//     println!("{:#?}", ast);
-//     println!("{:#?}", expected_ast);
-
-//     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
-// }
-
-// /// This tests a complex bitwise expression with multiple operators.
-// #[test]
-// fn test_complex_bitwise_expression() {
-//     let tokens: Vec<Token> = vec![
-//         Token::IDENTIFIER(vec!['a']),
-//         Token::AMPERSAND,
-//         Token::IDENTIFIER(vec!['b']),
-//         Token::BAR,
-//         Token::IDENTIFIER(vec!['c']),
-//         Token::CARET,
-//         Token::IDENTIFIER(vec!['d']),
-//         Token::SEMICOLON,
-//     ];
-
-//     // Parse the tokens into an AST
-//     let result = Parser::parse(tokens);
-//     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
-//     let ast = result.expect("Failed to parse");
-
-//     // Construct the expected AST for the expression `a & b | c ^ d;`
-//     let mut xor_expression_node = ASTNode::new(SyntaxElement::BinaryExpression);
-//     xor_expression_node.add_child(ASTNode::new(SyntaxElement::Identifier("c".to_string())));
-//     xor_expression_node.add_child(ASTNode::new(SyntaxElement::Operator("^".to_string())));
-//     xor_expression_node.add_child(ASTNode::new(SyntaxElement::Identifier("d".to_string())));
-
-//     let mut or_expression_node = ASTNode::new(SyntaxElement::BinaryExpression);
-//     or_expression_node.add_child(ASTNode::new(SyntaxElement::Identifier("b".to_string())));
-//     or_expression_node.add_child(ASTNode::new(SyntaxElement::Operator("|".to_string())));
-//     or_expression_node.add_child(xor_expression_node);
-
-//     let mut and_expression_node = ASTNode::new(SyntaxElement::BinaryExpression);
-//     and_expression_node.add_child(ASTNode::new(SyntaxElement::Identifier("a".to_string())));
-//     and_expression_node.add_child(ASTNode::new(SyntaxElement::Operator("&".to_string())));
-//     and_expression_node.add_child(or_expression_node);
-
-//     let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
-//     top_level_expr.add_child(and_expression_node);
-
-//     let expected_ast: AST = AST::new(top_level_expr);
-
-//     println!("{:#?}", ast);
-//     println!("{:#?}", expected_ast);
-
-//     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
-// }
+/// Tests the abillity for an expression to be a child of a block expression. 
+/// Tokens represent a block expression containing an identifier.
+#[test]
+fn test_block_with_expression() {
+    let tokens: Vec<Token> = vec![
+        Token::LBRACKET,
+        Token::IDENTIFIER(vec!['A']),
+        Token::RBRACKET
+    ];
+
+    let result = Parser::parse(tokens);
+    assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
+
+    let ast = result.expect("Failed to parse");
+
+    let mut block_exp_node = ASTNode::new(SyntaxElement::BlockExpression);
+
+    block_exp_node.add_child(ASTNode::new(SyntaxElement::Identifier("A".to_string())));
+
+    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+
+    top_level_expr.add_child(block_exp_node);
+
+    let expected_ast: AST = AST::new(top_level_expr);
+
+    assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
+}
+
+/// Tests the abillity to construct a return statement. 
+/// Tokens represent the statement 'return a;'.
+#[test]
+fn test_return_expression() {
+    let tokens: Vec<Token> = vec![
+        Token::RETURN,
+        Token::IDENTIFIER(vec!['A']),
+        Token::SEMICOLON,
+    ];
+
+    let result = Parser::parse(tokens);
+    assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
+
+    let ast = result.expect("Failed to parse");
+
+    let mut return_node = ASTNode::new(SyntaxElement::Return);
+
+    let mut assigned_val = ASTNode::new(SyntaxElement::AssignedValue);
+
+    assigned_val.add_child(ASTNode::new(SyntaxElement::Identifier("A".to_string())));
+
+    return_node.add_child(assigned_val);
+
+    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+
+    top_level_expr.add_child(return_node);
+
+    let expected_ast: AST = AST::new(top_level_expr);
+
+    assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
+}

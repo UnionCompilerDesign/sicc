@@ -5,7 +5,7 @@ use std::{fs, path::Path};
 use common::{ast::ast_struct::AST, constants::DEFAULT_PRIORITY_MODELEMENT, entry_points::entry_points, error::ErrorType};
 use integration::module::{ast_stitch, ModElement, Module};
 use lexer::{lexer_core::Lexer, token::Token};
-use parser::parser_core::Parser;
+use parser::core::Parser;
 use symbol_table::symbol_table_struct::SymbolTableStack;
 use sem_analysis::sem_analysis_core::SemAnalysis;
 
