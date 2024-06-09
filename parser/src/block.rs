@@ -5,11 +5,11 @@ use common::{
     ast::{
         ast_struct::ASTNode, 
         syntax_element::SyntaxElement,
+        data_type::DataType,
     },
 };
 use lexer::token::Token;
 use crate::core::Parser;
-use common::ast::data_type::DataType;
 
 
 impl Parser {
