@@ -11,6 +11,7 @@
 //! - `block`: Handles generation for block-containing elements like loops and functions.
 //! - `statement`: Handles generation for statements and operations within blocks.
 //! - `primitive`: Handles generation for primitive data types and operations.
+//! - `store`: Handles keeping track of the tags for creating and storing variables
 
 
 /// Core of the LLVM IR generation process.

@@ -1,23 +1,16 @@
+//! Testing for "combination cases", things which the IR generator should be able to combine
+//! together to make more complex programs.
+
 use std::sync::{Arc, Mutex};
-
 use ir::core::IRGenerator;
-
-use common::
-        ast::{
-            ast_struct::{
-                ASTNode, AST
-            }, 
-            data_type::DataType, 
-            syntax_element::SyntaxElement
-        };
+use common::{
+    ast::{ast_struct::{ASTNode, AST}, data_type::DataType, syntax_element::SyntaxElement},
+    constants::DEFAULT_PRIORITY_MODELEMENT};
 use symbol_table::symbol_table_struct::{SymbolInfo, SymbolTable, SymbolTableStack, SymbolValue};
 use integration::module::{
     ModElement, Module, ast_stitch
 };
- 
 use safe_llvm::{memory_management::resource_pools::ResourcePools, utils::utils_struct::Utils};
-
-pub const DEFAULT_PRIORITY_MODELEMENT: i32 = -1;
 
 fn wrap_in_tle(ast_node: ASTNode) -> AST {
     let mut tle: ASTNode = ASTNode::new(SyntaxElement::TopLevelExpression);
@@ -303,7 +296,7 @@ fn test_nested_for_loop() {
       br i1 true, label %for_bodyID2, label %for_endID2
 
     for_bodyID2:                                      ; preds = %for_condID2
-      br label %for_condID2
+      br label %for_incID2
       br label %for_incID2
 
     for_incID2:                                       ; preds = %for_bodyID2
@@ -473,7 +466,7 @@ fn test_nested_for_loop() {
         Ok(str) => str,
         Err(e) => panic!("{}", e)
     };
-    let expected_str = "; ModuleID = 'dummy_module'\nsource_filename = \"dummy_module\"\n\ndefine i64 @testForLoopNested() {\nentryID0:\n  %test_var_outer = alloca i64, align 8\n  store i64 0, ptr %test_var_outer, align 4\n  br label %for_condID1\n\nfor_condID1:                                      ; preds = %for_incID1, %entryID0\n  br i1 true, label %for_bodyID1, label %for_endID1\n\nfor_bodyID1:                                      ; preds = %for_condID1\n  %test_var = alloca i64, align 8\n  store i64 0, ptr %test_var, align 4\n  br label %for_condID2\n\nfor_condID2:                                      ; preds = %for_incID2, %for_bodyID2, %for_bodyID1\n  br i1 true, label %for_bodyID2, label %for_endID2\n\nfor_bodyID2:                                      ; preds = %for_condID2\n  br label %for_condID2\n  br label %for_incID2\n\nfor_incID2:                                       ; preds = %for_bodyID2\n  store i64 42, ptr %test_var, align 4\n  br label %for_condID2\n\nfor_endID2:                                       ; preds = %for_condID2\n  br label %for_incID1\n\nfor_incID1:                                       ; preds = %for_endID2\n  store i64 42, ptr %test_var_outer, align 4\n  br label %for_condID1\n\nfor_endID1:                                       ; preds = %for_condID1\n}\n";
+    let expected_str = "; ModuleID = 'dummy_module'\nsource_filename = \"dummy_module\"\n\ndefine i64 @testForLoopNested() {\nentryID0:\n  %test_var_outer = alloca i64, align 8\n  store i64 0, ptr %test_var_outer, align 4\n  br label %for_condID1\n\nfor_condID1:                                      ; preds = %for_incID1, %entryID0\n  br i1 true, label %for_bodyID1, label %for_endID1\n\nfor_bodyID1:                                      ; preds = %for_condID1\n  %test_var = alloca i64, align 8\n  store i64 0, ptr %test_var, align 4\n  br label %for_condID2\n\nfor_condID2:                                      ; preds = %for_incID2, %for_bodyID1\n  br i1 true, label %for_bodyID2, label %for_endID2\n\nfor_bodyID2:                                      ; preds = %for_condID2\n  br label %for_incID2\n  br label %for_incID2\n\nfor_incID2:                                       ; preds = %for_bodyID2, %for_bodyID2\n  store i64 42, ptr %test_var, align 4\n  br label %for_condID2\n\nfor_endID2:                                       ; preds = %for_condID2\n  br label %for_incID1\n\nfor_incID1:                                       ; preds = %for_endID2\n  store i64 42, ptr %test_var_outer, align 4\n  br label %for_condID1\n\nfor_endID1:                                       ; preds = %for_condID1\n}\n";
 
     assert_eq!(test_str, expected_str)
 }
@@ -481,12 +474,90 @@ fn test_nested_for_loop() {
 #[test]
 fn test_return_var() {
     /* 
-    int testFunction() {
+    int testFunctionWithRetrieveReturn() {
         int i = 42;
         return i;
     }
     
-    TBD
+    ; ModuleID = 'dummy_module'
+    source_filename = "dummy_module"
+
+    define i64 @testFunctionWithRetrieveReturn() {
+    entryID0:
+      %i = alloca i64, align 8
+      store i64 42, ptr %i, align 4
+      %vrecallID1 = load i64, ptr %i, align 4
+      ret i64 %vrecallID1
+}
 
     */
+    let mut assignment_node = ASTNode::new(SyntaxElement::Initialization);
+
+    let id_node = ASTNode::new(SyntaxElement::Identifier("i".to_string()));
+    let type_node = ASTNode::new(SyntaxElement::Type(DataType::Integer));
+
+    let mut var_node = ASTNode::new(SyntaxElement::Variable);
+    var_node.add_child(id_node);
+    var_node.add_child(type_node);
+
+    let mut value_node = ASTNode::new(SyntaxElement::AssignedValue);
+
+    let num_node = ASTNode::new(SyntaxElement::Literal("42".to_string()));
+    value_node.add_child(num_node);
+
+    assignment_node.add_child(var_node.clone());
+    assignment_node.add_child(value_node);
+
+    let mut ret_node = ASTNode::new(SyntaxElement::Return);
+    let mut val_node_return = ASTNode::new(SyntaxElement::AssignedValue);
+
+    val_node_return.add_child(var_node);
+    ret_node.add_child(val_node_return);
+
+
+    let mut fn_block = ASTNode::new(SyntaxElement::BlockExpression);
+    fn_block.add_child(assignment_node);
+    fn_block.add_child(ret_node);
+
+    let fn_type = ASTNode::new(SyntaxElement::Type(DataType::Integer));
+    let fn_id = ASTNode::new(SyntaxElement::Identifier("testFunctionWithRetrieveReturn".to_string()));
+
+    let mut fn_declaration_node = ASTNode::new(SyntaxElement::FunctionDeclaration);
+    fn_declaration_node.add_child(fn_id);
+    fn_declaration_node.add_child(fn_type);
+    fn_declaration_node.add_child(fn_block);
+
+    let ast = wrap_in_tle(fn_declaration_node);
+
+    let mut symbol_table_stack = SymbolTableStack::new();
+    let mut symbol_table_global = SymbolTable::new();
+    let fn_value = SymbolValue::FunctionValue{
+        parameters: Vec::new(),
+    };
+    let fn_info = SymbolInfo::new(DataType::Integer, fn_value);
+    symbol_table_global.add("testFunctionWithRetrieveReturn".to_string(), fn_info);
+    symbol_table_stack.push(symbol_table_global);
+    symbol_table_stack.push(SymbolTable::new());
+
+    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, symbol_table_stack, DEFAULT_PRIORITY_MODELEMENT)]);
+
+    let mut ir_generator = IRGenerator::new();
+    let module_tag = ir_generator.generate_ir(mod_ast);  
+
+    let pools = ir_generator.get_resource_pools();
+
+    let module = pools.lock().expect("coouldn't unlock pools mutex").get_module(module_tag).expect("No module found!");
+    let write_result = Utils::write_to_file(module.clone(), "output_retrieve_return.ll");
+    match write_result {
+        Ok(_) => eprintln!("Retrieve return test file written correctly!"),
+        Err(_) => panic!("Retrieve return test file failed to write!")
+    }
+    let get_str = Utils::write_to_string(module);
+    let test_str = match get_str {
+        Ok(str) => str,
+        Err(e) => panic!("{}", e)
+    };
+    let expected_str = "; ModuleID = 'dummy_module'\nsource_filename = \"dummy_module\"\n\ndefine i64 @testFunctionWithRetrieveReturn() {\nentryID0:\n  %i = alloca i64, align 8\n  store i64 42, ptr %i, align 4\n  %vrecallID1 = load i64, ptr %i, align 4\n  ret i64 %vrecallID1\n}\n";
+
+    assert_eq!(test_str, expected_str)
 }

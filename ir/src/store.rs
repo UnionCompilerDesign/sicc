@@ -1,9 +1,12 @@
+//! This defines the store, which is used to keep track of the allocation tags
+//! of variables in the current and outer scopes.
+//! Look around if you like, but don't do anything here. All of these
+//! functions have wrappers in `IRGenerator` that you should use to access the store,
+//! please do not attempt to access it directly.
+
 use std::collections::HashMap;
-
 use common::error::ErrorType;
-
 use safe_llvm::memory_management::resource_pools::ValueTag;
-
 
 pub struct Store {
     current_table_id: Option<usize>,
@@ -88,7 +91,7 @@ impl Store {
         Ok(())
     }
 
-    /// Searches for a variable in the table, Error if it's not found
+    /// Searches for a variable in the table and outer tables, Error if it's not found
     pub fn search_for_var(&self, var_name: String) -> Result<ValueTag, ErrorType> {
         let id_of_found: Option<usize> = self.search_tables_for_var(var_name.clone());
 

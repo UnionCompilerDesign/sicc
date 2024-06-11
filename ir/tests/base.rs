@@ -1,14 +1,14 @@
-use std::sync::{Arc, Mutex};
+//! Testing for "base cases", things which the IR generator must be able to do with
+//! the most basic level of functionality.
 
-use common::ast::{ast_struct::{ASTNode, AST}, data_type::DataType, syntax_element::SyntaxElement};
+use std::sync::{Arc, Mutex};
+use common::{
+    ast::{ast_struct::{ASTNode, AST}, data_type::DataType, syntax_element::SyntaxElement},
+    constants::DEFAULT_PRIORITY_MODELEMENT};
 use integration::module::{ast_stitch, ModElement, Module};
 use ir::core::IRGenerator;
-
- 
 use safe_llvm::{memory_management::resource_pools::ResourcePools, utils::utils_struct::Utils};
 use symbol_table::symbol_table_struct::{SymbolInfo, SymbolTable, SymbolTableStack, SymbolValue};
-
-pub const DEFAULT_PRIORITY_MODELEMENT: i32 = -1;
 
 fn wrap_in_tle(ast_node: ASTNode) -> AST {
     let mut tle: ASTNode = ASTNode::new(SyntaxElement::TopLevelExpression);
@@ -286,6 +286,85 @@ fn test_function_with_while_loop() {
 
     assert_eq!(test_str, expected_str)
 }
+#[test]
+fn test_function_with_while_no_body() {
+    /*
+    int testFunctionWithWhileNoBody() {
+        while (1);
+    }
+
+    ; ModuleID = 'dummy_module'
+    source_filename = "dummy_module"
+
+    define i64 @testFunctionWithWhileNoBody() {
+    entryID0:
+      br label %while_condID1
+
+    while_condID1:                                    ; preds = %while_bodyID1, %entryID0
+      br i1 true, label %while_bodyID1, label %while_endID1
+
+    while_bodyID1:                                    ; preds = %while_condID1
+      br label %while_condID1
+
+    while_endID1:                                     ; preds = %while_condID1
+    }
+
+    */
+
+    let mut while_condition = ASTNode::new(SyntaxElement::Condition);
+    let while_condition_value = ASTNode::new(SyntaxElement::Literal("true".to_string()));
+    while_condition.add_child(while_condition_value);
+
+
+    let mut while_statement = ASTNode::new(SyntaxElement::WhileLoop);
+    while_statement.add_child(while_condition);
+
+    let mut fn_block = ASTNode::new(SyntaxElement::BlockExpression);
+    fn_block.add_child(while_statement);
+
+    let fn_type = ASTNode::new(SyntaxElement::Type(DataType::Integer));
+    let fn_id = ASTNode::new(SyntaxElement::Identifier("testFunctionWithWhileNoBody".to_string()));
+
+    let mut fn_declaration_node = ASTNode::new(SyntaxElement::FunctionDeclaration);
+    fn_declaration_node.add_child(fn_id);
+    fn_declaration_node.add_child(fn_type);
+    fn_declaration_node.add_child(fn_block);
+
+    let ast = wrap_in_tle(fn_declaration_node);
+
+    let mut symbol_table_stack = SymbolTableStack::new();
+    let mut symbol_table_global = SymbolTable::new();
+    let fn_value = SymbolValue::FunctionValue{
+        parameters: Vec::new(),
+    };
+    let fn_info = SymbolInfo::new(DataType::Integer, fn_value);
+    symbol_table_global.add("testFunctionWithWhileNoBody".to_string(), fn_info);
+    symbol_table_stack.push(symbol_table_global);
+    symbol_table_stack.push(SymbolTable::new());
+
+    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, symbol_table_stack, DEFAULT_PRIORITY_MODELEMENT)]);
+
+    let mut ir_generator = IRGenerator::new();
+    let module_tag = ir_generator.generate_ir(mod_ast);  
+
+    let pools: Arc<Mutex<ResourcePools>> = ir_generator.get_resource_pools();
+    let pools = pools.try_lock().expect("Failed to lock resource pool mutex in do while IR!");
+
+    let module = pools.get_module(module_tag).expect("Failed to get module");
+    let write_result = Utils::write_to_file(module.clone(), "output_while_no_body.ll");
+    match write_result {
+        Ok(_) => eprintln!("While NB test file written correctly!"),
+        Err(_) => panic!("While NB test file failed to write!")
+    }
+    let get_str = Utils::write_to_string(module);
+    let test_str = match get_str {
+        Ok(str) => str,
+        Err(e) => panic!("{}", e)
+    };
+    let expected_str = "; ModuleID = 'dummy_module'\nsource_filename = \"dummy_module\"\n\ndefine i64 @testFunctionWithWhileNoBody() {\nentryID0:\n  br label %while_condID1\n\nwhile_condID1:                                    ; preds = %while_bodyID1, %entryID0\n  br i1 true, label %while_bodyID1, label %while_endID1\n\nwhile_bodyID1:                                    ; preds = %while_condID1\n  br label %while_condID1\n\nwhile_endID1:                                     ; preds = %while_condID1\n}\n";
+
+    assert_eq!(test_str, expected_str)
+}
 
 
 #[test]
@@ -475,6 +554,107 @@ fn test_function_with_assign() {
 }
 
 #[test]
+fn test_function_with_variable_retrieval() {
+    /*
+    int testFunctionWithAssign() {
+        int test_var = 0;
+        int test_var_2 = test_var;
+    }
+
+    ; ModuleID = 'dummy_module'
+    source_filename = "dummy_module"
+
+    define i64 @testFunctionWithRetrieve() {
+    entryID0:
+      %test_var = alloca i64, align 8
+      store i64 0, ptr %test_var, align 4
+      %vrecallID1 = load i64, ptr %test_var, align 4
+      %test_var_2 = alloca i64, align 8
+      store i64 %vrecallID1, ptr %test_var_2, align 4
+    }
+
+    */
+
+    let mut assignment_node = ASTNode::new(SyntaxElement::Initialization);
+
+    let id_node = ASTNode::new(SyntaxElement::Identifier("test_var".to_string()));
+    let type_node = ASTNode::new(SyntaxElement::Type(DataType::Integer));
+
+    let mut assignment_node_2 = ASTNode::new(SyntaxElement::Initialization);
+    let id_node_2 = ASTNode::new(SyntaxElement::Identifier("test_var_2".to_string()));
+    let type_node_2 = ASTNode::new(SyntaxElement::Type(DataType::Integer));
+    let mut var_node_2 = ASTNode::new(SyntaxElement::Variable);
+    var_node_2.add_child(id_node_2);
+    var_node_2.add_child(type_node_2);
+    assignment_node_2.add_child(var_node_2);
+
+    let mut var_node = ASTNode::new(SyntaxElement::Variable);
+    var_node.add_child(id_node);
+    var_node.add_child(type_node);
+
+    let mut val_node_2 = ASTNode::new(SyntaxElement::AssignedValue);
+    val_node_2.add_child(var_node.clone());
+
+    assignment_node_2.add_child(val_node_2);
+
+    let mut value_node = ASTNode::new(SyntaxElement::AssignedValue);
+
+    let num_node = ASTNode::new(SyntaxElement::Literal("0".to_string()));
+    value_node.add_child(num_node);
+
+    assignment_node.add_child(var_node);
+    assignment_node.add_child(value_node);
+
+
+    let mut fn_block = ASTNode::new(SyntaxElement::BlockExpression);
+    fn_block.add_child(assignment_node);
+    fn_block.add_child(assignment_node_2);
+
+    let fn_type = ASTNode::new(SyntaxElement::Type(DataType::Integer));
+    let fn_id = ASTNode::new(SyntaxElement::Identifier("testFunctionWithRetrieve".to_string()));
+
+    let mut fn_declaration_node = ASTNode::new(SyntaxElement::FunctionDeclaration);
+    fn_declaration_node.add_child(fn_id);
+    fn_declaration_node.add_child(fn_type);
+    fn_declaration_node.add_child(fn_block);
+
+    let ast = wrap_in_tle(fn_declaration_node);
+
+    let mut symbol_table_stack = SymbolTableStack::new();
+    let mut symbol_table_global = SymbolTable::new();
+    let fn_value = SymbolValue::FunctionValue{
+        parameters: Vec::new(),
+    };
+    let fn_info = SymbolInfo::new(DataType::Integer, fn_value);
+    symbol_table_global.add("testFunctionWithRetrieve".to_string(), fn_info);
+    symbol_table_stack.push(symbol_table_global);
+    symbol_table_stack.push(SymbolTable::new());
+
+    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, symbol_table_stack, DEFAULT_PRIORITY_MODELEMENT)]);
+
+    let mut ir_generator = IRGenerator::new();
+    let module_tag = ir_generator.generate_ir(mod_ast);  
+
+    let pools = ir_generator.get_resource_pools();
+
+    let module = pools.lock().expect("coouldn't unlock pools mutex").get_module(module_tag).expect("No module found!");
+    let write_result = Utils::write_to_file(module.clone(), "output_retrieve.ll");
+    match write_result {
+        Ok(_) => eprintln!("Retrieve test file written correctly!"),
+        Err(_) => panic!("Retrieve test file failed to write!")
+    }
+    let get_str = Utils::write_to_string(module);
+    let test_str = match get_str {
+        Ok(str) => str,
+        Err(e) => panic!("{}", e)
+    };
+    let expected_str = "; ModuleID = 'dummy_module'\nsource_filename = \"dummy_module\"\n\ndefine i64 @testFunctionWithRetrieve() {\nentryID0:\n  %test_var = alloca i64, align 8\n  store i64 0, ptr %test_var, align 4\n  %vrecallID1 = load i64, ptr %test_var, align 4\n  %test_var_2 = alloca i64, align 8\n  store i64 %vrecallID1, ptr %test_var_2, align 4\n}\n";
+
+    assert_eq!(test_str, expected_str)
+
+}
+
+#[test]
 fn test_function_with_reassign() {
     /*
     int testFunctionWithReassign() {
@@ -591,7 +771,7 @@ fn test_function_with_for_loop() {
       br i1 true, label %for_bodyID1, label %for_endID1
 
     for_bodyID1:                                      ; preds = %for_condID1
-      br label %for_condID1
+      br label %for_incID1
       br label %for_incID1
 
     for_incID1:                                       ; preds = %for_bodyID1
@@ -699,7 +879,7 @@ fn test_function_with_for_loop() {
         Ok(str) => str,
         Err(e) => panic!("{}", e)
     };
-    let expected_str = "; ModuleID = 'dummy_module'\nsource_filename = \"dummy_module\"\n\ndefine i64 @testForLoop() {\nentryID0:\n  %test_var = alloca i64, align 8\n  store i64 0, ptr %test_var, align 4\n  br label %for_condID1\n\nfor_condID1:                                      ; preds = %for_incID1, %for_bodyID1, %entryID0\n  br i1 true, label %for_bodyID1, label %for_endID1\n\nfor_bodyID1:                                      ; preds = %for_condID1\n  br label %for_condID1\n  br label %for_incID1\n\nfor_incID1:                                       ; preds = %for_bodyID1\n  store i64 42, ptr %test_var, align 4\n  br label %for_condID1\n\nfor_endID1:                                       ; preds = %for_condID1\n}\n";
+    let expected_str = "; ModuleID = 'dummy_module'\nsource_filename = \"dummy_module\"\n\ndefine i64 @testForLoop() {\nentryID0:\n  %test_var = alloca i64, align 8\n  store i64 0, ptr %test_var, align 4\n  br label %for_condID1\n\nfor_condID1:                                      ; preds = %for_incID1, %entryID0\n  br i1 true, label %for_bodyID1, label %for_endID1\n\nfor_bodyID1:                                      ; preds = %for_condID1\n  br label %for_incID1\n  br label %for_incID1\n\nfor_incID1:                                       ; preds = %for_bodyID1, %for_bodyID1\n  store i64 42, ptr %test_var, align 4\n  br label %for_condID1\n\nfor_endID1:                                       ; preds = %for_condID1\n}\n";
 
     assert_eq!(test_str, expected_str)
 
