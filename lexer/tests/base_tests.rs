@@ -1,4 +1,3 @@
-use common::error::ErrorType;
 use lexer::{
     core::Lexer,
     token::Token,
@@ -8,7 +7,7 @@ use lexer::{
 /// Tests tokens individually.
 
 #[test]
-fn test_EOF() {
+fn test_eof() {
     let input = "";
     let result = Lexer::lex(input);
     let expected = vec![

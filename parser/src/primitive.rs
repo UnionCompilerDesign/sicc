@@ -2,10 +2,9 @@
 
 use common::{ 
     ast::{
-        ast_struct::ASTNode, data_type::DataType, syntax_element::SyntaxElement
+        core::ASTNode, data_type::DataType, 
     }, error::ErrorType
 };
-use lexer::token::Token;
 use crate::core::Parser;
 
 impl Parser {

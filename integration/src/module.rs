@@ -1,6 +1,6 @@
 //! This file defines the core structures and functionalities associated with our `Module`.
 //! `Module` types are composite structures that aggregate multiple module elements, each containing an AST and a symbol table stack.
-use common::ast::{ast_struct::{ASTNode, AST}, syntax_element::SyntaxElement};
+use common::ast::{core::{ASTNode, AST}, node_type::NodeType};
 use sts::core::SymbolTableStack;
 
 /// Represents a module, which is a collection of `ModElement` instances.
@@ -189,9 +189,9 @@ pub fn ast_stitch(input: Vec<ModElement>) -> Module {
 /// # Returns
 /// An integer representing the priority of the module element.
 fn get_ast_priority(ast_root: ASTNode) -> i32 {
-    match ast_root.get_element() {
-        SyntaxElement::ModuleExpression => 20,
-        SyntaxElement::TopLevelExpression => 10,
-        _ => panic!("Not a valid root expression: {:?}", ast_root.get_element())
+    match ast_root.get_node_type() {
+        NodeType::ModuleExpression => 20,
+        NodeType::TopLevelExpression => 10,
+        _ => panic!("Not a valid root expression: {:?}", ast_root.get_node_type())
     }
 }

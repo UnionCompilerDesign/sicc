@@ -1,11 +1,8 @@
 //! This file contains tests for error handling, making sure that the parser returns the correct errors when given invalid token streams.
 
-use common::{ 
-    error::ErrorType,
-};
+use common::error::ErrorType;
 use lexer::token::Token;
 use parser::core::Parser;
-
 
 /// This test checks that the parser returns a SyntaxError when a block does not have a closing bracket.
 #[test]

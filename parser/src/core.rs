@@ -2,10 +2,8 @@
 //! tokens and routes to appropriate helper methods in the parser to construct an abstract syntax tree.
                                  
 use common::{ 
-    ast::{
-        ast_struct::{ASTNode, AST}, 
-        syntax_element::SyntaxElement,
-    }, error::ErrorType
+    ast::core::{ASTNode, AST}, 
+    error::ErrorType
 };
 use lexer::token::Token;
 
@@ -66,6 +64,7 @@ impl Parser {
     /// let ast = Parser::parse(tokens);
     /// ```
     pub fn parse(input: Vec<Token>) -> Result<AST, Vec<ErrorType>> {
+        let _ = input;
         unimplemented!();
     }  
 

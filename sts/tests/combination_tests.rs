@@ -1,6 +1,6 @@
 use common::ast::{
-    ast_struct::{ASTNode, AST}, 
-    syntax_element::SyntaxElement, 
+    core::{ASTNode, AST}, 
+    node_type::NodeType, 
 };
 use sts::core::{SymbolTable, SymbolTableStack};
 
@@ -8,16 +8,16 @@ use sts::core::{SymbolTable, SymbolTableStack};
 #[test]
 fn test_nested_loops() {
     // Setup AST for nested loops
-    let mut do_while_node = ASTNode::new(SyntaxElement::DoWhileLoop);
-    let mut do_while_block = ASTNode::new(SyntaxElement::BlockExpression);
-    let mut while_node = ASTNode::new(SyntaxElement::WhileLoop);
-    let mut while_block = ASTNode::new(SyntaxElement::BlockExpression);
-    let mut for_node = ASTNode::new(SyntaxElement::ForLoop);
-    let for_condition = ASTNode::new(SyntaxElement::Condition);
-    let mut for_block = ASTNode::new(SyntaxElement::BlockExpression);
-    let mut switch_node = ASTNode::new(SyntaxElement::SwitchStatement);
-    let mut case_node = ASTNode::new(SyntaxElement::Case);
-    let case_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut do_while_node = ASTNode::new(NodeType::DoWhileLoop);
+    let mut do_while_block = ASTNode::new(NodeType::BlockExpression);
+    let mut while_node = ASTNode::new(NodeType::WhileLoop);
+    let mut while_block = ASTNode::new(NodeType::BlockExpression);
+    let mut for_node = ASTNode::new(NodeType::ForLoop);
+    let for_condition = ASTNode::new(NodeType::Condition);
+    let mut for_block = ASTNode::new(NodeType::BlockExpression);
+    let mut switch_node = ASTNode::new(NodeType::SwitchStatement);
+    let mut case_node = ASTNode::new(NodeType::Case);
+    let case_block = ASTNode::new(NodeType::BlockExpression);
 
     // Constructing the nested loop structure
     case_node.add_child(case_block);
@@ -60,21 +60,21 @@ fn test_nested_loops() {
 #[test]
 fn test_nested_for_loops() {
     // Setup AST for nested for loops
-    let mut outer_for_loop = ASTNode::new(SyntaxElement::ForLoop);
-    let outer_condition = ASTNode::new(SyntaxElement::Condition);
-    let mut outer_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut outer_for_loop = ASTNode::new(NodeType::ForLoop);
+    let outer_condition = ASTNode::new(NodeType::Condition);
+    let mut outer_block = ASTNode::new(NodeType::BlockExpression);
 
-    let mut mid_for_loop = ASTNode::new(SyntaxElement::ForLoop);
-    let mid_condition = ASTNode::new(SyntaxElement::Condition);
-    let mut mid_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut mid_for_loop = ASTNode::new(NodeType::ForLoop);
+    let mid_condition = ASTNode::new(NodeType::Condition);
+    let mut mid_block = ASTNode::new(NodeType::BlockExpression);
 
-    let mut inner_for_loop = ASTNode::new(SyntaxElement::ForLoop);
-    let inner_condition = ASTNode::new(SyntaxElement::Condition);
-    let mut inner_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut inner_for_loop = ASTNode::new(NodeType::ForLoop);
+    let inner_condition = ASTNode::new(NodeType::Condition);
+    let mut inner_block = ASTNode::new(NodeType::BlockExpression);
 
-    let mut most_inner_for_loop = ASTNode::new(SyntaxElement::ForLoop);
-    let most_inner_condition = ASTNode::new(SyntaxElement::Condition);
-    let most_inner_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut most_inner_for_loop = ASTNode::new(NodeType::ForLoop);
+    let most_inner_condition = ASTNode::new(NodeType::Condition);
+    let most_inner_block = ASTNode::new(NodeType::BlockExpression);
 
     most_inner_for_loop.add_child(most_inner_condition);
     most_inner_for_loop.add_child(most_inner_block);
@@ -123,17 +123,17 @@ fn test_nested_for_loops() {
 #[test]
 fn test_nested_while_loops() {
     // Setup AST for nested while loops
-    let mut outer_while_loop = ASTNode::new(SyntaxElement::WhileLoop);
-    let mut outer_while_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut outer_while_loop = ASTNode::new(NodeType::WhileLoop);
+    let mut outer_while_block = ASTNode::new(NodeType::BlockExpression);
 
-    let mut mid_while_loop = ASTNode::new(SyntaxElement::WhileLoop);
-    let mut mid_while_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut mid_while_loop = ASTNode::new(NodeType::WhileLoop);
+    let mut mid_while_block = ASTNode::new(NodeType::BlockExpression);
 
-    let mut inner_while_loop = ASTNode::new(SyntaxElement::WhileLoop);
-    let mut inner_while_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut inner_while_loop = ASTNode::new(NodeType::WhileLoop);
+    let mut inner_while_block = ASTNode::new(NodeType::BlockExpression);
 
-    let mut most_inner_while_loop = ASTNode::new(SyntaxElement::WhileLoop);
-    let most_inner_while_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut most_inner_while_loop = ASTNode::new(NodeType::WhileLoop);
+    let most_inner_while_block = ASTNode::new(NodeType::BlockExpression);
 
     most_inner_while_loop.add_child(most_inner_while_block);
     inner_while_block.add_child(most_inner_while_loop);
@@ -170,17 +170,17 @@ fn test_nested_while_loops() {
 #[test]
 fn test_nested_do_while_loops() {
     // Setup AST for nested do-while loops
-    let mut outer_do_while_loop = ASTNode::new(SyntaxElement::DoWhileLoop);
-    let mut outer_do_while_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut outer_do_while_loop = ASTNode::new(NodeType::DoWhileLoop);
+    let mut outer_do_while_block = ASTNode::new(NodeType::BlockExpression);
 
-    let mut mid_do_while_loop = ASTNode::new(SyntaxElement::DoWhileLoop);
-    let mut mid_do_while_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut mid_do_while_loop = ASTNode::new(NodeType::DoWhileLoop);
+    let mut mid_do_while_block = ASTNode::new(NodeType::BlockExpression);
 
-    let mut inner_do_while_loop = ASTNode::new(SyntaxElement::DoWhileLoop);
-    let mut inner_do_while_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut inner_do_while_loop = ASTNode::new(NodeType::DoWhileLoop);
+    let mut inner_do_while_block = ASTNode::new(NodeType::BlockExpression);
 
-    let mut most_inner_do_while_loop = ASTNode::new(SyntaxElement::DoWhileLoop);
-    let most_inner_do_while_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut most_inner_do_while_loop = ASTNode::new(NodeType::DoWhileLoop);
+    let most_inner_do_while_block = ASTNode::new(NodeType::BlockExpression);
 
     most_inner_do_while_loop.add_child(most_inner_do_while_block);
     inner_do_while_block.add_child(most_inner_do_while_loop);
@@ -217,21 +217,21 @@ fn test_nested_do_while_loops() {
 #[test]
 fn test_nested_switch_statements() {
     // Setup AST for nested switch statements
-    let mut outer_switch = ASTNode::new(SyntaxElement::SwitchStatement);
-    let mut outer_case = ASTNode::new(SyntaxElement::Case);
-    let mut outer_case_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut outer_switch = ASTNode::new(NodeType::SwitchStatement);
+    let mut outer_case = ASTNode::new(NodeType::Case);
+    let mut outer_case_block = ASTNode::new(NodeType::BlockExpression);
 
-    let mut mid_switch = ASTNode::new(SyntaxElement::SwitchStatement);
-    let mut mid_case = ASTNode::new(SyntaxElement::Case);
-    let mut mid_case_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut mid_switch = ASTNode::new(NodeType::SwitchStatement);
+    let mut mid_case = ASTNode::new(NodeType::Case);
+    let mut mid_case_block = ASTNode::new(NodeType::BlockExpression);
 
-    let mut inner_switch = ASTNode::new(SyntaxElement::SwitchStatement);
-    let mut inner_case = ASTNode::new(SyntaxElement::Case);
-    let mut inner_case_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut inner_switch = ASTNode::new(NodeType::SwitchStatement);
+    let mut inner_case = ASTNode::new(NodeType::Case);
+    let mut inner_case_block = ASTNode::new(NodeType::BlockExpression);
 
-    let mut most_inner_switch = ASTNode::new(SyntaxElement::SwitchStatement);
-    let mut most_inner_case = ASTNode::new(SyntaxElement::Case);
-    let most_inner_case_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut most_inner_switch = ASTNode::new(NodeType::SwitchStatement);
+    let mut most_inner_case = ASTNode::new(NodeType::Case);
+    let most_inner_case_block = ASTNode::new(NodeType::BlockExpression);
 
     most_inner_case.add_child(most_inner_case_block);
     most_inner_switch.add_child(most_inner_case);

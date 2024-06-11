@@ -1,7 +1,7 @@
 //! This file hosts all of the functions necessary for generating LLVM IR
 //! for "block" nodes, nodes that generate and manipulate basic blocks.
 
-use common::{ast::ast_struct::ASTNode, error::ErrorType};
+use common::{ast::core::ASTNode, error::ErrorType};
 use safe_llvm::ir::core::Tag;
 use crate::core::IRGenerator;
 
@@ -30,6 +30,7 @@ impl IRGenerator {
     /// function's ValueTag. */
     /// ```
     pub fn generate_fn_declaration_ir(&mut self, node: &ASTNode) -> Result<Option<Tag>, ErrorType> {
+        let _ = node;
         unimplemented!();
     }
     
@@ -57,6 +58,7 @@ impl IRGenerator {
     /// /* check if type_result was Ok or Err, if Ok, it will contain None. */
     /// ```
     pub fn generate_block_exp(&mut self, node: &ASTNode) -> Result<Option<Tag>, ErrorType> {
+        let _ = node;
         unimplemented!();
     }
 
@@ -83,6 +85,7 @@ impl IRGenerator {
     /// /* check if type_result was Ok or Err, if Ok, it will contain None. */
     /// ```
     pub fn generate_do_while_ir(&mut self, node: &ASTNode) -> Result<Option<Tag>, ErrorType> {
+        let _ = node;
         unimplemented!();
     }
 
@@ -109,6 +112,7 @@ impl IRGenerator {
     /// /* check if type_result was Ok or Err, if Ok, it will contain None. */
     /// ```
     pub fn generate_while_ir(&mut self, node: &ASTNode) -> Result<Option<Tag>, ErrorType> {
+        let _ = node;
         unimplemented!();
     }
     
@@ -135,6 +139,7 @@ impl IRGenerator {
     /// /* check if type_result was Ok or Err, if Ok, it will contain None. */
     /// ```
     pub fn generate_for_ir(&mut self, node: &ASTNode) -> Result<Option<Tag>, ErrorType> {
+        let _ = node;
         unimplemented!();
     }
 
@@ -161,6 +166,7 @@ impl IRGenerator {
     /// /* check if type_result was Ok or Err, if Ok, it will contain None. */
     /// ```
     pub fn generate_if_ir(&mut self, node: &ASTNode) -> Result<Option<Tag>, ErrorType> {
+        let _ = node;
         unimplemented!();
     }
 } 

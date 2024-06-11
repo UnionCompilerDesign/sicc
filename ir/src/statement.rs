@@ -2,7 +2,7 @@
 //! for statements that do not evaluate to values such as break, 
 //! continue, and assignment.
 
-use common::{ast::ast_struct::ASTNode, error::ErrorType};
+use common::{ast::core::ASTNode, error::ErrorType};
 use safe_llvm::ir::core::Tag;
 use crate::core::IRGenerator;
 
@@ -30,6 +30,7 @@ impl IRGenerator {
     /// /* check if type_result was Ok or Err, if Ok, it will contain None. */
     /// ```
     pub fn generate_assignment_ir(&mut self, node: &ASTNode) -> Result<Option<Tag>, ErrorType> {
+        let _ = node;
         unimplemented!();
     }
 
@@ -56,6 +57,7 @@ impl IRGenerator {
     /// /* check if type_result was Ok or Err, if Ok, it will contain None. */
     /// ```
     pub fn generate_initialization_ir(&mut self, node: &ASTNode) -> Result<Option<Tag>, ErrorType> {
+        let _ = node;
         unimplemented!();
     }
     
@@ -83,7 +85,6 @@ impl IRGenerator {
     /// /* check if type_result was Ok or Err, if Ok, it will contain None. */
     /// ```
     pub fn generate_break_ir(&mut self, _node: &ASTNode) -> Result<Option<Tag>, ErrorType> {
-        
         unimplemented!();
     }
 
@@ -136,6 +137,7 @@ impl IRGenerator {
     /// /* check if type_result was Ok or Err, if Ok, it will contain None. */
     /// ```
     pub fn generate_return_ir(&mut self, node: &ASTNode) -> Result<Option<Tag>, ErrorType> {
+        let _ = node;
         unimplemented!();
     }
 
@@ -163,6 +165,7 @@ impl IRGenerator {
     /// the allocation tag of the recalled variable container. */
     /// ```
     pub fn generate_variable_ir(&mut self, node: &ASTNode) -> Result<Option<Tag>, ErrorType> {
+        let _ = node;
         unimplemented!();
     }
 }

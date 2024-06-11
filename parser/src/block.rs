@@ -2,15 +2,9 @@
 
 use common::{ 
     error::ErrorType,
-    ast::{
-        ast_struct::ASTNode, 
-        syntax_element::SyntaxElement,
-        data_type::DataType,
-    },
+    ast::core::ASTNode,
 };
-use lexer::token::Token;
 use crate::core::Parser;
-
 
 impl Parser {
     /// Creates the children of an expression that changes scope. Used for all scope changing expressions except structs and enums.
@@ -130,6 +124,8 @@ impl Parser {
     ///
     /// * Returns an error if there is a failure in token consumption or block parsing.
     pub fn parse_function_declaration(&mut self, identifier_node: ASTNode, return_type_node: ASTNode) -> Result<Option<ASTNode>, Vec<ErrorType>> {
+        let _ = identifier_node;
+        let _ = return_type_node;
         unimplemented!();
     }
     

@@ -1,18 +1,18 @@
 //! Base Case Testing for STS.
 
 use common::ast::{
-    ast_struct::{ASTNode, AST}, 
+    core::{ASTNode, AST}, 
     data_type::DataType, 
-    syntax_element::SyntaxElement
+    node_type::NodeType
 };
 use sts::core::{SymbolInfo, SymbolTable, SymbolTableStack, SymbolValue};
 
 #[test]
 fn test_empty_function() {
-    let mut fn_node = ASTNode::new(SyntaxElement::FunctionDeclaration);
+    let mut fn_node = ASTNode::new(NodeType::FunctionDeclaration);
     fn_node.set_children(vec![
-        ASTNode::new(SyntaxElement::Identifier("empty_function".to_string())),
-        ASTNode::new(SyntaxElement::Type(DataType::Void)),
+        ASTNode::new(NodeType::Identifier("empty_function".to_string())),
+        ASTNode::new(NodeType::Type(DataType::Void)),
     ]);
 
     let stack_pair_result = SymbolTableStack::gen_sym_table_stack(AST::new(fn_node.clone()));
@@ -28,16 +28,16 @@ fn test_empty_function() {
 
 #[test]
 fn test_empty_function_with_parameter() {
-    let mut param_node = ASTNode::new(SyntaxElement::Parameter);
+    let mut param_node = ASTNode::new(NodeType::Parameter);
     param_node.set_children(vec![
-        ASTNode::new(SyntaxElement::Identifier("param1".to_string())),
-        ASTNode::new(SyntaxElement::Type(DataType::Integer)),
+        ASTNode::new(NodeType::Identifier("param1".to_string())),
+        ASTNode::new(NodeType::Type(DataType::Integer)),
     ]);
 
-    let mut fn_node = ASTNode::new(SyntaxElement::FunctionDeclaration);
+    let mut fn_node = ASTNode::new(NodeType::FunctionDeclaration);
     fn_node.set_children(vec![
-        ASTNode::new(SyntaxElement::Identifier("empty_function_with_param".to_string())),
-        ASTNode::new(SyntaxElement::Type(DataType::Void)),
+        ASTNode::new(NodeType::Identifier("empty_function_with_param".to_string())),
+        ASTNode::new(NodeType::Type(DataType::Void)),
         param_node,
     ]);
 
@@ -57,9 +57,9 @@ fn test_empty_function_with_parameter() {
 
 #[test]
 fn test_for_loop() {
-    let condition_node = ASTNode::new(SyntaxElement::Condition);
-    let block_node = ASTNode::new(SyntaxElement::BlockExpression);
-    let mut for_node = ASTNode::new(SyntaxElement::ForLoop);
+    let condition_node = ASTNode::new(NodeType::Condition);
+    let block_node = ASTNode::new(NodeType::BlockExpression);
+    let mut for_node = ASTNode::new(NodeType::ForLoop);
     for_node.set_children(vec![condition_node, block_node]);
 
     let stack_pair_result = SymbolTableStack::gen_sym_table_stack(AST::new(for_node.clone()));
@@ -78,8 +78,8 @@ fn test_for_loop() {
 
 #[test]
 fn test_while_loop() {
-    let block_node = ASTNode::new(SyntaxElement::BlockExpression);
-    let mut while_node = ASTNode::new(SyntaxElement::WhileLoop);
+    let block_node = ASTNode::new(NodeType::BlockExpression);
+    let mut while_node = ASTNode::new(NodeType::WhileLoop);
     while_node.set_children(vec![block_node]);
 
     let stack_pair_result = SymbolTableStack::gen_sym_table_stack(AST::new(while_node.clone()));
@@ -96,8 +96,8 @@ fn test_while_loop() {
 
 #[test]
 fn test_do_while_loop() {
-    let block_node = ASTNode::new(SyntaxElement::BlockExpression);
-    let mut do_while_node = ASTNode::new(SyntaxElement::DoWhileLoop);
+    let block_node = ASTNode::new(NodeType::BlockExpression);
+    let mut do_while_node = ASTNode::new(NodeType::DoWhileLoop);
     do_while_node.set_children(vec![block_node]);
 
     let stack_pair_result = SymbolTableStack::gen_sym_table_stack(AST::new(do_while_node.clone()));
@@ -114,13 +114,13 @@ fn test_do_while_loop() {
 
 #[test]
 fn test_if_else_statement() {
-    let if_block_node = ASTNode::new(SyntaxElement::BlockExpression);
-    let else_block_node = ASTNode::new(SyntaxElement::BlockExpression);
-    let mut if_node = ASTNode::new(SyntaxElement::IfStatement);
+    let if_block_node = ASTNode::new(NodeType::BlockExpression);
+    let else_block_node = ASTNode::new(NodeType::BlockExpression);
+    let mut if_node = ASTNode::new(NodeType::IfStatement);
     if_node.set_children(vec![if_block_node]);
-    let mut else_node = ASTNode::new(SyntaxElement::ElseStatement);
+    let mut else_node = ASTNode::new(NodeType::ElseStatement);
     else_node.set_children(vec![else_block_node]);
-    let mut if_else_node = ASTNode::new(SyntaxElement::IfStatement);
+    let mut if_else_node = ASTNode::new(NodeType::IfStatement);
     if_else_node.set_children(vec![if_node, else_node]);
 
     let stack_pair_result = SymbolTableStack::gen_sym_table_stack(AST::new(if_else_node.clone()));
@@ -139,13 +139,13 @@ fn test_if_else_statement() {
 
 #[test]
 fn test_switch_statement() {
-    let mut case_node1 = ASTNode::new(SyntaxElement::Case);
-    case_node1.set_children(vec![ASTNode::new(SyntaxElement::BlockExpression)]);
-    let mut case_node2 = ASTNode::new(SyntaxElement::Case);
-    case_node2.set_children(vec![ASTNode::new(SyntaxElement::BlockExpression)]);
-    let mut case_node3 = ASTNode::new(SyntaxElement::Case);
-    case_node3.set_children(vec![ASTNode::new(SyntaxElement::BlockExpression)]);
-    let mut switch_node = ASTNode::new(SyntaxElement::SwitchStatement);
+    let mut case_node1 = ASTNode::new(NodeType::Case);
+    case_node1.set_children(vec![ASTNode::new(NodeType::BlockExpression)]);
+    let mut case_node2 = ASTNode::new(NodeType::Case);
+    case_node2.set_children(vec![ASTNode::new(NodeType::BlockExpression)]);
+    let mut case_node3 = ASTNode::new(NodeType::Case);
+    case_node3.set_children(vec![ASTNode::new(NodeType::BlockExpression)]);
+    let mut switch_node = ASTNode::new(NodeType::SwitchStatement);
     switch_node.set_children(vec![case_node1, case_node2, case_node3]);
 
     let stack_pair_result = SymbolTableStack::gen_sym_table_stack(AST::new(switch_node.clone()));
@@ -166,9 +166,9 @@ fn test_switch_statement() {
 
 #[test]
 fn test_initialization() {
-    let name = ASTNode::new(SyntaxElement::Identifier("foo".to_string()));
-    let kind = ASTNode::new(SyntaxElement::Type(DataType::Integer));
-    let mut init = ASTNode::new(SyntaxElement::Initialization);
+    let name = ASTNode::new(NodeType::Identifier("foo".to_string()));
+    let kind = ASTNode::new(NodeType::Type(DataType::Integer));
+    let mut init = ASTNode::new(NodeType::Initialization);
 
     init.add_child(name);
     init.add_child(kind);

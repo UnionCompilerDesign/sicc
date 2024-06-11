@@ -1,8 +1,5 @@
 use common::error::ErrorType;
-use lexer::{
-    core::Lexer,
-    token::Token,
-};
+use lexer::core::Lexer;
 
 /// cargo test --test error_tests
 /// Tests combinations of tokens that should flag an error. 

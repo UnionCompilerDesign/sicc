@@ -4,7 +4,7 @@
 use std::sync::{Arc, Mutex};
 use ir::core::IRGenerator;
 use common::{
-  ast::{ast_struct::{ASTNode, AST}, data_type::DataType, syntax_element::SyntaxElement},
+  ast::{core::{ASTNode, AST}, data_type::DataType, node_type::NodeType},
   constants::DEFAULT_PRIORITY_MODELEMENT};
 use sts::core::{SymbolInfo, SymbolTable, SymbolTableStack, SymbolValue};
 use integration::module::{
@@ -13,7 +13,7 @@ use integration::module::{
 use safe_llvm::{common::io, ir::core::IRManager};
 
 fn wrap_in_tle(ast_node: ASTNode) -> AST {
-    let mut tle: ASTNode = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut tle: ASTNode = ASTNode::new(NodeType::TopLevelExpression);
     tle.add_child(ast_node);
     AST::new(tle)
 }
@@ -109,71 +109,71 @@ fn test_deeply_nested_loops1() {
     for_endID1:                                       ; preds = %for_condID1
     }
     */
-    let mut function_ast = ASTNode::new(SyntaxElement::FunctionDeclaration);
-    let fn_id = ASTNode::new(SyntaxElement::Identifier("testDeeplyNestedLoops".to_string()));
-    let fn_type = ASTNode::new(SyntaxElement::Type(DataType::Integer));
-    let mut fn_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut function_ast = ASTNode::new(NodeType::FunctionDeclaration);
+    let fn_id = ASTNode::new(NodeType::Identifier("testDeeplyNestedLoops".to_string()));
+    let fn_type = ASTNode::new(NodeType::Type(DataType::Integer));
+    let mut fn_block = ASTNode::new(NodeType::BlockExpression);
 
-    let mut for_loop = ASTNode::new(SyntaxElement::ForLoop);
-    let mut for_init = ASTNode::new(SyntaxElement::LoopInitializer);
-    let mut assignment_node = ASTNode::new(SyntaxElement::Initialization);
-    let mut for_cond = ASTNode::new(SyntaxElement::Condition);
-    for_cond.add_child(ASTNode::new(SyntaxElement::Literal("true".to_string())));
+    let mut for_loop = ASTNode::new(NodeType::ForLoop);
+    let mut for_init = ASTNode::new(NodeType::LoopInitializer);
+    let mut assignment_node = ASTNode::new(NodeType::Initialization);
+    let mut for_cond = ASTNode::new(NodeType::Condition);
+    for_cond.add_child(ASTNode::new(NodeType::Literal("true".to_string())));
 
-    let mut for_init_var = ASTNode::new(SyntaxElement::Variable);
-    for_init_var.add_child(ASTNode::new(SyntaxElement::Identifier("i".to_string())));
-    for_init_var.add_child(ASTNode::new(SyntaxElement::Type(DataType::Integer)));
+    let mut for_init_var = ASTNode::new(NodeType::Variable);
+    for_init_var.add_child(ASTNode::new(NodeType::Identifier("i".to_string())));
+    for_init_var.add_child(ASTNode::new(NodeType::Type(DataType::Integer)));
     assignment_node.add_child(for_init_var);
 
-    let mut for_init_av = ASTNode::new( SyntaxElement::AssignedValue);
-    for_init_av.add_child(ASTNode::new(SyntaxElement::Literal("5".to_string())));
+    let mut for_init_av = ASTNode::new( NodeType::AssignedValue);
+    for_init_av.add_child(ASTNode::new(NodeType::Literal("5".to_string())));
     assignment_node.add_child(for_init_av);
     for_init.add_child(assignment_node);
 
-    let mut for_body = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut for_body = ASTNode::new(NodeType::BlockExpression);
 
-    let mut while_loop = ASTNode::new(SyntaxElement::WhileLoop);
-    let mut while_cond = ASTNode::new(SyntaxElement::Condition); 
-    while_cond.add_child(ASTNode::new(SyntaxElement::Literal("true".to_string())));
-    let mut while_body = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut while_loop = ASTNode::new(NodeType::WhileLoop);
+    let mut while_cond = ASTNode::new(NodeType::Condition); 
+    while_cond.add_child(ASTNode::new(NodeType::Literal("true".to_string())));
+    let mut while_body = ASTNode::new(NodeType::BlockExpression);
 
-    let mut do_while_loop = ASTNode::new(SyntaxElement::DoWhileLoop);
-    let mut do_while_cond = ASTNode::new(SyntaxElement::Condition); 
-    do_while_cond.add_child( ASTNode::new(SyntaxElement::Literal("true".to_string()))); 
-    let mut do_while_body = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut do_while_loop = ASTNode::new(NodeType::DoWhileLoop);
+    let mut do_while_cond = ASTNode::new(NodeType::Condition); 
+    do_while_cond.add_child( ASTNode::new(NodeType::Literal("true".to_string()))); 
+    let mut do_while_body = ASTNode::new(NodeType::BlockExpression);
 
-    let mut nested_for_loop = ASTNode::new(SyntaxElement::ForLoop);
-    let mut nested_for_cond = ASTNode::new(SyntaxElement::Condition);
-    nested_for_cond.add_child(ASTNode::new(SyntaxElement::Literal("true".to_string())));
-    let mut nested_for_init = ASTNode::new(SyntaxElement::LoopInitializer);
-    let mut nested_for_variable = ASTNode::new(SyntaxElement::Initialization);
-    let mut nested_for_init_var = ASTNode::new(SyntaxElement::Variable);
-    nested_for_init_var.add_child(ASTNode::new(SyntaxElement::Identifier("j".to_string())));
-    nested_for_init_var.add_child(ASTNode::new(SyntaxElement::Type(DataType::Integer)));
+    let mut nested_for_loop = ASTNode::new(NodeType::ForLoop);
+    let mut nested_for_cond = ASTNode::new(NodeType::Condition);
+    nested_for_cond.add_child(ASTNode::new(NodeType::Literal("true".to_string())));
+    let mut nested_for_init = ASTNode::new(NodeType::LoopInitializer);
+    let mut nested_for_variable = ASTNode::new(NodeType::Initialization);
+    let mut nested_for_init_var = ASTNode::new(NodeType::Variable);
+    nested_for_init_var.add_child(ASTNode::new(NodeType::Identifier("j".to_string())));
+    nested_for_init_var.add_child(ASTNode::new(NodeType::Type(DataType::Integer)));
 
-    let mut nested_for_init_val = ASTNode::new(SyntaxElement::AssignedValue);
-    nested_for_init_val.add_child(ASTNode::new(SyntaxElement::Literal("6".to_string())));
+    let mut nested_for_init_val = ASTNode::new(NodeType::AssignedValue);
+    nested_for_init_val.add_child(ASTNode::new(NodeType::Literal("6".to_string())));
     // nested_for_init.add_child(nested_for_init_var);
     nested_for_variable.add_child(nested_for_init_var);
     nested_for_variable.add_child(nested_for_init_val);
     nested_for_init.add_child(nested_for_variable);
 
-    let mut nested_for_body = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut nested_for_body = ASTNode::new(NodeType::BlockExpression);
 
-    let mut nested_while_loop = ASTNode::new(SyntaxElement::WhileLoop);
-    let mut nested_while_cond = ASTNode::new(SyntaxElement::Condition);
-    nested_while_cond.add_child(ASTNode::new(SyntaxElement::Literal("true".to_string())));
-    let mut nested_while_body = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut nested_while_loop = ASTNode::new(NodeType::WhileLoop);
+    let mut nested_while_cond = ASTNode::new(NodeType::Condition);
+    nested_while_cond.add_child(ASTNode::new(NodeType::Literal("true".to_string())));
+    let mut nested_while_body = ASTNode::new(NodeType::BlockExpression);
 
-    let mut nested_do_while_loop = ASTNode::new(SyntaxElement::DoWhileLoop);
-    let mut nested_do_while_body = ASTNode::new(SyntaxElement::BlockExpression);
-    let mut nested_do_while_blockexp = ASTNode::new(SyntaxElement::Return);
-    let mut nested_do_while_av = ASTNode::new(SyntaxElement::AssignedValue);
-    nested_do_while_av.add_child(ASTNode::new(SyntaxElement::Literal("0".to_string())));
+    let mut nested_do_while_loop = ASTNode::new(NodeType::DoWhileLoop);
+    let mut nested_do_while_body = ASTNode::new(NodeType::BlockExpression);
+    let mut nested_do_while_blockexp = ASTNode::new(NodeType::Return);
+    let mut nested_do_while_av = ASTNode::new(NodeType::AssignedValue);
+    nested_do_while_av.add_child(ASTNode::new(NodeType::Literal("0".to_string())));
     nested_do_while_blockexp.add_child(nested_do_while_av);
     nested_do_while_body.add_child(nested_do_while_blockexp);
-    let mut nested_do_while_cond = ASTNode::new(SyntaxElement::Condition); 
-    nested_do_while_cond.add_child(ASTNode::new(SyntaxElement::Literal("true".to_string())));
+    let mut nested_do_while_cond = ASTNode::new(NodeType::Condition); 
+    nested_do_while_cond.add_child(ASTNode::new(NodeType::Literal("true".to_string())));
 
     nested_do_while_loop.add_child(nested_do_while_body);
     nested_do_while_loop.add_child(nested_do_while_cond);
@@ -321,48 +321,48 @@ fn test_deeply_nested_loops2() {
     while_endID1:                                     ; preds = %while_condID1
     }
     */
-    let mut function_ast = ASTNode::new(SyntaxElement::FunctionDeclaration);
-    let fn_id = ASTNode::new(SyntaxElement::Identifier("testSwappedWhileForLoops".to_string()));
-    let fn_type = ASTNode::new(SyntaxElement::Type(DataType::Integer));
-    let mut fn_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut function_ast = ASTNode::new(NodeType::FunctionDeclaration);
+    let fn_id = ASTNode::new(NodeType::Identifier("testSwappedWhileForLoops".to_string()));
+    let fn_type = ASTNode::new(NodeType::Type(DataType::Integer));
+    let mut fn_block = ASTNode::new(NodeType::BlockExpression);
 
-    let mut outer_while_loop = ASTNode::new(SyntaxElement::WhileLoop);
-    let mut outer_while_cond = ASTNode::new(SyntaxElement::Condition);
-    outer_while_cond.add_child(ASTNode::new(SyntaxElement::Literal("true".to_string()))); 
-    let mut outer_while_body = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut outer_while_loop = ASTNode::new(NodeType::WhileLoop);
+    let mut outer_while_cond = ASTNode::new(NodeType::Condition);
+    outer_while_cond.add_child(ASTNode::new(NodeType::Literal("true".to_string()))); 
+    let mut outer_while_body = ASTNode::new(NodeType::BlockExpression);
 
-    let mut for_loop = ASTNode::new(SyntaxElement::ForLoop);
-    let mut for_loop_cond = ASTNode::new(SyntaxElement::Condition);
-    let mut for_loop_body = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut for_loop = ASTNode::new(NodeType::ForLoop);
+    let mut for_loop_cond = ASTNode::new(NodeType::Condition);
+    let mut for_loop_body = ASTNode::new(NodeType::BlockExpression);
 
-    for_loop_cond.add_child(ASTNode::new(SyntaxElement::Literal("true".to_string()))); 
+    for_loop_cond.add_child(ASTNode::new(NodeType::Literal("true".to_string()))); 
     for_loop.add_child(for_loop_cond);
 
-    let mut do_while_loop = ASTNode::new(SyntaxElement::DoWhileLoop);
-    let mut do_while_cond = ASTNode::new(SyntaxElement::Condition);
-    do_while_cond.add_child(ASTNode::new(SyntaxElement::Literal("true".to_string())));
-    let mut do_while_body = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut do_while_loop = ASTNode::new(NodeType::DoWhileLoop);
+    let mut do_while_cond = ASTNode::new(NodeType::Condition);
+    do_while_cond.add_child(ASTNode::new(NodeType::Literal("true".to_string())));
+    let mut do_while_body = ASTNode::new(NodeType::BlockExpression);
 
-    let mut inner_while_loop = ASTNode::new(SyntaxElement::WhileLoop);
-    let mut inner_while_cond = ASTNode::new(SyntaxElement::Condition);
-    inner_while_cond.add_child(ASTNode::new(SyntaxElement::Literal("true".to_string())));
-    let mut inner_while_body = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut inner_while_loop = ASTNode::new(NodeType::WhileLoop);
+    let mut inner_while_cond = ASTNode::new(NodeType::Condition);
+    inner_while_cond.add_child(ASTNode::new(NodeType::Literal("true".to_string())));
+    let mut inner_while_body = ASTNode::new(NodeType::BlockExpression);
 
-    let mut inner_for_loop = ASTNode::new(SyntaxElement::ForLoop);
-    let mut inner_for_loop_body = ASTNode::new(SyntaxElement::BlockExpression);
-    let mut inner_for_loop_cond = ASTNode::new(SyntaxElement::Condition);
-    inner_for_loop_cond.add_child(ASTNode::new(SyntaxElement::Literal("true".to_string()))); 
+    let mut inner_for_loop = ASTNode::new(NodeType::ForLoop);
+    let mut inner_for_loop_body = ASTNode::new(NodeType::BlockExpression);
+    let mut inner_for_loop_cond = ASTNode::new(NodeType::Condition);
+    inner_for_loop_cond.add_child(ASTNode::new(NodeType::Literal("true".to_string()))); 
     inner_for_loop.add_child(inner_for_loop_cond);
 
-    let mut inner_do_while_loop = ASTNode::new(SyntaxElement::DoWhileLoop);
-    let mut inner_do_while_body = ASTNode::new(SyntaxElement::BlockExpression);
-    let mut inner_do_while_statement = ASTNode::new(SyntaxElement::Return);
-    let mut inner_do_while_av = ASTNode::new(SyntaxElement::AssignedValue);
-    inner_do_while_av.add_child(ASTNode::new(SyntaxElement::Literal("42".to_string())));
+    let mut inner_do_while_loop = ASTNode::new(NodeType::DoWhileLoop);
+    let mut inner_do_while_body = ASTNode::new(NodeType::BlockExpression);
+    let mut inner_do_while_statement = ASTNode::new(NodeType::Return);
+    let mut inner_do_while_av = ASTNode::new(NodeType::AssignedValue);
+    inner_do_while_av.add_child(ASTNode::new(NodeType::Literal("42".to_string())));
     inner_do_while_statement.add_child(inner_do_while_av);
     inner_do_while_body.add_child(inner_do_while_statement);
-    let mut inner_do_while_cond = ASTNode::new(SyntaxElement::Condition);
-    inner_do_while_cond.add_child(ASTNode::new(SyntaxElement::Literal("true".to_string())));
+    let mut inner_do_while_cond = ASTNode::new(NodeType::Condition);
+    inner_do_while_cond.add_child(ASTNode::new(NodeType::Literal("true".to_string())));
 
     inner_do_while_loop.add_child(inner_do_while_body);
     inner_do_while_loop.add_child(inner_do_while_cond);
@@ -492,51 +492,51 @@ fn test_deply_nested_loops3() {
     do_endID1:                                        ; preds = %do_condID1
     }
     */
-    let mut function_ast = ASTNode::new(SyntaxElement::FunctionDeclaration);
-    let fn_id = ASTNode::new(SyntaxElement::Identifier("testMultipleDoWhileLoops3".to_string()));
-    let fn_type = ASTNode::new(SyntaxElement::Type(DataType::Integer));
-    let mut fn_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut function_ast = ASTNode::new(NodeType::FunctionDeclaration);
+    let fn_id = ASTNode::new(NodeType::Identifier("testMultipleDoWhileLoops3".to_string()));
+    let fn_type = ASTNode::new(NodeType::Type(DataType::Integer));
+    let mut fn_block = ASTNode::new(NodeType::BlockExpression);
 
-    let mut outer_do_while_loop = ASTNode::new(SyntaxElement::DoWhileLoop);
-    let mut outer_do_while_cond = ASTNode::new(SyntaxElement::Condition);
-    outer_do_while_cond.add_child(ASTNode::new(SyntaxElement::Literal("true".to_string())));
-    let mut outer_do_while_body = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut outer_do_while_loop = ASTNode::new(NodeType::DoWhileLoop);
+    let mut outer_do_while_cond = ASTNode::new(NodeType::Condition);
+    outer_do_while_cond.add_child(ASTNode::new(NodeType::Literal("true".to_string())));
+    let mut outer_do_while_body = ASTNode::new(NodeType::BlockExpression);
 
-    let mut middle_do_while_loop = ASTNode::new(SyntaxElement::DoWhileLoop);
-    let mut middle_do_while_cond = ASTNode::new(SyntaxElement::Condition);
-    middle_do_while_cond.add_child(ASTNode::new(SyntaxElement::Literal("true".to_string())));
-    let mut middle_do_while_body = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut middle_do_while_loop = ASTNode::new(NodeType::DoWhileLoop);
+    let mut middle_do_while_cond = ASTNode::new(NodeType::Condition);
+    middle_do_while_cond.add_child(ASTNode::new(NodeType::Literal("true".to_string())));
+    let mut middle_do_while_body = ASTNode::new(NodeType::BlockExpression);
 
-    let mut for_loop = ASTNode::new(SyntaxElement::ForLoop);
-    let mut for_loop_cond = ASTNode::new(SyntaxElement::Condition);
-    for_loop_cond.add_child(ASTNode::new(SyntaxElement::Literal("true".to_string())));
+    let mut for_loop = ASTNode::new(NodeType::ForLoop);
+    let mut for_loop_cond = ASTNode::new(NodeType::Condition);
+    for_loop_cond.add_child(ASTNode::new(NodeType::Literal("true".to_string())));
     for_loop.add_child(for_loop_cond);
-    let mut for_init = ASTNode::new(SyntaxElement::LoopInitializer);
-    let mut for_init_var_declaration = ASTNode::new(SyntaxElement::Initialization);
-    let mut for_init_var = ASTNode::new(SyntaxElement::Variable);
-    for_init_var.add_child(ASTNode::new(SyntaxElement::Identifier("i".to_string())));
-    for_init_var.add_child(ASTNode::new(SyntaxElement::Type(DataType::Integer)));
-    let mut for_init_val = ASTNode::new(SyntaxElement::AssignedValue);
-    for_init_val.add_child(ASTNode::new(SyntaxElement::Literal("42".to_string())));
+    let mut for_init = ASTNode::new(NodeType::LoopInitializer);
+    let mut for_init_var_declaration = ASTNode::new(NodeType::Initialization);
+    let mut for_init_var = ASTNode::new(NodeType::Variable);
+    for_init_var.add_child(ASTNode::new(NodeType::Identifier("i".to_string())));
+    for_init_var.add_child(ASTNode::new(NodeType::Type(DataType::Integer)));
+    let mut for_init_val = ASTNode::new(NodeType::AssignedValue);
+    for_init_val.add_child(ASTNode::new(NodeType::Literal("42".to_string())));
     for_init_var_declaration.add_child(for_init_var);
     for_init_var_declaration.add_child(for_init_val);
     for_init.add_child(for_init_var_declaration);
 
-    let mut for_body = ASTNode::new(SyntaxElement::BlockExpression);
-    let mut while_loop = ASTNode::new(SyntaxElement::WhileLoop);
-    let mut while_cond = ASTNode::new(SyntaxElement::Condition);
-    while_cond.add_child(ASTNode::new(SyntaxElement::Literal("true".to_string())));
-    let mut while_body = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut for_body = ASTNode::new(NodeType::BlockExpression);
+    let mut while_loop = ASTNode::new(NodeType::WhileLoop);
+    let mut while_cond = ASTNode::new(NodeType::Condition);
+    while_cond.add_child(ASTNode::new(NodeType::Literal("true".to_string())));
+    let mut while_body = ASTNode::new(NodeType::BlockExpression);
 
-    let mut inner_do_while_loop = ASTNode::new(SyntaxElement::DoWhileLoop);
-    let mut inner_do_while_body = ASTNode::new(SyntaxElement::BlockExpression);
-    let mut inner_do_while_return = ASTNode::new(SyntaxElement::Return);
-    let mut inner_do_while_av = ASTNode::new(SyntaxElement::AssignedValue);
-    inner_do_while_av.add_child(ASTNode::new(SyntaxElement::Literal("42".to_string())));
+    let mut inner_do_while_loop = ASTNode::new(NodeType::DoWhileLoop);
+    let mut inner_do_while_body = ASTNode::new(NodeType::BlockExpression);
+    let mut inner_do_while_return = ASTNode::new(NodeType::Return);
+    let mut inner_do_while_av = ASTNode::new(NodeType::AssignedValue);
+    inner_do_while_av.add_child(ASTNode::new(NodeType::Literal("42".to_string())));
     inner_do_while_return.add_child(inner_do_while_av);
     inner_do_while_body.add_child(inner_do_while_return);
-    let mut inner_do_while_cond = ASTNode::new(SyntaxElement::Condition);
-    inner_do_while_cond.add_child(ASTNode::new(SyntaxElement::Literal("true".to_string())));
+    let mut inner_do_while_cond = ASTNode::new(NodeType::Condition);
+    inner_do_while_cond.add_child(ASTNode::new(NodeType::Literal("true".to_string())));
 
     inner_do_while_loop.add_child(inner_do_while_body);
     inner_do_while_loop.add_child(inner_do_while_cond);
@@ -634,33 +634,33 @@ fn test_function_with_while_if_else_break_continue() {
 
     */ 
 
-    let mut while_condition = ASTNode::new(SyntaxElement::Condition);
-    let while_condition_value = ASTNode::new(SyntaxElement::Literal("true".to_string()));
+    let mut while_condition = ASTNode::new(NodeType::Condition);
+    let while_condition_value = ASTNode::new(NodeType::Literal("true".to_string()));
     while_condition.add_child(while_condition_value);
-    let mut while_body = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut while_body = ASTNode::new(NodeType::BlockExpression);
 
-    let mut while_statement = ASTNode::new(SyntaxElement::WhileLoop);
+    let mut while_statement = ASTNode::new(NodeType::WhileLoop);
     while_statement.add_child(while_condition);
     
 
-    let mut if_statement = ASTNode::new(SyntaxElement::IfStatement);
+    let mut if_statement = ASTNode::new(NodeType::IfStatement);
 
-    let mut if_condition = ASTNode::new(SyntaxElement::Condition);
+    let mut if_condition = ASTNode::new(NodeType::Condition);
 
-    let if_value = ASTNode::new(SyntaxElement::Literal("true".to_string()));
+    let if_value = ASTNode::new(NodeType::Literal("true".to_string()));
     if_condition.add_child(if_value);
 
-    let mut then_branch = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut then_branch = ASTNode::new(NodeType::BlockExpression);
 
-    then_branch.add_child(ASTNode::new(SyntaxElement::Break));
+    then_branch.add_child(ASTNode::new(NodeType::Break));
 
     if_statement.add_child(if_condition);
     if_statement.add_child(then_branch);
 
-    let mut else_branch = ASTNode::new(SyntaxElement::ElseStatement);
-    let mut else_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut else_branch = ASTNode::new(NodeType::ElseStatement);
+    let mut else_block = ASTNode::new(NodeType::BlockExpression);
 
-    else_block.add_child(ASTNode::new(SyntaxElement::Continue));
+    else_block.add_child(ASTNode::new(NodeType::Continue));
 
     else_branch.add_child(else_block);
 
@@ -669,14 +669,14 @@ fn test_function_with_while_if_else_break_continue() {
     while_statement.add_child(while_body);
 
 
-    let mut fn_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut fn_block = ASTNode::new(NodeType::BlockExpression);
 
     fn_block.add_child(while_statement);
 
-    let fn_type = ASTNode::new(SyntaxElement::Type(DataType::Integer));
-    let fn_id = ASTNode::new(SyntaxElement::Identifier("testFunction".to_string()));
+    let fn_type = ASTNode::new(NodeType::Type(DataType::Integer));
+    let fn_id = ASTNode::new(NodeType::Identifier("testFunction".to_string()));
 
-    let mut fn_declaration_node = ASTNode::new(SyntaxElement::FunctionDeclaration);
+    let mut fn_declaration_node = ASTNode::new(NodeType::FunctionDeclaration);
     
     fn_declaration_node.add_child(fn_id);
     fn_declaration_node.add_child(fn_type);

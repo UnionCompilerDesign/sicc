@@ -30,6 +30,7 @@ pub enum ErrorType {
 
     /// Syntax Error, most commonly found in the parsing stage.
     SyntaxError {
+        /// Describes the parsing error found.
         message: String,
     },
 

@@ -1,7 +1,7 @@
 //! This file hosts all of the functions necessary for generating LLVM IR
 //! for primitives such as basic data types and literal values.
 
-use common::{ast::{ast_struct::ASTNode, data_type::DataType}, error::ErrorType};
+use common::{ast::{core::ASTNode, data_type::DataType}, error::ErrorType};
 use safe_llvm::ir::core::Tag;
 use crate::core::IRGenerator;
 
@@ -31,6 +31,7 @@ impl IRGenerator {
     /// the Tag and use this for other functions. */
     /// ```
     pub fn generate_data_type_ir(&mut self, data_type: &DataType) -> Result<Option<Tag>, ErrorType> {
+        let _ = data_type;
         unimplemented!();
     }
 
@@ -58,6 +59,7 @@ impl IRGenerator {
     /// the Tag and use this for other functions. */
     /// ```
     pub fn generate_literal_ir(&mut self, node: &ASTNode) -> Result<Option<Tag>, ErrorType> {
+        let _ = node;
         unimplemented!();
     }
 }

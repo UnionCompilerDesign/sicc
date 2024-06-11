@@ -1,7 +1,7 @@
 //! This file contains basic tests for the parser, most often ensuring correct parsing of individual tokens.
 
 use common::ast::{
-    ast_struct::{ASTNode, AST}, data_type::DataType, syntax_element::SyntaxElement
+    core::{ASTNode, AST}, data_type::DataType, node_type::NodeType
 };
 use lexer::token::Token;
 use parser::core::Parser;
@@ -11,7 +11,7 @@ use parser::core::Parser;
 fn test_empty_input() { 
     let tokens: Vec<Token> = vec![];
     let ast = Parser::parse(tokens).expect("Failed to parse");
-    assert_eq!(ast.get_root().get_element(), SyntaxElement::TopLevelExpression);
+    assert_eq!(ast.get_root().get_node_type(), NodeType::TopLevelExpression);
     assert!(ast.get_root().get_children().is_empty());
 }
 
@@ -20,7 +20,7 @@ fn test_empty_input() {
 fn test_eof() { 
     let tokens: Vec<Token> = vec![Token::EOF];
     let ast = Parser::parse(tokens).expect("Failed to parse");
-    assert_eq!(ast.get_root().get_element(), SyntaxElement::TopLevelExpression);
+    assert_eq!(ast.get_root().get_node_type(), NodeType::TopLevelExpression);
     assert!(ast.get_root().get_children().is_empty());
 }
 
@@ -36,8 +36,8 @@ fn test_number_syntax_element() {
     
     let ast = result.expect("Failed to parse");
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
-    top_level_expr.add_child(ASTNode::new(SyntaxElement::Literal("23".to_string())));
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
+    top_level_expr.add_child(ASTNode::new(NodeType::Literal("23".to_string())));
     let expected_ast: AST = AST::new(top_level_expr);
 
     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
@@ -55,8 +55,8 @@ fn test_floating_point_number() {
     
     let ast = result.expect("Failed to parse");
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
-    top_level_expr.add_child(ASTNode::new(SyntaxElement::Literal("2.3".to_string())));
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
+    top_level_expr.add_child(ASTNode::new(NodeType::Literal("2.3".to_string())));
     let expected_ast: AST = AST::new(top_level_expr);
 
     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
@@ -74,8 +74,8 @@ fn test_identifier_syntax_element() {
     
     let ast = result.expect("Failed to parse");
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
-    top_level_expr.add_child(ASTNode::new(SyntaxElement::Identifier("foo".to_string())));
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
+    top_level_expr.add_child(ASTNode::new(NodeType::Identifier("foo".to_string())));
     let expected_ast: AST = AST::new(top_level_expr);
 
 
@@ -95,8 +95,8 @@ fn test_break_syntax_element() {
     
     let ast = result.expect("Failed to parse");
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
-    top_level_expr.add_child(ASTNode::new(SyntaxElement::Break));
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
+    top_level_expr.add_child(ASTNode::new(NodeType::Break));
     let expected_ast: AST = AST::new(top_level_expr);
 
     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
@@ -115,8 +115,8 @@ fn test_continue_syntax_element() {
     
     let ast = result.expect("Failed to parse");
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
-    top_level_expr.add_child(ASTNode::new(SyntaxElement::Continue));
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
+    top_level_expr.add_child(ASTNode::new(NodeType::Continue));
     let expected_ast: AST = AST::new(top_level_expr);
 
     assert_eq!(ast, expected_ast, "The parsed AST does not match the expected AST.");
@@ -130,7 +130,7 @@ fn test_semicolon_syntax_element() {
     ];
 
     let ast = Parser::parse(tokens).expect("Failed to parse");
-    assert_eq!(ast.get_root().get_element(), SyntaxElement::TopLevelExpression);
+    assert_eq!(ast.get_root().get_node_type(), NodeType::TopLevelExpression);
     assert!(ast.get_root().get_children().is_empty());
 }
 
@@ -149,14 +149,14 @@ fn test_operator_syntax_element() {
     
     let ast = result.expect("Failed to parse");
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     
-    let mut binary_expr_node = ASTNode::new(SyntaxElement::BinaryExpression);
-    let identifier_node_a: ASTNode = ASTNode::new(SyntaxElement::Identifier("x".to_string()));
-    let identifier_node_b: ASTNode = ASTNode::new(SyntaxElement::Identifier("y".to_string()));
+    let mut binary_expr_node = ASTNode::new(NodeType::BinaryExpression);
+    let identifier_node_a: ASTNode = ASTNode::new(NodeType::Identifier("x".to_string()));
+    let identifier_node_b: ASTNode = ASTNode::new(NodeType::Identifier("y".to_string()));
 
     binary_expr_node.add_child(identifier_node_a);
-    binary_expr_node.add_child(ASTNode::new(SyntaxElement::Operator("<".to_string())));
+    binary_expr_node.add_child(ASTNode::new(NodeType::Operator("<".to_string())));
     binary_expr_node.add_child(identifier_node_b);
 
     top_level_expr.add_child(binary_expr_node);
@@ -177,18 +177,18 @@ fn test_data_type_syntax_element() {
 
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let mut initialization_node: ASTNode = ASTNode::new(SyntaxElement::Initialization);
+    let mut initialization_node: ASTNode = ASTNode::new(NodeType::Initialization);
 
-    let var_id_node: ASTNode = ASTNode::new(SyntaxElement::Identifier("y".to_string()));
-    let type_node: ASTNode = ASTNode::new(SyntaxElement::Type(DataType::Integer));
+    let var_id_node: ASTNode = ASTNode::new(NodeType::Identifier("y".to_string()));
+    let type_node: ASTNode = ASTNode::new(NodeType::Type(DataType::Integer));
 
-    let mut variable_node: ASTNode = ASTNode::new(SyntaxElement::Variable);
+    let mut variable_node: ASTNode = ASTNode::new(NodeType::Variable);
     variable_node.add_child(var_id_node);
     variable_node.add_child(type_node);
 
     initialization_node.add_child(variable_node);
 
-    let mut top_level_expr: ASTNode = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr: ASTNode = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(initialization_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -215,9 +215,9 @@ fn test_if_statement_syntax_element() {
 
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let if_syntax_element = ast.get_root().get_children()[0].get_element();
+    let if_syntax_element = ast.get_root().get_children()[0].get_node_type();
 
-    assert_eq!(if_syntax_element, SyntaxElement::IfStatement, "No IfStatement syntax element was found as a child of the TopLevelExpression node.");
+    assert_eq!(if_syntax_element, NodeType::IfStatement, "No IfStatement syntax element was found as a child of the TopLevelExpression node.");
 }
 
 /// This test checks the parser's ability to create a ForLoop syntax element
@@ -249,9 +249,9 @@ fn test_for_loop_syntax_element() {
     ];
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let for_syntax_element = ast.get_root().get_children()[0].get_element();
+    let for_syntax_element = ast.get_root().get_children()[0].get_node_type();
 
-    assert_eq!(for_syntax_element, SyntaxElement::ForLoop, "No ForLoop syntax element was found as a child of the TopLevelExpression node.");
+    assert_eq!(for_syntax_element, NodeType::ForLoop, "No ForLoop syntax element was found as a child of the TopLevelExpression node.");
 }
 
 /// This test checks the parser's ability to create a WhileLoop syntax element
@@ -272,9 +272,9 @@ fn test_while_loop_syntax_element() {
 
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let while_syntax_element = ast.get_root().get_children()[0].get_element();
+    let while_syntax_element = ast.get_root().get_children()[0].get_node_type();
 
-    assert_eq!(while_syntax_element, SyntaxElement::WhileLoop, "No WhileLoop syntax element was found as a child of the TopLevelExpression node.");
+    assert_eq!(while_syntax_element, NodeType::WhileLoop, "No WhileLoop syntax element was found as a child of the TopLevelExpression node.");
 }
 
 /// This test checks the parser's ability to create a DoWhileLoop syntax element
@@ -297,9 +297,9 @@ fn test_do_while_loop_syntax_element() {
 
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let do_while_syntax_element = ast.get_root().get_children()[0].get_element();
+    let do_while_syntax_element = ast.get_root().get_children()[0].get_node_type();
 
-    assert_eq!(do_while_syntax_element, SyntaxElement::DoWhileLoop, "No DoWhileLoop syntax element was found as a child of the TopLevelExpression node.");
+    assert_eq!(do_while_syntax_element, NodeType::DoWhileLoop, "No DoWhileLoop syntax element was found as a child of the TopLevelExpression node.");
 }
 
 /// This test checks the parser's ability to create a Return syntax element.
@@ -313,9 +313,9 @@ fn test_return_syntax_element() {
 
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let return_syntax_element = ast.get_root().get_children()[0].get_element();
+    let return_syntax_element = ast.get_root().get_children()[0].get_node_type();
 
-    assert_eq!(return_syntax_element, SyntaxElement::Return, "No Return syntax element was found as a child of the TopLevelExpression node.");
+    assert_eq!(return_syntax_element, NodeType::Return, "No Return syntax element was found as a child of the TopLevelExpression node.");
 }
 
 /// This test checks the parser's ability to create a SwitchStatement syntax element
@@ -334,9 +334,9 @@ fn test_switch_statement_syntax_element() {
 
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let switch_syntax_element = ast.get_root().get_children()[0].get_element();
+    let switch_syntax_element = ast.get_root().get_children()[0].get_node_type();
 
-    assert_eq!(switch_syntax_element, SyntaxElement::SwitchStatement, "No SwitchStatement syntax element was found as a child of the TopLevelExpression node.");
+    assert_eq!(switch_syntax_element, NodeType::SwitchStatement, "No SwitchStatement syntax element was found as a child of the TopLevelExpression node.");
 }
 
 /// This test checks the parser's ability to create a Case syntax element
@@ -363,9 +363,9 @@ fn test_case_syntax_element() {
 
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let case_syntax_element = ast.get_root().get_children()[0].get_children()[1].get_children()[0].get_element();
+    let case_syntax_element = ast.get_root().get_children()[0].get_children()[1].get_children()[0].get_node_type();
 
-    assert_eq!(case_syntax_element, SyntaxElement::Case, "No Case syntax element was found as a child of the SwitchStatement AST node.");
+    assert_eq!(case_syntax_element, NodeType::Case, "No Case syntax element was found as a child of the SwitchStatement AST node.");
 }
 
 /// This test checks the parser's ability to create a Default syntax element
@@ -391,9 +391,9 @@ fn test_default_syntax_element() {
 
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let default_syntax_element = ast.get_root().get_children()[0].get_children()[1].get_children()[0].get_element();
+    let default_syntax_element = ast.get_root().get_children()[0].get_children()[1].get_children()[0].get_node_type();
 
-    assert_eq!(default_syntax_element, SyntaxElement::Default, "No Default syntax element was found as a child of the SwitchStatement AST node.");
+    assert_eq!(default_syntax_element, NodeType::Default, "No Default syntax element was found as a child of the SwitchStatement AST node.");
 }
 
 /// This test checks the parser's ability to create an Assignment syntax element
@@ -408,9 +408,9 @@ fn test_assignment_syntax_element() {
 
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let assignment_syntax_element = ast.get_root().get_children()[0].get_element();
+    let assignment_syntax_element = ast.get_root().get_children()[0].get_node_type();
 
-    assert_eq!(assignment_syntax_element, SyntaxElement::Assignment, "No Assignment syntax element was found as a child of the TopLevelExpression AST node.");
+    assert_eq!(assignment_syntax_element, NodeType::Assignment, "No Assignment syntax element was found as a child of the TopLevelExpression AST node.");
 }
 
 /// This test checks the parser's ability to create an Initialization syntax element
@@ -426,9 +426,9 @@ fn test_initialization_syntax_element() {
 
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let initialization_syntax_element = ast.get_root().get_children()[0].get_element();
+    let initialization_syntax_element = ast.get_root().get_children()[0].get_node_type();
 
-    assert_eq!(initialization_syntax_element, SyntaxElement::Initialization, "No Initialization syntax element was found as a child of the TopLevelExpression AST node.");
+    assert_eq!(initialization_syntax_element, NodeType::Initialization, "No Initialization syntax element was found as a child of the TopLevelExpression AST node.");
 }
 
 /// This test checks the parser's ability to create a FunctionDeclaration syntax element
@@ -448,9 +448,9 @@ fn test_function_declaration_syntax_element() {
 
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let func_syntax_element = ast.get_root().get_children()[0].get_element();
+    let func_syntax_element = ast.get_root().get_children()[0].get_node_type();
 
-    assert_eq!(func_syntax_element, SyntaxElement::FunctionDeclaration, "No FunctionDeclaration syntax element was found as a child of the TopLevelExpression AST node.");
+    assert_eq!(func_syntax_element, NodeType::FunctionDeclaration, "No FunctionDeclaration syntax element was found as a child of the TopLevelExpression AST node.");
 }
 
 /// This test checks the parser's ability to create a StructDeclaration syntax element
@@ -467,9 +467,9 @@ fn test_struct_declaration_syntax_element() {
 
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let struct_syntax_element = ast.get_root().get_children()[0].get_element();
+    let struct_syntax_element = ast.get_root().get_children()[0].get_node_type();
 
-    assert_eq!(struct_syntax_element, SyntaxElement::StructDeclaration, "No StructDeclaration syntax element was found as a child of the TopLevelExpression AST node.");
+    assert_eq!(struct_syntax_element, NodeType::StructDeclaration, "No StructDeclaration syntax element was found as a child of the TopLevelExpression AST node.");
 }
 
 /// This test checks the parser's ability to create an EnumDeclaration syntax element
@@ -486,9 +486,9 @@ fn test_enum_declaration_syntax_element() {
 
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let enum_syntax_element = ast.get_root().get_children()[0].get_element();
+    let enum_syntax_element = ast.get_root().get_children()[0].get_node_type();
 
-    assert_eq!(enum_syntax_element, SyntaxElement::EnumDeclaration, "No EnumDeclaration syntax element was found as a child of the TopLevelExpression AST node.");
+    assert_eq!(enum_syntax_element, NodeType::EnumDeclaration, "No EnumDeclaration syntax element was found as a child of the TopLevelExpression AST node.");
 }
 
 /// This test checks the parser's ability to create a BlockExpression syntax element
@@ -502,9 +502,9 @@ fn test_block_expression_declaration_syntax_element() {
 
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let block_expression_syntax_element = ast.get_root().get_children()[0].get_element();
+    let block_expression_syntax_element = ast.get_root().get_children()[0].get_node_type();
 
-    assert_eq!(block_expression_syntax_element, SyntaxElement::BlockExpression, "No BlockExpression syntax element was found as a child of the TopLevelExpression AST node.");
+    assert_eq!(block_expression_syntax_element, NodeType::BlockExpression, "No BlockExpression syntax element was found as a child of the TopLevelExpression AST node.");
 }
 
 /// This test checks the parser's ability to create a Condition syntax element
@@ -526,9 +526,9 @@ fn test_condition_syntax_element() {
 
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let condition_syntax_element = ast.get_root().get_children()[0].get_children()[0].get_element();
+    let condition_syntax_element = ast.get_root().get_children()[0].get_children()[0].get_node_type();
     
-    assert_eq!(condition_syntax_element, SyntaxElement::Condition, "No Condition syntax element was found as a child of the IfStatement node.");
+    assert_eq!(condition_syntax_element, NodeType::Condition, "No Condition syntax element was found as a child of the IfStatement node.");
 }
 /// This test checks the parser's ability to create a Variant syntax element
 /// as the child of the EnumDeclaration AST node.
@@ -549,9 +549,9 @@ fn test_variant_syntax_element() {
 
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let variant_syntax_element = ast.get_root().get_children()[0].get_children()[1].get_element();
+    let variant_syntax_element = ast.get_root().get_children()[0].get_children()[1].get_node_type();
 
-    assert_eq!(variant_syntax_element, SyntaxElement::Variant, "No Variant syntax element was found as a child of the EnumDeclaration AST node.");
+    assert_eq!(variant_syntax_element, NodeType::Variant, "No Variant syntax element was found as a child of the EnumDeclaration AST node.");
 }
 
 /// This test checks the parser's ability to create an AssignedValue syntax element
@@ -567,9 +567,9 @@ fn test_assigned_value_syntax_element() {
 
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let assigned_value_syntax_element = ast.get_root().get_children()[0].get_children()[1].get_element();
+    let assigned_value_syntax_element = ast.get_root().get_children()[0].get_children()[1].get_node_type();
 
-    assert_eq!(assigned_value_syntax_element, SyntaxElement::AssignedValue, "No AssignedValue syntax element was found as a child of the Initialization AST node.");
+    assert_eq!(assigned_value_syntax_element, NodeType::AssignedValue, "No AssignedValue syntax element was found as a child of the Initialization AST node.");
 }
 
 /// This test checks the parser's ability to create a Field syntax element
@@ -593,9 +593,9 @@ fn test_field_syntax_element() {
 
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let struct_field_syntax_element = ast.get_root().get_children()[0].get_children()[1].get_element();
+    let struct_field_syntax_element = ast.get_root().get_children()[0].get_children()[1].get_node_type();
 
-    assert_eq!(struct_field_syntax_element, SyntaxElement::Field, "No Field syntax element was found as a child of the StructDeclaration AST node.");
+    assert_eq!(struct_field_syntax_element, NodeType::Field, "No Field syntax element was found as a child of the StructDeclaration AST node.");
 }
 
 /// This test checks the parser's ability to create a Parameter syntax element
@@ -616,9 +616,9 @@ fn test_parameter_syntax_element() {
 
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let parameter_syntax_element = ast.get_root().get_children()[0].get_children()[1].get_element();
+    let parameter_syntax_element = ast.get_root().get_children()[0].get_children()[1].get_node_type();
 
-    assert_eq!(parameter_syntax_element, SyntaxElement::Parameter, "No Parameter syntax element was found as a child of the FunctionDeclaration AST node.");
+    assert_eq!(parameter_syntax_element, NodeType::Parameter, "No Parameter syntax element was found as a child of the FunctionDeclaration AST node.");
 }
 
 /// This test checks the parser's ability to create a Variable syntax element
@@ -634,9 +634,9 @@ fn test_variable_syntax_element() {
 
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let variable_syntax_element = ast.get_root().get_children()[0].get_children()[0].get_element();
+    let variable_syntax_element = ast.get_root().get_children()[0].get_children()[0].get_node_type();
 
-    assert_eq!(variable_syntax_element, SyntaxElement::Variable, "No Variable syntax element was found as a child of the Initialization AST node.");
+    assert_eq!(variable_syntax_element, NodeType::Variable, "No Variable syntax element was found as a child of the Initialization AST node.");
 }
 
 /// This tests checks the parser's abillity to create a BinaryExpression syntax element
@@ -652,9 +652,9 @@ fn test_bin_exp_syntax_element() {
     
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let bin_exp_syntax_element = ast.get_root().get_children()[0].get_element();
+    let bin_exp_syntax_element = ast.get_root().get_children()[0].get_node_type();
 
-    assert_eq!(bin_exp_syntax_element, SyntaxElement::BinaryExpression, "No BinaryExpression syntax element was found as a child of the TopLevelExpression AST node.");
+    assert_eq!(bin_exp_syntax_element, NodeType::BinaryExpression, "No BinaryExpression syntax element was found as a child of the TopLevelExpression AST node.");
 }
 
 /// This tests checks the parser's abillity to create a UnaryExpression syntax element
@@ -669,9 +669,9 @@ fn test_unary_exp_syntax_element() {
     
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let unary_exp_syntax_element = ast.get_root().get_children()[0].get_element();
+    let unary_exp_syntax_element = ast.get_root().get_children()[0].get_node_type();
 
-    assert_eq!(unary_exp_syntax_element, SyntaxElement::UnaryExpression, "No UnaryExpression syntax element was found as a child of the TopLevelExpression AST node.");
+    assert_eq!(unary_exp_syntax_element, NodeType::UnaryExpression, "No UnaryExpression syntax element was found as a child of the TopLevelExpression AST node.");
 }
 
 /// This test checks the parser's ability to create a LoopInitializer and LoopIncrement syntax element
@@ -704,11 +704,11 @@ fn test_for_loop_elements() {
 
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let loop_init = ast.get_root().get_children()[0].get_children()[0].get_element();
+    let loop_init = ast.get_root().get_children()[0].get_children()[0].get_node_type();
 
-    assert_eq!(loop_init, SyntaxElement::LoopInitializer, "No LoopInitializer syntax element was found as a child of the ForLoop node.");
+    assert_eq!(loop_init, NodeType::LoopInitializer, "No LoopInitializer syntax element was found as a child of the ForLoop node.");
 
-    let loop_increment = ast.get_root().get_children()[0].get_children()[2].get_element();
+    let loop_increment = ast.get_root().get_children()[0].get_children()[2].get_node_type();
 
-    assert_eq!(loop_increment, SyntaxElement::LoopIncrement, "No LoopIncrement syntax element was found as a child of the ForLoop node.");
+    assert_eq!(loop_increment, NodeType::LoopIncrement, "No LoopIncrement syntax element was found as a child of the ForLoop node.");
 }

@@ -3,8 +3,7 @@
 use std::{collections::{HashMap, HashSet}, fmt};
 use common::{
     ast::{
-        ast_struct::{ASTNode, AST}, 
-        syntax_element::SyntaxElement, 
+        core::{ASTNode, AST}, 
         data_type::DataType,
     }, 
     error::ErrorType
@@ -171,6 +170,7 @@ impl SymbolTableStack {
     /// Returns a `Result` containing an `AST` and `SymbolTableStack` pair if Ok and a vector
     /// of errors if any errors were encountered.
     pub fn gen_sym_table_stack(ast: AST) -> Result<(AST, SymbolTableStack), Vec<ErrorType>> {
+        let _ = ast;
         unimplemented!()
     }
 
@@ -189,6 +189,7 @@ impl SymbolTableStack {
     ///
     /// Returns a vector of errors if there was a problem during STS generation.
     pub fn sym_table_stack_router(&mut self, node: &ASTNode) -> Result<(), Vec<ErrorType>> {
+        let _ = node;
         unimplemented!()
     }
 

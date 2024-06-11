@@ -2,12 +2,10 @@
 //! code blocks.
 
 use common::{
-    ast::{
-        ast_struct::ASTNode, data_type::DataType, syntax_element::SyntaxElement
-    }, 
+    ast::core::ASTNode, 
     error::ErrorType
 };
-use crate::core::{SymbolInfo, SymbolTable, SymbolTableStack, SymbolValue};
+use crate::core::SymbolTableStack;
 
 impl SymbolTableStack {
     /// Processes an initialization node in the symbol table stack.
@@ -20,7 +18,8 @@ impl SymbolTableStack {
     ///
     /// Returns a `Result` with Ok indicating the process was successful or Err containing a 
     /// vector if errors if there were any.
-    pub fn sym_table_init(&mut self, init_node: &ASTNode) -> Result<(), Vec<ErrorType>> {
+    pub fn sym_table_init(&mut self, node: &ASTNode) -> Result<(), Vec<ErrorType>> {
+        let _ = node;
         unimplemented!();
     }    
 

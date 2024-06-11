@@ -1,10 +1,10 @@
 //! This file contains symbol table stack generation functions for nodes that contain code blocks.
 
 use common::{
-    ast::{ast_struct::ASTNode, data_type::DataType, syntax_element::SyntaxElement},
+    ast::core::ASTNode,
     error::ErrorType,
 };
-use crate::core::{SymbolInfo, SymbolTable, SymbolValue, SymbolTableStack};
+use crate::core::SymbolTableStack;
 
 impl SymbolTableStack {
     /// Processes function declarations from an AST and pushes information to the STS.
@@ -17,7 +17,8 @@ impl SymbolTableStack {
     ///
     /// Returns a `Result` with Ok indicating the process was successful or Err containing a 
     /// vector if errors if there were any.
-    pub fn sym_table_fn(&mut self, fn_node: &ASTNode) -> Result<(), Vec<ErrorType>> {
+    pub fn sym_table_fn(&mut self, node: &ASTNode) -> Result<(), Vec<ErrorType>> {
+        let _ = node;
         unimplemented!();
     }
 
@@ -31,7 +32,8 @@ impl SymbolTableStack {
     ///
     /// Returns a `Result` with Ok indicating the process was successful or Err containing a 
     /// vector if errors if there were any.
-    pub fn sym_table_for(&mut self, for_node: &ASTNode) -> Result<(), Vec<ErrorType>> {
+    pub fn sym_table_for(&mut self, node: &ASTNode) -> Result<(), Vec<ErrorType>> {
+        let _ = node;
         unimplemented!();
     }
 
@@ -45,7 +47,8 @@ impl SymbolTableStack {
     ///
     /// Returns a `Result` with Ok indicating the process was successful or Err containing a 
     /// vector if errors if there were any.
-    pub fn sym_table_block(&mut self, _block_node: &ASTNode) -> Result<(), Vec<ErrorType>> {
+    pub fn sym_table_block(&mut self, node: &ASTNode) -> Result<(), Vec<ErrorType>> {
+        let _ = node;
         unimplemented!();
     }
 }

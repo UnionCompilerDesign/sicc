@@ -1,15 +1,14 @@
-//! This file defines the syntax elements that can be used in our Abstract Syntax Tree (`AST`).
-//! These syntax elements represent the types of expressions that can appear in a program.
+//! This file contains a definition of an enum representing the acceptable node types of ASTs
 
-use std::fmt;
 use crate::ast::data_type::DataType;
+use std::fmt;
 
 /// Defines acceptable syntax elements as part of an `AST`.
 ///
 /// Each element A different kind of syntactic construct that can appear in source code, such as constants, identifiers, 
 /// operators, and control structures. These elements are used to build a tree representation of the code's syntactic structure.
 #[derive(Debug, Clone, PartialEq, Default, Eq, Hash)]
-pub enum SyntaxElement {
+pub enum NodeType {
     /// A lack of expression, often used as a placeholder.
     #[default]
     NoExpression,
@@ -133,14 +132,14 @@ pub enum SyntaxElement {
 ///
 /// # Returns
 /// * `fmt::Result` - The result of the formatting operation.
-impl fmt::Display for SyntaxElement {
+impl fmt::Display for NodeType {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            SyntaxElement::Literal(value) => write!(f, "Literal({})", value),
-            SyntaxElement::Identifier(id) => write!(f, "Identifier({})", id),
-            SyntaxElement::Operator(op) => write!(f, "Operator({})", op),
-            SyntaxElement::Type(data_type) => write!(f, "Type({})", data_type),
-            SyntaxElement::Constant(value) => write!(f, "Constant({})", value),
+            NodeType::Literal(value) => write!(f, "Literal({})", value),
+            NodeType::Identifier(id) => write!(f, "Identifier({})", id),
+            NodeType::Operator(op) => write!(f, "Operator({})", op),
+            NodeType::Type(data_type) => write!(f, "Type({})", data_type),
+            NodeType::Constant(value) => write!(f, "Constant({})", value),
             _ => write!(f, "{:?}", self) 
         }
     }

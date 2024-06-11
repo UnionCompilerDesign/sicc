@@ -4,8 +4,8 @@
 //! turning code into a (one step above a) directly runnable format.
 
 use std::sync::{Arc, Mutex};
-use integration::module::{ModElement, Module};
-use common::{ast::ast_struct::ASTNode, error::ErrorType};
+use integration::module::Module;
+use common::{ast::core::ASTNode, error::ErrorType};
 use safe_llvm::ir::core::{BasicBlockTag, BuilderTag, ContextTag, IRManager, ModuleTag, Tag, ValueTag};
 use sts::core::SymbolTableStack;
 use crate::store::Store;
@@ -502,12 +502,9 @@ impl IRGenerator {
     ///
     /// Returns a `ModuleTag` containing the constructed module when IR generation is complete.
     ///
-    pub fn generate_ir(&mut self, mut input: Module) -> ModuleTag {
-        let module: &mut Vec<ModElement> = input.get_mut_children();
-
+    pub fn generate_ir(&mut self, input: Module) -> ModuleTag {
+        let _ = input;
         unimplemented!();
-
-        self.get_module()
     }
 
     /// Routes the generation of LLVM IR based on the type of AST node encountered.
@@ -526,6 +523,7 @@ impl IRGenerator {
     /// - Returns an error if there was a problem during IR generation such as a malformed node.
     ///
     pub fn ir_router(&mut self, node: &ASTNode) -> Result<Option<Tag>, ErrorType> {
+        let _ = node;
         unimplemented!();
     }
 }

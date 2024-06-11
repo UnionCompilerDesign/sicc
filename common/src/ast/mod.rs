@@ -2,10 +2,10 @@
 //! the Abstract Syntax Tree (AST) used in SLICC.
 
 /// Defines the core structures of the AST.
-pub mod ast_struct;
+pub mod core;
 
 /// Defines data types used in the AST.
 pub mod data_type;
 
 /// Defines different types of syntax elements.
-pub mod syntax_element;
+pub mod node_type;

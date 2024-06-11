@@ -8,9 +8,6 @@ pub mod ast;
 /// Defines constants.
 pub mod constants;
 
-/// Provides functionality to locate entry points within a source file.
-pub mod entry_points;
-
 /// Defines error types.
 pub mod error;
 

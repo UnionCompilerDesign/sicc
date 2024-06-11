@@ -2,18 +2,14 @@
 
 use common::{ 
     error::ErrorType,
-    ast::{
-        ast_struct::ASTNode, 
-        syntax_element::SyntaxElement,
-    },
+    ast::core::ASTNode,
 };
-use lexer::token::Token;
 use crate::core::Parser;
 
 impl Parser {
     /// Parses a unary expression. 
     /// Specifically handles DASH and EXCLAMATIONPOINT tokens, as returns corresponding AST with a top-level 
-    /// 'SyntaxElement::UnaryExpression' ASTNode.
+    /// 'NodeType::UnaryExpression' ASTNode.
     ///
     /// # Returns
     ///
@@ -28,7 +24,7 @@ impl Parser {
     }
     
     /// Parses a variable reassignment. Handles assignment to literals, expressions, and other identifiers.
-    /// Creates a top level 'SyntaxElement::Assignment' ASTNode, with children representing the identifier and
+    /// Creates a top level 'NodeType::Assignment' ASTNode, with children representing the identifier and
     /// its new AssignedValue. Is called by 'Parser::parse_identifier', which fullfills the `name_chars` parameter.
     ///
     /// # Parameters
@@ -44,6 +40,7 @@ impl Parser {
     ///
     /// * Returns an error if parsing of the assignment fails.
     pub fn parse_assignment(&mut self, name_chars: Vec<char>) -> Result<Option<ASTNode>, Vec<ErrorType>> {
+        let _ = name_chars;
         unimplemented!();
     }
 

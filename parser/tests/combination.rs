@@ -1,7 +1,7 @@
 //! This file contains combination tests for the parser, which tests sequences of tokens that represent common programming concepts, such as statements, loops, expressions, etc.
 
 use common::ast::{
-    ast_struct::{ASTNode, AST}, data_type::DataType, syntax_element::SyntaxElement
+    core::{ASTNode, AST}, data_type::DataType, node_type::NodeType
 };
 use lexer::token::Token;
 use parser::core::Parser;
@@ -34,17 +34,17 @@ fn test_basic_binary_expr() {
     // A + B
     let ast_2: AST = Parser::parse(tokens_2).expect("Failed to parse");
 
-    let mut binary_expr_node_2 = ASTNode::new(SyntaxElement::BinaryExpression);
+    let mut binary_expr_node_2 = ASTNode::new(NodeType::BinaryExpression);
 
-    let identifier_node_a_2: ASTNode = ASTNode::new(SyntaxElement::Identifier("a".to_string()));
-    let identifier_node_b_2: ASTNode = ASTNode::new(SyntaxElement::Literal('5'.to_string()));
+    let identifier_node_a_2: ASTNode = ASTNode::new(NodeType::Identifier("a".to_string()));
+    let identifier_node_b_2: ASTNode = ASTNode::new(NodeType::Literal('5'.to_string()));
 
     binary_expr_node_2.add_child(identifier_node_a_2);
-    binary_expr_node_2.add_child(ASTNode::new(SyntaxElement::Operator("+".to_string())));
+    binary_expr_node_2.add_child(ASTNode::new(NodeType::Operator("+".to_string())));
     binary_expr_node_2.add_child(identifier_node_b_2);
 
 
-    let mut top_level_expr_2 = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr_2 = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr_2.add_child(binary_expr_node_2);
 
     let expected_ast_2: AST = AST::new(top_level_expr_2);
@@ -61,17 +61,17 @@ fn test_basic_binary_expr() {
     // A - B
     let ast_3: AST = Parser::parse(tokens_3).expect("Failed to parse");
 
-    let mut binary_expr_node_3 = ASTNode::new(SyntaxElement::BinaryExpression);
+    let mut binary_expr_node_3 = ASTNode::new(NodeType::BinaryExpression);
 
-    let identifier_node_a_3: ASTNode = ASTNode::new(SyntaxElement::Identifier("a".to_string()));
-    let identifier_node_b_3: ASTNode = ASTNode::new(SyntaxElement::Literal('5'.to_string()));
+    let identifier_node_a_3: ASTNode = ASTNode::new(NodeType::Identifier("a".to_string()));
+    let identifier_node_b_3: ASTNode = ASTNode::new(NodeType::Literal('5'.to_string()));
 
     binary_expr_node_3.add_child(identifier_node_a_3);
-    binary_expr_node_3.add_child(ASTNode::new(SyntaxElement::Operator("-".to_string())));
+    binary_expr_node_3.add_child(ASTNode::new(NodeType::Operator("-".to_string())));
     binary_expr_node_3.add_child(identifier_node_b_3);
 
 
-    let mut top_level_expr_3 = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr_3 = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr_3.add_child(binary_expr_node_3);
 
     let expected_ast_3: AST = AST::new(top_level_expr_3);
@@ -89,17 +89,17 @@ fn test_basic_binary_expr() {
     // A / B
     let ast_4: AST = Parser::parse(tokens_4).expect("Failed to parse");
 
-    let mut binary_expr_node_4 = ASTNode::new(SyntaxElement::BinaryExpression);
+    let mut binary_expr_node_4 = ASTNode::new(NodeType::BinaryExpression);
 
-    let identifier_node_a_4: ASTNode = ASTNode::new(SyntaxElement::Identifier("a".to_string()));
-    let identifier_node_b_4: ASTNode = ASTNode::new(SyntaxElement::Literal('5'.to_string()));
+    let identifier_node_a_4: ASTNode = ASTNode::new(NodeType::Identifier("a".to_string()));
+    let identifier_node_b_4: ASTNode = ASTNode::new(NodeType::Literal('5'.to_string()));
 
     binary_expr_node_4.add_child(identifier_node_a_4);
-    binary_expr_node_4.add_child(ASTNode::new(SyntaxElement::Operator("/".to_string())));
+    binary_expr_node_4.add_child(ASTNode::new(NodeType::Operator("/".to_string())));
     binary_expr_node_4.add_child(identifier_node_b_4);
 
 
-    let mut top_level_expr_4 = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr_4 = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr_4.add_child(binary_expr_node_4);
 
     let expected_ast_4: AST = AST::new(top_level_expr_4);
@@ -132,21 +132,21 @@ fn test_compound_binary_expr() {
         
     ];
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
-    let mut binary_expr_node: ASTNode = ASTNode::new(SyntaxElement::BinaryExpression);
+    let mut binary_expr_node: ASTNode = ASTNode::new(NodeType::BinaryExpression);
 
-    let identifier_node_a: ASTNode = ASTNode::new(SyntaxElement::Identifier("a".to_string()));
-    let identifier_node_b: ASTNode = ASTNode::new(SyntaxElement::Identifier("b".to_string()));
+    let identifier_node_a: ASTNode = ASTNode::new(NodeType::Identifier("a".to_string()));
+    let identifier_node_b: ASTNode = ASTNode::new(NodeType::Identifier("b".to_string()));
 
     binary_expr_node.add_child(identifier_node_a);
-    binary_expr_node.add_child(ASTNode::new(SyntaxElement::Operator("*".to_string())));
+    binary_expr_node.add_child(ASTNode::new(NodeType::Operator("*".to_string())));
     binary_expr_node.add_child(identifier_node_b);
 
-    let mut top_binary_expr_node: ASTNode = ASTNode::new(SyntaxElement::BinaryExpression);
+    let mut top_binary_expr_node: ASTNode = ASTNode::new(NodeType::BinaryExpression);
     top_binary_expr_node.add_child(binary_expr_node);
-    top_binary_expr_node.add_child(ASTNode::new(SyntaxElement::Operator("+".to_string())));
-    top_binary_expr_node.add_child(ASTNode::new(SyntaxElement::Identifier("c".to_string())));
+    top_binary_expr_node.add_child(ASTNode::new(NodeType::Operator("+".to_string())));
+    top_binary_expr_node.add_child(ASTNode::new(NodeType::Identifier("c".to_string())));
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(top_binary_expr_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -167,30 +167,30 @@ fn test_compound_binary_expr() {
     ];
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let mut binary_expr_node: ASTNode = ASTNode::new(SyntaxElement::BinaryExpression);
+    let mut binary_expr_node: ASTNode = ASTNode::new(NodeType::BinaryExpression);
 
-    let identifier_node_a: ASTNode = ASTNode::new(SyntaxElement::Identifier("a".to_string()));
-    let identifier_node_b: ASTNode = ASTNode::new(SyntaxElement::Identifier("b".to_string()));
-    let identifier_node_c: ASTNode = ASTNode::new(SyntaxElement::Identifier("c".to_string()));
-    let identifier_node_d: ASTNode = ASTNode::new(SyntaxElement::Identifier("d".to_string()));
+    let identifier_node_a: ASTNode = ASTNode::new(NodeType::Identifier("a".to_string()));
+    let identifier_node_b: ASTNode = ASTNode::new(NodeType::Identifier("b".to_string()));
+    let identifier_node_c: ASTNode = ASTNode::new(NodeType::Identifier("c".to_string()));
+    let identifier_node_d: ASTNode = ASTNode::new(NodeType::Identifier("d".to_string()));
 
     binary_expr_node.add_child(identifier_node_b);
-    binary_expr_node.add_child(ASTNode::new(SyntaxElement::Operator("*".to_string())));
+    binary_expr_node.add_child(ASTNode::new(NodeType::Operator("*".to_string())));
     binary_expr_node.add_child(identifier_node_c);
 
-    let mut binary_expr_node_2: ASTNode = ASTNode::new(SyntaxElement::BinaryExpression);
+    let mut binary_expr_node_2: ASTNode = ASTNode::new(NodeType::BinaryExpression);
 
     binary_expr_node_2.add_child(identifier_node_a);
-    binary_expr_node_2.add_child(ASTNode::new(SyntaxElement::Operator("+".to_string())));
+    binary_expr_node_2.add_child(ASTNode::new(NodeType::Operator("+".to_string())));
     binary_expr_node_2.add_child(binary_expr_node);
 
 
-    let mut top_binary_expr_node: ASTNode = ASTNode::new(SyntaxElement::BinaryExpression);
+    let mut top_binary_expr_node: ASTNode = ASTNode::new(NodeType::BinaryExpression);
     top_binary_expr_node.add_child(binary_expr_node_2);
-    top_binary_expr_node.add_child(ASTNode::new(SyntaxElement::Operator("+".to_string())));
+    top_binary_expr_node.add_child(ASTNode::new(NodeType::Operator("+".to_string())));
     top_binary_expr_node.add_child(identifier_node_d);
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(top_binary_expr_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -214,45 +214,45 @@ fn test_compound_binary_expr() {
         
     ];
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
-    let identifier_node_a: ASTNode = ASTNode::new(SyntaxElement::Identifier("a".to_string()));
-    let identifier_node_b: ASTNode = ASTNode::new(SyntaxElement::Identifier("b".to_string()));
-    let identifier_node_c: ASTNode = ASTNode::new(SyntaxElement::Identifier("c".to_string()));
-    let identifier_node_d: ASTNode = ASTNode::new(SyntaxElement::Identifier("d".to_string()));
-    let identifier_node_e: ASTNode = ASTNode::new(SyntaxElement::Identifier("e".to_string()));
-    let identifier_node_f: ASTNode = ASTNode::new(SyntaxElement::Identifier("f".to_string()));
+    let identifier_node_a: ASTNode = ASTNode::new(NodeType::Identifier("a".to_string()));
+    let identifier_node_b: ASTNode = ASTNode::new(NodeType::Identifier("b".to_string()));
+    let identifier_node_c: ASTNode = ASTNode::new(NodeType::Identifier("c".to_string()));
+    let identifier_node_d: ASTNode = ASTNode::new(NodeType::Identifier("d".to_string()));
+    let identifier_node_e: ASTNode = ASTNode::new(NodeType::Identifier("e".to_string()));
+    let identifier_node_f: ASTNode = ASTNode::new(NodeType::Identifier("f".to_string()));
 
-    let mut binary_expr_node: ASTNode = ASTNode::new(SyntaxElement::BinaryExpression);
+    let mut binary_expr_node: ASTNode = ASTNode::new(NodeType::BinaryExpression);
 
     binary_expr_node.add_child(identifier_node_c);
-    binary_expr_node.add_child(ASTNode::new(SyntaxElement::Operator("/".to_string())));
+    binary_expr_node.add_child(ASTNode::new(NodeType::Operator("/".to_string())));
     binary_expr_node.add_child(identifier_node_d);
 
 
-    let mut binary_expr_node_2: ASTNode = ASTNode::new(SyntaxElement::BinaryExpression);
+    let mut binary_expr_node_2: ASTNode = ASTNode::new(NodeType::BinaryExpression);
 
     binary_expr_node_2.add_child(binary_expr_node);
-    binary_expr_node_2.add_child(ASTNode::new(SyntaxElement::Operator("%".to_string())));
+    binary_expr_node_2.add_child(ASTNode::new(NodeType::Operator("%".to_string())));
     binary_expr_node_2.add_child(identifier_node_e);
 
-    let mut binary_expr_node_3: ASTNode = ASTNode::new(SyntaxElement::BinaryExpression);
+    let mut binary_expr_node_3: ASTNode = ASTNode::new(NodeType::BinaryExpression);
 
     binary_expr_node_3.add_child(identifier_node_a);
-    binary_expr_node_3.add_child(ASTNode::new(SyntaxElement::Operator("*".to_string())));
+    binary_expr_node_3.add_child(ASTNode::new(NodeType::Operator("*".to_string())));
     binary_expr_node_3.add_child(identifier_node_b);
 
-    let mut binary_expr_node_4: ASTNode = ASTNode::new(SyntaxElement::BinaryExpression);
+    let mut binary_expr_node_4: ASTNode = ASTNode::new(NodeType::BinaryExpression);
 
     binary_expr_node_4.add_child(binary_expr_node_3);
-    binary_expr_node_4.add_child(ASTNode::new(SyntaxElement::Operator("+".to_string())));
+    binary_expr_node_4.add_child(ASTNode::new(NodeType::Operator("+".to_string())));
     binary_expr_node_4.add_child(binary_expr_node_2);
 
-    let mut top_binary_expr_node: ASTNode = ASTNode::new(SyntaxElement::BinaryExpression);
+    let mut top_binary_expr_node: ASTNode = ASTNode::new(NodeType::BinaryExpression);
 
     top_binary_expr_node.add_child(binary_expr_node_4);
-    top_binary_expr_node.add_child(ASTNode::new(SyntaxElement::Operator("-".to_string())));
+    top_binary_expr_node.add_child(ASTNode::new(NodeType::Operator("-".to_string())));
     top_binary_expr_node.add_child(identifier_node_f);
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(top_binary_expr_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -281,50 +281,50 @@ fn test_compound_binary_expr() {
         
     ];
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
-    let identifier_node_a: ASTNode = ASTNode::new(SyntaxElement::Identifier("a".to_string()));
-    let identifier_node_b: ASTNode = ASTNode::new(SyntaxElement::Identifier("b".to_string()));
-    let identifier_node_c: ASTNode = ASTNode::new(SyntaxElement::Identifier("c".to_string()));
-    let identifier_node_d: ASTNode = ASTNode::new(SyntaxElement::Identifier("d".to_string()));
-    let identifier_node_e: ASTNode = ASTNode::new(SyntaxElement::Identifier("e".to_string()));
-    let identifier_node_f: ASTNode = ASTNode::new(SyntaxElement::Identifier("f".to_string()));
+    let identifier_node_a: ASTNode = ASTNode::new(NodeType::Identifier("a".to_string()));
+    let identifier_node_b: ASTNode = ASTNode::new(NodeType::Identifier("b".to_string()));
+    let identifier_node_c: ASTNode = ASTNode::new(NodeType::Identifier("c".to_string()));
+    let identifier_node_d: ASTNode = ASTNode::new(NodeType::Identifier("d".to_string()));
+    let identifier_node_e: ASTNode = ASTNode::new(NodeType::Identifier("e".to_string()));
+    let identifier_node_f: ASTNode = ASTNode::new(NodeType::Identifier("f".to_string()));
 
-    let mut binary_expr_node: ASTNode = ASTNode::new(SyntaxElement::BinaryExpression);
+    let mut binary_expr_node: ASTNode = ASTNode::new(NodeType::BinaryExpression);
 
     binary_expr_node.add_child(identifier_node_c);
-    binary_expr_node.add_child(ASTNode::new(SyntaxElement::Operator("/".to_string())));
+    binary_expr_node.add_child(ASTNode::new(NodeType::Operator("/".to_string())));
     binary_expr_node.add_child(identifier_node_d);
 
 
-    let mut binary_expr_node_2: ASTNode = ASTNode::new(SyntaxElement::BinaryExpression);
+    let mut binary_expr_node_2: ASTNode = ASTNode::new(NodeType::BinaryExpression);
 
     binary_expr_node_2.add_child(binary_expr_node);
-    binary_expr_node_2.add_child(ASTNode::new(SyntaxElement::Operator("%".to_string())));
-    let mut unary_expr_node_1: ASTNode = ASTNode::new(SyntaxElement::UnaryExpression);
-    unary_expr_node_1.add_child(ASTNode::new(SyntaxElement::Operator("-".to_string())));
+    binary_expr_node_2.add_child(ASTNode::new(NodeType::Operator("%".to_string())));
+    let mut unary_expr_node_1: ASTNode = ASTNode::new(NodeType::UnaryExpression);
+    unary_expr_node_1.add_child(ASTNode::new(NodeType::Operator("-".to_string())));
     unary_expr_node_1.add_child(identifier_node_e);
     binary_expr_node_2.add_child(unary_expr_node_1);
 
-    let mut binary_expr_node_3: ASTNode = ASTNode::new(SyntaxElement::BinaryExpression);
-    let mut unary_expr_node_2: ASTNode = ASTNode::new(SyntaxElement::UnaryExpression);
-    unary_expr_node_2.add_child(ASTNode::new(SyntaxElement::Operator("-".to_string())));
+    let mut binary_expr_node_3: ASTNode = ASTNode::new(NodeType::BinaryExpression);
+    let mut unary_expr_node_2: ASTNode = ASTNode::new(NodeType::UnaryExpression);
+    unary_expr_node_2.add_child(ASTNode::new(NodeType::Operator("-".to_string())));
     unary_expr_node_2.add_child(identifier_node_a);
     binary_expr_node_3.add_child(unary_expr_node_2);
-    binary_expr_node_3.add_child(ASTNode::new(SyntaxElement::Operator("*".to_string())));
+    binary_expr_node_3.add_child(ASTNode::new(NodeType::Operator("*".to_string())));
     binary_expr_node_3.add_child(identifier_node_b);
 
-    let mut binary_expr_node_4: ASTNode = ASTNode::new(SyntaxElement::BinaryExpression);
+    let mut binary_expr_node_4: ASTNode = ASTNode::new(NodeType::BinaryExpression);
 
     binary_expr_node_4.add_child(binary_expr_node_3);
-    binary_expr_node_4.add_child(ASTNode::new(SyntaxElement::Operator("+".to_string())));
+    binary_expr_node_4.add_child(ASTNode::new(NodeType::Operator("+".to_string())));
     binary_expr_node_4.add_child(binary_expr_node_2);
 
-    let mut top_binary_expr_node: ASTNode = ASTNode::new(SyntaxElement::BinaryExpression);
+    let mut top_binary_expr_node: ASTNode = ASTNode::new(NodeType::BinaryExpression);
 
     top_binary_expr_node.add_child(binary_expr_node_4);
-    top_binary_expr_node.add_child(ASTNode::new(SyntaxElement::Operator("-".to_string())));
+    top_binary_expr_node.add_child(ASTNode::new(NodeType::Operator("-".to_string())));
     top_binary_expr_node.add_child(identifier_node_f);
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(top_binary_expr_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -352,11 +352,11 @@ fn test_unary_expression() {
     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
 
     let ast = result.expect("Failed to parse");
-    let mut unary_expr_node = ASTNode::new(SyntaxElement::UnaryExpression);
+    let mut unary_expr_node = ASTNode::new(NodeType::UnaryExpression);
     
-    unary_expr_node.add_child(ASTNode::new(SyntaxElement::Operator("-".to_string())));
-    unary_expr_node.add_child(ASTNode::new(SyntaxElement::Identifier("A".to_string())));
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    unary_expr_node.add_child(ASTNode::new(NodeType::Operator("-".to_string())));
+    unary_expr_node.add_child(ASTNode::new(NodeType::Identifier("A".to_string())));
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(unary_expr_node);
     let expected_ast: AST = AST::new(top_level_expr);
 
@@ -381,18 +381,18 @@ fn test_binary_expr_with_unary_negation() {
     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
     let ast = result.expect("Failed to parse");
 
-    let mut unary_expr_node = ASTNode::new(SyntaxElement::UnaryExpression);
-    unary_expr_node.add_child(ASTNode::new(SyntaxElement::Operator("-".to_string())));
-    unary_expr_node.add_child(ASTNode::new(SyntaxElement::Literal("5".to_string())));
+    let mut unary_expr_node = ASTNode::new(NodeType::UnaryExpression);
+    unary_expr_node.add_child(ASTNode::new(NodeType::Operator("-".to_string())));
+    unary_expr_node.add_child(ASTNode::new(NodeType::Literal("5".to_string())));
 
-    let int_node = ASTNode::new(SyntaxElement::Literal("3".to_string()));
+    let int_node = ASTNode::new(NodeType::Literal("3".to_string()));
 
-    let mut binary_expr_node = ASTNode::new(SyntaxElement::BinaryExpression);
+    let mut binary_expr_node = ASTNode::new(NodeType::BinaryExpression);
     binary_expr_node.add_child(unary_expr_node);
-    binary_expr_node.add_child(ASTNode::new(SyntaxElement::Operator("-".to_string())));
+    binary_expr_node.add_child(ASTNode::new(NodeType::Operator("-".to_string())));
     binary_expr_node.add_child(int_node);
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(binary_expr_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -419,11 +419,11 @@ fn test_assignment_to_number() {
     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
     let ast = result.expect("Failed to parse");
 
-    let mut assignment_node = ASTNode::new(SyntaxElement::Assignment);
-    assignment_node.add_child(ASTNode::new(SyntaxElement::Identifier("x".to_string())));
-    assignment_node.add_child(ASTNode::new(SyntaxElement::Literal("3".to_string())));
+    let mut assignment_node = ASTNode::new(NodeType::Assignment);
+    assignment_node.add_child(ASTNode::new(NodeType::Identifier("x".to_string())));
+    assignment_node.add_child(ASTNode::new(NodeType::Literal("3".to_string())));
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(assignment_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -450,17 +450,17 @@ fn test_assignment_to_addition_expression() {
     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
     let ast = result.expect("Failed to parse");
 
-    let mut assignment_node = ASTNode::new(SyntaxElement::Assignment);
-    assignment_node.add_child(ASTNode::new(SyntaxElement::Identifier("x".to_string())));
+    let mut assignment_node = ASTNode::new(NodeType::Assignment);
+    assignment_node.add_child(ASTNode::new(NodeType::Identifier("x".to_string())));
 
-    let mut binary_expression_node = ASTNode::new(SyntaxElement::BinaryExpression);
-    binary_expression_node.add_child(ASTNode::new(SyntaxElement::Literal("3".to_string())));
-    binary_expression_node.add_child(ASTNode::new(SyntaxElement::Operator("+".to_string())));
-    binary_expression_node.add_child(ASTNode::new(SyntaxElement::Literal("4".to_string())));
+    let mut binary_expression_node = ASTNode::new(NodeType::BinaryExpression);
+    binary_expression_node.add_child(ASTNode::new(NodeType::Literal("3".to_string())));
+    binary_expression_node.add_child(ASTNode::new(NodeType::Operator("+".to_string())));
+    binary_expression_node.add_child(ASTNode::new(NodeType::Literal("4".to_string())));
 
     assignment_node.add_child(binary_expression_node);
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(assignment_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -487,17 +487,17 @@ fn test_assignment_to_multiplication_expression() {
     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
     let ast = result.expect("Failed to parse");
 
-    let mut assignment_node = ASTNode::new(SyntaxElement::Assignment);
-    assignment_node.add_child(ASTNode::new(SyntaxElement::Identifier("y".to_string())));
+    let mut assignment_node = ASTNode::new(NodeType::Assignment);
+    assignment_node.add_child(ASTNode::new(NodeType::Identifier("y".to_string())));
 
-    let mut binary_expression_node = ASTNode::new(SyntaxElement::BinaryExpression);
-    binary_expression_node.add_child(ASTNode::new(SyntaxElement::Literal("5".to_string())));
-    binary_expression_node.add_child(ASTNode::new(SyntaxElement::Operator("*".to_string())));
-    binary_expression_node.add_child(ASTNode::new(SyntaxElement::Literal("6".to_string())));
+    let mut binary_expression_node = ASTNode::new(NodeType::BinaryExpression);
+    binary_expression_node.add_child(ASTNode::new(NodeType::Literal("5".to_string())));
+    binary_expression_node.add_child(ASTNode::new(NodeType::Operator("*".to_string())));
+    binary_expression_node.add_child(ASTNode::new(NodeType::Literal("6".to_string())));
 
     assignment_node.add_child(binary_expression_node);
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(assignment_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -524,17 +524,17 @@ fn test_assignment_to_division_expression() {
     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
     let ast = result.expect("Failed to parse");
 
-    let mut assignment_node = ASTNode::new(SyntaxElement::Assignment);
-    assignment_node.add_child(ASTNode::new(SyntaxElement::Identifier("z".to_string())));
+    let mut assignment_node = ASTNode::new(NodeType::Assignment);
+    assignment_node.add_child(ASTNode::new(NodeType::Identifier("z".to_string())));
 
-    let mut binary_expression_node = ASTNode::new(SyntaxElement::BinaryExpression);
-    binary_expression_node.add_child(ASTNode::new(SyntaxElement::Literal("8".to_string())));
-    binary_expression_node.add_child(ASTNode::new(SyntaxElement::Operator("/".to_string())));
-    binary_expression_node.add_child(ASTNode::new(SyntaxElement::Literal("2".to_string())));
+    let mut binary_expression_node = ASTNode::new(NodeType::BinaryExpression);
+    binary_expression_node.add_child(ASTNode::new(NodeType::Literal("8".to_string())));
+    binary_expression_node.add_child(ASTNode::new(NodeType::Operator("/".to_string())));
+    binary_expression_node.add_child(ASTNode::new(NodeType::Literal("2".to_string())));
 
     assignment_node.add_child(binary_expression_node);
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(assignment_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -561,17 +561,17 @@ fn test_assignment_to_subtraction_expression() {
     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
     let ast = result.expect("Failed to parse");
 
-    let mut assignment_node = ASTNode::new(SyntaxElement::Assignment);
-    assignment_node.add_child(ASTNode::new(SyntaxElement::Identifier("w".to_string())));
+    let mut assignment_node = ASTNode::new(NodeType::Assignment);
+    assignment_node.add_child(ASTNode::new(NodeType::Identifier("w".to_string())));
 
-    let mut binary_expression_node = ASTNode::new(SyntaxElement::BinaryExpression);
-    binary_expression_node.add_child(ASTNode::new(SyntaxElement::Literal("10".to_string())));
-    binary_expression_node.add_child(ASTNode::new(SyntaxElement::Operator("-".to_string())));
-    binary_expression_node.add_child(ASTNode::new(SyntaxElement::Literal("4".to_string())));
+    let mut binary_expression_node = ASTNode::new(NodeType::BinaryExpression);
+    binary_expression_node.add_child(ASTNode::new(NodeType::Literal("10".to_string())));
+    binary_expression_node.add_child(ASTNode::new(NodeType::Operator("-".to_string())));
+    binary_expression_node.add_child(ASTNode::new(NodeType::Literal("4".to_string())));
 
     assignment_node.add_child(binary_expression_node);
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(assignment_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -603,23 +603,23 @@ fn test_assignment_to_parenthesized_addition_expression() {
     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
     let ast = result.expect("Failed to parse");
 
-    let mut assignment_node = ASTNode::new(SyntaxElement::Assignment);
-    assignment_node.add_child(ASTNode::new(SyntaxElement::Identifier("a".to_string())));
+    let mut assignment_node = ASTNode::new(NodeType::Assignment);
+    assignment_node.add_child(ASTNode::new(NodeType::Identifier("a".to_string())));
 
-    let mut binary_expression_node_outer = ASTNode::new(SyntaxElement::BinaryExpression);
-    let mut binary_expression_node_inner = ASTNode::new(SyntaxElement::BinaryExpression);
+    let mut binary_expression_node_outer = ASTNode::new(NodeType::BinaryExpression);
+    let mut binary_expression_node_inner = ASTNode::new(NodeType::BinaryExpression);
     
-    binary_expression_node_inner.add_child(ASTNode::new(SyntaxElement::Literal("3".to_string())));
-    binary_expression_node_inner.add_child(ASTNode::new(SyntaxElement::Operator("+".to_string())));
-    binary_expression_node_inner.add_child(ASTNode::new(SyntaxElement::Literal("4".to_string())));
+    binary_expression_node_inner.add_child(ASTNode::new(NodeType::Literal("3".to_string())));
+    binary_expression_node_inner.add_child(ASTNode::new(NodeType::Operator("+".to_string())));
+    binary_expression_node_inner.add_child(ASTNode::new(NodeType::Literal("4".to_string())));
     
     binary_expression_node_outer.add_child(binary_expression_node_inner);
-    binary_expression_node_outer.add_child(ASTNode::new(SyntaxElement::Operator("*".to_string())));
-    binary_expression_node_outer.add_child(ASTNode::new(SyntaxElement::Literal("2".to_string())));
+    binary_expression_node_outer.add_child(ASTNode::new(NodeType::Operator("*".to_string())));
+    binary_expression_node_outer.add_child(ASTNode::new(NodeType::Literal("2".to_string())));
 
     assignment_node.add_child(binary_expression_node_outer);
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(assignment_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -655,28 +655,28 @@ fn test_assignment_to_complex_expression() {
     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
     let ast = result.expect("Failed to parse");
 
-    let mut assignment_node = ASTNode::new(SyntaxElement::Assignment);
-    assignment_node.add_child(ASTNode::new(SyntaxElement::Identifier("b".to_string())));
+    let mut assignment_node = ASTNode::new(NodeType::Assignment);
+    assignment_node.add_child(ASTNode::new(NodeType::Identifier("b".to_string())));
 
-    let mut binary_expression_node_outer = ASTNode::new(SyntaxElement::BinaryExpression);
-    let mut binary_expression_node_inner_left = ASTNode::new(SyntaxElement::BinaryExpression);
-    let mut binary_expression_node_inner_right = ASTNode::new(SyntaxElement::BinaryExpression);
+    let mut binary_expression_node_outer = ASTNode::new(NodeType::BinaryExpression);
+    let mut binary_expression_node_inner_left = ASTNode::new(NodeType::BinaryExpression);
+    let mut binary_expression_node_inner_right = ASTNode::new(NodeType::BinaryExpression);
 
-    binary_expression_node_inner_left.add_child(ASTNode::new(SyntaxElement::Literal("1".to_string())));
-    binary_expression_node_inner_left.add_child(ASTNode::new(SyntaxElement::Operator("+".to_string())));
-    binary_expression_node_inner_left.add_child(ASTNode::new(SyntaxElement::Literal("2".to_string())));
+    binary_expression_node_inner_left.add_child(ASTNode::new(NodeType::Literal("1".to_string())));
+    binary_expression_node_inner_left.add_child(ASTNode::new(NodeType::Operator("+".to_string())));
+    binary_expression_node_inner_left.add_child(ASTNode::new(NodeType::Literal("2".to_string())));
     
-    binary_expression_node_inner_right.add_child(ASTNode::new(SyntaxElement::Literal("3".to_string())));
-    binary_expression_node_inner_right.add_child(ASTNode::new(SyntaxElement::Operator("-".to_string())));
-    binary_expression_node_inner_right.add_child(ASTNode::new(SyntaxElement::Literal("4".to_string())));
+    binary_expression_node_inner_right.add_child(ASTNode::new(NodeType::Literal("3".to_string())));
+    binary_expression_node_inner_right.add_child(ASTNode::new(NodeType::Operator("-".to_string())));
+    binary_expression_node_inner_right.add_child(ASTNode::new(NodeType::Literal("4".to_string())));
 
     binary_expression_node_outer.add_child(binary_expression_node_inner_left);
-    binary_expression_node_outer.add_child(ASTNode::new(SyntaxElement::Operator("*".to_string())));
+    binary_expression_node_outer.add_child(ASTNode::new(NodeType::Operator("*".to_string())));
     binary_expression_node_outer.add_child(binary_expression_node_inner_right);
 
     assignment_node.add_child(binary_expression_node_outer);
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(assignment_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -712,28 +712,28 @@ fn test_assignment_to_nested_parentheses_expression() {
     assert!(result.is_ok(), "Parser should successfully parse the expression without errors.");
     let ast = result.expect("Failed to parse");
 
-    let mut assignment_node = ASTNode::new(SyntaxElement::Assignment);
-    assignment_node.add_child(ASTNode::new(SyntaxElement::Identifier("c".to_string())));
+    let mut assignment_node = ASTNode::new(NodeType::Assignment);
+    assignment_node.add_child(ASTNode::new(NodeType::Identifier("c".to_string())));
 
-    let mut binary_expression_node_outer = ASTNode::new(SyntaxElement::BinaryExpression);
-    let mut binary_expression_node_middle = ASTNode::new(SyntaxElement::BinaryExpression);
-    let mut binary_expression_node_inner = ASTNode::new(SyntaxElement::BinaryExpression);
+    let mut binary_expression_node_outer = ASTNode::new(NodeType::BinaryExpression);
+    let mut binary_expression_node_middle = ASTNode::new(NodeType::BinaryExpression);
+    let mut binary_expression_node_inner = ASTNode::new(NodeType::BinaryExpression);
 
-    binary_expression_node_inner.add_child(ASTNode::new(SyntaxElement::Literal("7".to_string())));
-    binary_expression_node_inner.add_child(ASTNode::new(SyntaxElement::Operator("+".to_string())));
-    binary_expression_node_inner.add_child(ASTNode::new(SyntaxElement::Literal("8".to_string())));
+    binary_expression_node_inner.add_child(ASTNode::new(NodeType::Literal("7".to_string())));
+    binary_expression_node_inner.add_child(ASTNode::new(NodeType::Operator("+".to_string())));
+    binary_expression_node_inner.add_child(ASTNode::new(NodeType::Literal("8".to_string())));
     
     binary_expression_node_middle.add_child(binary_expression_node_inner);
-    binary_expression_node_middle.add_child(ASTNode::new(SyntaxElement::Operator("*".to_string())));
-    binary_expression_node_middle.add_child(ASTNode::new(SyntaxElement::Literal("2".to_string())));
+    binary_expression_node_middle.add_child(ASTNode::new(NodeType::Operator("*".to_string())));
+    binary_expression_node_middle.add_child(ASTNode::new(NodeType::Literal("2".to_string())));
 
     binary_expression_node_outer.add_child(binary_expression_node_middle);
-    binary_expression_node_outer.add_child(ASTNode::new(SyntaxElement::Operator("/".to_string())));
-    binary_expression_node_outer.add_child(ASTNode::new(SyntaxElement::Literal("3".to_string())));
+    binary_expression_node_outer.add_child(ASTNode::new(NodeType::Operator("/".to_string())));
+    binary_expression_node_outer.add_child(ASTNode::new(NodeType::Literal("3".to_string())));
 
     assignment_node.add_child(binary_expression_node_outer);
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(assignment_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -755,18 +755,18 @@ fn test_initialization_parsing_no_value() {
     ];
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let mut initialization_node: ASTNode = ASTNode::new(SyntaxElement::Initialization);
+    let mut initialization_node: ASTNode = ASTNode::new(NodeType::Initialization);
 
-    let var_id_node: ASTNode = ASTNode::new(SyntaxElement::Identifier("x".to_string()));
-    let type_node: ASTNode = ASTNode::new(SyntaxElement::Type(DataType::Boolean));
+    let var_id_node: ASTNode = ASTNode::new(NodeType::Identifier("x".to_string()));
+    let type_node: ASTNode = ASTNode::new(NodeType::Type(DataType::Boolean));
 
-    let mut variable_node: ASTNode = ASTNode::new(SyntaxElement::Variable);
+    let mut variable_node: ASTNode = ASTNode::new(NodeType::Variable);
     variable_node.add_child(var_id_node);
     variable_node.add_child(type_node);
 
     initialization_node.add_child(variable_node);
 
-    let mut top_level_expr: ASTNode = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr: ASTNode = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(initialization_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -788,23 +788,23 @@ fn test_initialization_parsing_int() {
     ];
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let mut initialization_node: ASTNode = ASTNode::new(SyntaxElement::Initialization);
+    let mut initialization_node: ASTNode = ASTNode::new(NodeType::Initialization);
 
-    let var_id_node: ASTNode = ASTNode::new(SyntaxElement::Identifier("x".to_string()));
-    let type_node: ASTNode = ASTNode::new(SyntaxElement::Type(DataType::Integer));
+    let var_id_node: ASTNode = ASTNode::new(NodeType::Identifier("x".to_string()));
+    let type_node: ASTNode = ASTNode::new(NodeType::Type(DataType::Integer));
 
-    let mut variable_node: ASTNode = ASTNode::new(SyntaxElement::Variable);
+    let mut variable_node: ASTNode = ASTNode::new(NodeType::Variable);
     variable_node.add_child(var_id_node);
     variable_node.add_child(type_node);
 
-    let value_node: ASTNode = ASTNode::new(SyntaxElement::Literal("1".to_string()));
-    let mut assigned_value_node: ASTNode = ASTNode::new(SyntaxElement::AssignedValue);
+    let value_node: ASTNode = ASTNode::new(NodeType::Literal("1".to_string()));
+    let mut assigned_value_node: ASTNode = ASTNode::new(NodeType::AssignedValue);
     assigned_value_node.add_child(value_node);
 
     initialization_node.add_child(variable_node);
     initialization_node.add_child(assigned_value_node);
 
-    let mut top_level_expr: ASTNode = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr: ASTNode = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(initialization_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -826,23 +826,23 @@ fn test_initialization_parsing_long() {
     ];
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let mut initialization_node: ASTNode = ASTNode::new(SyntaxElement::Initialization);
+    let mut initialization_node: ASTNode = ASTNode::new(NodeType::Initialization);
 
-    let var_id_node: ASTNode = ASTNode::new(SyntaxElement::Identifier("x".to_string()));
-    let type_node: ASTNode = ASTNode::new(SyntaxElement::Type(DataType::Long));
+    let var_id_node: ASTNode = ASTNode::new(NodeType::Identifier("x".to_string()));
+    let type_node: ASTNode = ASTNode::new(NodeType::Type(DataType::Long));
 
-    let mut variable_node: ASTNode = ASTNode::new(SyntaxElement::Variable);
+    let mut variable_node: ASTNode = ASTNode::new(NodeType::Variable);
     variable_node.add_child(var_id_node);
     variable_node.add_child(type_node);
 
-    let value_node: ASTNode = ASTNode::new(SyntaxElement::Literal("1".to_string()));
-    let mut assigned_value_node: ASTNode = ASTNode::new(SyntaxElement::AssignedValue);
+    let value_node: ASTNode = ASTNode::new(NodeType::Literal("1".to_string()));
+    let mut assigned_value_node: ASTNode = ASTNode::new(NodeType::AssignedValue);
     assigned_value_node.add_child(value_node);
 
     initialization_node.add_child(variable_node);
     initialization_node.add_child(assigned_value_node);
 
-    let mut top_level_expr: ASTNode = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr: ASTNode = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(initialization_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -868,10 +868,10 @@ fn test_struct_declaration_empty() {
     assert!(result.is_ok(), "Parser should successfully parse the struct declaration without errors.");
     let ast = result.expect("Failed to parse");
 
-    let mut struct_node = ASTNode::new(SyntaxElement::StructDeclaration);
-    struct_node.add_child(ASTNode::new(SyntaxElement::Identifier("MyStruct".to_string())));
+    let mut struct_node = ASTNode::new(NodeType::StructDeclaration);
+    struct_node.add_child(ASTNode::new(NodeType::Identifier("MyStruct".to_string())));
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(struct_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -902,21 +902,21 @@ fn test_struct_declaration_with_int_fields() {
     assert!(result.is_ok(), "Parser should successfully parse the struct declaration without errors.");
     let ast = result.expect("Failed to parse");
 
-    let mut struct_node = ASTNode::new(SyntaxElement::StructDeclaration);
-    struct_node.add_child(ASTNode::new(SyntaxElement::Identifier("MyStruct".to_string())));
+    let mut struct_node = ASTNode::new(NodeType::StructDeclaration);
+    struct_node.add_child(ASTNode::new(NodeType::Identifier("MyStruct".to_string())));
 
-    let mut field_a = ASTNode::new(SyntaxElement::Field);
-    field_a.add_child(ASTNode::new(SyntaxElement::Literal("a".to_string())));
-    field_a.add_child(ASTNode::new(SyntaxElement::Type(DataType::Integer)));
+    let mut field_a = ASTNode::new(NodeType::Field);
+    field_a.add_child(ASTNode::new(NodeType::Literal("a".to_string())));
+    field_a.add_child(ASTNode::new(NodeType::Type(DataType::Integer)));
     
-    let mut field_b = ASTNode::new(SyntaxElement::Field);
-    field_b.add_child(ASTNode::new(SyntaxElement::Literal("b".to_string())));
-    field_b.add_child(ASTNode::new(SyntaxElement::Type(DataType::Integer)));
+    let mut field_b = ASTNode::new(NodeType::Field);
+    field_b.add_child(ASTNode::new(NodeType::Literal("b".to_string())));
+    field_b.add_child(ASTNode::new(NodeType::Type(DataType::Integer)));
 
     struct_node.add_child(field_a);
     struct_node.add_child(field_b);
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(struct_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -947,21 +947,21 @@ fn test_struct_declaration_with_char_fields() {
     assert!(result.is_ok(), "Parser should successfully parse the struct declaration without errors.");
     let ast = result.expect("Failed to parse");
 
-    let mut struct_node = ASTNode::new(SyntaxElement::StructDeclaration);
-    struct_node.add_child(ASTNode::new(SyntaxElement::Identifier("MyStruct".to_string())));
+    let mut struct_node = ASTNode::new(NodeType::StructDeclaration);
+    struct_node.add_child(ASTNode::new(NodeType::Identifier("MyStruct".to_string())));
 
-    let mut field_a = ASTNode::new(SyntaxElement::Field);
-    field_a.add_child(ASTNode::new(SyntaxElement::Literal("a".to_string())));
-    field_a.add_child(ASTNode::new(SyntaxElement::Type(DataType::Char)));
+    let mut field_a = ASTNode::new(NodeType::Field);
+    field_a.add_child(ASTNode::new(NodeType::Literal("a".to_string())));
+    field_a.add_child(ASTNode::new(NodeType::Type(DataType::Char)));
     
-    let mut field_b = ASTNode::new(SyntaxElement::Field);
-    field_b.add_child(ASTNode::new(SyntaxElement::Literal("b".to_string())));
-    field_b.add_child(ASTNode::new(SyntaxElement::Type(DataType::Char)));
+    let mut field_b = ASTNode::new(NodeType::Field);
+    field_b.add_child(ASTNode::new(NodeType::Literal("b".to_string())));
+    field_b.add_child(ASTNode::new(NodeType::Type(DataType::Char)));
 
     struct_node.add_child(field_a);
     struct_node.add_child(field_b);
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(struct_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -988,10 +988,10 @@ fn test_enum_declaration_empty() {
     assert!(result.is_ok(), "Parser should successfully parse the enum declaration without errors.");
     let ast = result.expect("Failed to parse");
 
-    let mut enum_node = ASTNode::new(SyntaxElement::EnumDeclaration);
-    enum_node.add_child(ASTNode::new(SyntaxElement::Identifier("MyEnum".to_string())));
+    let mut enum_node = ASTNode::new(NodeType::EnumDeclaration);
+    enum_node.add_child(ASTNode::new(NodeType::Identifier("MyEnum".to_string())));
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(enum_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -1021,23 +1021,23 @@ fn test_enum_declaration_with_variants() {
     assert!(result.is_ok(), "Parser should successfully parse the enum declaration without errors.");
     let ast = result.expect("Failed to parse");
 
-    let mut enum_node = ASTNode::new(SyntaxElement::EnumDeclaration);
-    enum_node.add_child(ASTNode::new(SyntaxElement::Identifier("Color".to_string())));
+    let mut enum_node = ASTNode::new(NodeType::EnumDeclaration);
+    enum_node.add_child(ASTNode::new(NodeType::Identifier("Color".to_string())));
 
-    let mut variant_red = ASTNode::new(SyntaxElement::Variant);
-    variant_red.add_child(ASTNode::new(SyntaxElement::Identifier("Red".to_string())));
+    let mut variant_red = ASTNode::new(NodeType::Variant);
+    variant_red.add_child(ASTNode::new(NodeType::Identifier("Red".to_string())));
     
-    let mut variant_green = ASTNode::new(SyntaxElement::Variant);
-    variant_green.add_child(ASTNode::new(SyntaxElement::Identifier("Green".to_string())));
+    let mut variant_green = ASTNode::new(NodeType::Variant);
+    variant_green.add_child(ASTNode::new(NodeType::Identifier("Green".to_string())));
 
-    let mut variant_blue = ASTNode::new(SyntaxElement::Variant);
-    variant_blue.add_child(ASTNode::new(SyntaxElement::Identifier("Blue".to_string())));
+    let mut variant_blue = ASTNode::new(NodeType::Variant);
+    variant_blue.add_child(ASTNode::new(NodeType::Identifier("Blue".to_string())));
 
     enum_node.add_child(variant_red);
     enum_node.add_child(variant_green);
     enum_node.add_child(variant_blue);
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(enum_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -1063,19 +1063,19 @@ fn test_single_function_declaration() {
     ];
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let mut function_declaration_node = ASTNode::new(SyntaxElement::FunctionDeclaration);
+    let mut function_declaration_node = ASTNode::new(NodeType::FunctionDeclaration);
 
-    let identifier_node: ASTNode = ASTNode::new(SyntaxElement::Identifier("my_func".to_string()));
-    let block_expression_node: ASTNode = ASTNode::new(SyntaxElement::BlockExpression);
+    let identifier_node: ASTNode = ASTNode::new(NodeType::Identifier("my_func".to_string()));
+    let block_expression_node: ASTNode = ASTNode::new(NodeType::BlockExpression);
 
     function_declaration_node.add_child(identifier_node);
 
-    let return_type_node: ASTNode = ASTNode::new(SyntaxElement::Type(DataType::Void));
+    let return_type_node: ASTNode = ASTNode::new(NodeType::Type(DataType::Void));
     function_declaration_node.add_child(return_type_node);
 
     function_declaration_node.add_child(block_expression_node);
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(function_declaration_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -1104,29 +1104,29 @@ fn test_function_with_parameters_and_return_type() {
     ];
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let mut function_declaration_node = ASTNode::new(SyntaxElement::FunctionDeclaration);
-    let identifier_node = ASTNode::new(SyntaxElement::Identifier("calculate".to_string()));
+    let mut function_declaration_node = ASTNode::new(NodeType::FunctionDeclaration);
+    let identifier_node = ASTNode::new(NodeType::Identifier("calculate".to_string()));
     function_declaration_node.add_child(identifier_node);
 
-    let mut parameter_x_node = ASTNode::new(SyntaxElement::Parameter);
-    parameter_x_node.add_child(ASTNode::new(SyntaxElement::Identifier("x".to_string())));
-    parameter_x_node.add_child(ASTNode::new(SyntaxElement::Type(DataType::Integer)));
+    let mut parameter_x_node = ASTNode::new(NodeType::Parameter);
+    parameter_x_node.add_child(ASTNode::new(NodeType::Identifier("x".to_string())));
+    parameter_x_node.add_child(ASTNode::new(NodeType::Type(DataType::Integer)));
 
-    let mut parameter_y_node = ASTNode::new(SyntaxElement::Parameter);
-    parameter_y_node.add_child(ASTNode::new(SyntaxElement::Identifier("y".to_string())));
-    parameter_y_node.add_child(ASTNode::new(SyntaxElement::Type(DataType::Integer)));
+    let mut parameter_y_node = ASTNode::new(NodeType::Parameter);
+    parameter_y_node.add_child(ASTNode::new(NodeType::Identifier("y".to_string())));
+    parameter_y_node.add_child(ASTNode::new(NodeType::Type(DataType::Integer)));
 
     function_declaration_node.add_child(parameter_x_node);
     function_declaration_node.add_child(parameter_y_node);
 
-    let return_type_node: ASTNode = ASTNode::new(SyntaxElement::Type(DataType::Boolean));
+    let return_type_node: ASTNode = ASTNode::new(NodeType::Type(DataType::Boolean));
     function_declaration_node.add_child(return_type_node);
 
-    let block_expression_node: ASTNode = ASTNode::new(SyntaxElement::BlockExpression);
+    let block_expression_node: ASTNode = ASTNode::new(NodeType::BlockExpression);
 
     function_declaration_node.add_child(block_expression_node);
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(function_declaration_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -1158,18 +1158,18 @@ fn test_function_with_body() {
 
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let mut function_declaration_node: ASTNode = ASTNode::new(SyntaxElement::FunctionDeclaration);
-    let identifier_node = ASTNode::new(SyntaxElement::Identifier("test".to_string()));
+    let mut function_declaration_node: ASTNode = ASTNode::new(NodeType::FunctionDeclaration);
+    let identifier_node = ASTNode::new(NodeType::Identifier("test".to_string()));
     function_declaration_node.add_child(identifier_node);
 
-    let mut block_expression_node = ASTNode::new(SyntaxElement::BlockExpression);
-    let mut initialization_node = ASTNode::new(SyntaxElement::Initialization);
-    let mut assigned_value_node: ASTNode = ASTNode::new(SyntaxElement::AssignedValue);
-    let mut variable_node: ASTNode = ASTNode::new(SyntaxElement::Variable);
+    let mut block_expression_node = ASTNode::new(NodeType::BlockExpression);
+    let mut initialization_node = ASTNode::new(NodeType::Initialization);
+    let mut assigned_value_node: ASTNode = ASTNode::new(NodeType::AssignedValue);
+    let mut variable_node: ASTNode = ASTNode::new(NodeType::Variable);
 
-    let variable_id_node: ASTNode = ASTNode::new(SyntaxElement::Identifier("x".to_string()));
-    let type_node: ASTNode = ASTNode::new(SyntaxElement::Type(DataType::Integer));
-    let value_node: ASTNode = ASTNode::new(SyntaxElement::Literal("1".to_string()));
+    let variable_id_node: ASTNode = ASTNode::new(NodeType::Identifier("x".to_string()));
+    let type_node: ASTNode = ASTNode::new(NodeType::Type(DataType::Integer));
+    let value_node: ASTNode = ASTNode::new(NodeType::Literal("1".to_string()));
 
     variable_node.add_child(variable_id_node);
     variable_node.add_child(type_node);
@@ -1181,12 +1181,12 @@ fn test_function_with_body() {
 
     block_expression_node.add_child(initialization_node);
 
-    let return_type_node: ASTNode = ASTNode::new(SyntaxElement::Type(DataType::Void));
+    let return_type_node: ASTNode = ASTNode::new(NodeType::Type(DataType::Void));
     function_declaration_node.add_child(return_type_node);
 
     function_declaration_node.add_child(block_expression_node);
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(function_declaration_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -1231,41 +1231,41 @@ fn test_function_with_if_else_statement() {
 
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let mut function_declaration_node = ASTNode::new(SyntaxElement::FunctionDeclaration);
-    let identifier_node = ASTNode::new(SyntaxElement::Identifier("foo".to_string()));
+    let mut function_declaration_node = ASTNode::new(NodeType::FunctionDeclaration);
+    let identifier_node = ASTNode::new(NodeType::Identifier("foo".to_string()));
     function_declaration_node.add_child(identifier_node);
 
-    let mut parameter_a_node = ASTNode::new(SyntaxElement::Parameter);
-    parameter_a_node.add_child(ASTNode::new(SyntaxElement::Identifier("a".to_string())));
-    parameter_a_node.add_child(ASTNode::new(SyntaxElement::Type(DataType::Integer)));
+    let mut parameter_a_node = ASTNode::new(NodeType::Parameter);
+    parameter_a_node.add_child(ASTNode::new(NodeType::Identifier("a".to_string())));
+    parameter_a_node.add_child(ASTNode::new(NodeType::Type(DataType::Integer)));
     function_declaration_node.add_child(parameter_a_node);
 
-    let mut parameter_b_node = ASTNode::new(SyntaxElement::Parameter);
-    parameter_b_node.add_child(ASTNode::new(SyntaxElement::Identifier("b".to_string())));
-    parameter_b_node.add_child(ASTNode::new(SyntaxElement::Type(DataType::Integer)));
+    let mut parameter_b_node = ASTNode::new(NodeType::Parameter);
+    parameter_b_node.add_child(ASTNode::new(NodeType::Identifier("b".to_string())));
+    parameter_b_node.add_child(ASTNode::new(NodeType::Type(DataType::Integer)));
     function_declaration_node.add_child(parameter_b_node);
 
-    let return_type_node = ASTNode::new(SyntaxElement::Type(DataType::Boolean));
+    let return_type_node = ASTNode::new(NodeType::Type(DataType::Boolean));
     function_declaration_node.add_child(return_type_node);
 
-    let mut if_statement_node = ASTNode::new(SyntaxElement::IfStatement);
-    let mut condition_node = ASTNode::new(SyntaxElement::Condition);
-    let inner_condition_node = ASTNode::new(SyntaxElement::Identifier("x".to_string()));
+    let mut if_statement_node = ASTNode::new(NodeType::IfStatement);
+    let mut condition_node = ASTNode::new(NodeType::Condition);
+    let inner_condition_node = ASTNode::new(NodeType::Identifier("x".to_string()));
     condition_node.add_child(inner_condition_node);
 
-    let mut then_branch_node = ASTNode::new(SyntaxElement::BlockExpression);
-    let mut then_return_node = ASTNode::new(SyntaxElement::Return);
-    let mut then_return_value = ASTNode::new(SyntaxElement::AssignedValue);
-    let then_return_value_node = ASTNode::new(SyntaxElement::Identifier("x".to_string()));
+    let mut then_branch_node = ASTNode::new(NodeType::BlockExpression);
+    let mut then_return_node = ASTNode::new(NodeType::Return);
+    let mut then_return_value = ASTNode::new(NodeType::AssignedValue);
+    let then_return_value_node = ASTNode::new(NodeType::Identifier("x".to_string()));
     then_return_value.add_child(then_return_value_node);
 
     then_return_node.add_child(then_return_value);
     then_branch_node.add_child(then_return_node);
 
-    let mut else_branch_node = ASTNode::new(SyntaxElement::BlockExpression);
-    let mut else_return_node = ASTNode::new(SyntaxElement::Return);
-    let mut else_return_value: ASTNode = ASTNode::new(SyntaxElement::AssignedValue);
-    let else_return_value_node = ASTNode::new(SyntaxElement::Identifier("x".to_string()));
+    let mut else_branch_node = ASTNode::new(NodeType::BlockExpression);
+    let mut else_return_node = ASTNode::new(NodeType::Return);
+    let mut else_return_value: ASTNode = ASTNode::new(NodeType::AssignedValue);
+    let else_return_value_node = ASTNode::new(NodeType::Identifier("x".to_string()));
     else_return_value.add_child(else_return_value_node);
 
     else_return_node.add_child(else_return_value);
@@ -1275,12 +1275,12 @@ fn test_function_with_if_else_statement() {
     if_statement_node.add_child(then_branch_node);
     if_statement_node.add_child(else_branch_node);
 
-    let mut block_expression_node = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut block_expression_node = ASTNode::new(NodeType::BlockExpression);
     block_expression_node.add_child(if_statement_node);
 
     function_declaration_node.add_child(block_expression_node);
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(function_declaration_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -1322,35 +1322,35 @@ fn test_for_loop_parsing() {
     ];
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let mut for_loop_node: ASTNode = ASTNode::new(SyntaxElement::ForLoop);
+    let mut for_loop_node: ASTNode = ASTNode::new(NodeType::ForLoop);
 
-    let mut init_node: ASTNode = ASTNode::new(SyntaxElement::LoopInitializer);
-    let mut assignment_node: ASTNode = ASTNode::new(SyntaxElement::Assignment);
-    assignment_node.add_child(ASTNode::new(SyntaxElement::Identifier("x".to_string())));
-    assignment_node.add_child(ASTNode::new(SyntaxElement::Literal("0".to_string())));
+    let mut init_node: ASTNode = ASTNode::new(NodeType::LoopInitializer);
+    let mut assignment_node: ASTNode = ASTNode::new(NodeType::Assignment);
+    assignment_node.add_child(ASTNode::new(NodeType::Identifier("x".to_string())));
+    assignment_node.add_child(ASTNode::new(NodeType::Literal("0".to_string())));
     init_node.add_child(assignment_node);
 
-    let mut condition_node: ASTNode = ASTNode::new(SyntaxElement::Condition);
-    let mut bin_exp_node: ASTNode = ASTNode::new(SyntaxElement::BinaryExpression);
-    bin_exp_node.add_child(ASTNode::new(SyntaxElement::Identifier("x".to_string())));
-    bin_exp_node.add_child(ASTNode::new(SyntaxElement::Operator("<".to_string())));
-    bin_exp_node.add_child(ASTNode::new(SyntaxElement::Literal("1".to_string())));
+    let mut condition_node: ASTNode = ASTNode::new(NodeType::Condition);
+    let mut bin_exp_node: ASTNode = ASTNode::new(NodeType::BinaryExpression);
+    bin_exp_node.add_child(ASTNode::new(NodeType::Identifier("x".to_string())));
+    bin_exp_node.add_child(ASTNode::new(NodeType::Operator("<".to_string())));
+    bin_exp_node.add_child(ASTNode::new(NodeType::Literal("1".to_string())));
     condition_node.add_child(bin_exp_node);
 
-    let mut increment_node: ASTNode = ASTNode::new(SyntaxElement::LoopIncrement);
-    let mut assignment_node2: ASTNode = ASTNode::new(SyntaxElement::Assignment);
-    assignment_node2.add_child(ASTNode::new(SyntaxElement::Identifier("x".to_string())));
+    let mut increment_node: ASTNode = ASTNode::new(NodeType::LoopIncrement);
+    let mut assignment_node2: ASTNode = ASTNode::new(NodeType::Assignment);
+    assignment_node2.add_child(ASTNode::new(NodeType::Identifier("x".to_string())));
 
-    let mut bin_exp_node2: ASTNode = ASTNode::new(SyntaxElement::BinaryExpression);
-    bin_exp_node2.add_child(ASTNode::new(SyntaxElement::Identifier("x".to_string())));
-    bin_exp_node2.add_child(ASTNode::new(SyntaxElement::Operator("+".to_string())));
-    bin_exp_node2.add_child(ASTNode::new(SyntaxElement::Literal("1".to_string())));
+    let mut bin_exp_node2: ASTNode = ASTNode::new(NodeType::BinaryExpression);
+    bin_exp_node2.add_child(ASTNode::new(NodeType::Identifier("x".to_string())));
+    bin_exp_node2.add_child(ASTNode::new(NodeType::Operator("+".to_string())));
+    bin_exp_node2.add_child(ASTNode::new(NodeType::Literal("1".to_string())));
     assignment_node2.add_child(bin_exp_node2);
     
     increment_node.add_child(assignment_node2);
 
-    let mut body_node: ASTNode = ASTNode::new(SyntaxElement::BlockExpression);
-    let break_node: ASTNode = ASTNode::new(SyntaxElement::Break);
+    let mut body_node: ASTNode = ASTNode::new(NodeType::BlockExpression);
+    let break_node: ASTNode = ASTNode::new(NodeType::Break);
 
     body_node.add_child(break_node);
 
@@ -1359,7 +1359,7 @@ fn test_for_loop_parsing() {
     for_loop_node.add_child(increment_node);
     for_loop_node.add_child(body_node);
 
-    let mut top_level_expr: ASTNode = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr: ASTNode = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(for_loop_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -1385,21 +1385,21 @@ fn test_while_loop_parsing() {
     ];
     let actual_ast = Parser::parse(tokens).expect("Failed to parse");
 
-    let mut while_loop_node = ASTNode::new(SyntaxElement::WhileLoop);
+    let mut while_loop_node = ASTNode::new(NodeType::WhileLoop);
     
-    let mut condition_node: ASTNode = ASTNode::new(SyntaxElement::Condition);
-    let condition_value_node = ASTNode::new(SyntaxElement::Identifier("x".to_string()));
+    let mut condition_node: ASTNode = ASTNode::new(NodeType::Condition);
+    let condition_value_node = ASTNode::new(NodeType::Identifier("x".to_string()));
     condition_node.add_child(condition_value_node);
 
-    let mut body_node = ASTNode::new(SyntaxElement::BlockExpression);
-    let break_node = ASTNode::new(SyntaxElement::Break);
+    let mut body_node = ASTNode::new(NodeType::BlockExpression);
+    let break_node = ASTNode::new(NodeType::Break);
 
     body_node.add_child(break_node);
 
     while_loop_node.add_child(condition_node); 
     while_loop_node.add_child(body_node); 
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(while_loop_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -1427,20 +1427,20 @@ fn test_do_while_loop_parsing() {
     ];
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let mut do_while_loop_node = ASTNode::new(SyntaxElement::DoWhileLoop);
+    let mut do_while_loop_node = ASTNode::new(NodeType::DoWhileLoop);
     
-    let mut body_node = ASTNode::new(SyntaxElement::BlockExpression);
-    let break_node = ASTNode::new(SyntaxElement::Break);
+    let mut body_node = ASTNode::new(NodeType::BlockExpression);
+    let break_node = ASTNode::new(NodeType::Break);
     body_node.add_child(break_node);
 
-    let mut condition_node = ASTNode::new(SyntaxElement::Condition);
-    let condition_value_node = ASTNode::new(SyntaxElement::Identifier("x".to_string()));
+    let mut condition_node = ASTNode::new(NodeType::Condition);
+    let condition_value_node = ASTNode::new(NodeType::Identifier("x".to_string()));
     condition_node.add_child(condition_value_node);
 
     do_while_loop_node.add_child(body_node); 
     do_while_loop_node.add_child(condition_node); 
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(do_while_loop_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -1468,18 +1468,18 @@ fn test_if_statement_parsing() {
 
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let mut if_statement_node: ASTNode = ASTNode::new(SyntaxElement::IfStatement);
+    let mut if_statement_node: ASTNode = ASTNode::new(NodeType::IfStatement);
 
-    let mut condition_node: ASTNode = ASTNode::new(SyntaxElement::Condition);
-    let inner_condition_node = ASTNode::new(SyntaxElement::Identifier("x".to_string()));
+    let mut condition_node: ASTNode = ASTNode::new(NodeType::Condition);
+    let inner_condition_node = ASTNode::new(NodeType::Identifier("x".to_string()));
     condition_node.add_child(inner_condition_node);
 
 
-    let mut then_branch_node: ASTNode = ASTNode::new(SyntaxElement::BlockExpression);
-    let mut return_node: ASTNode = ASTNode::new(SyntaxElement::Return);
-    let mut assigned_value_node: ASTNode = ASTNode::new(SyntaxElement::AssignedValue);
+    let mut then_branch_node: ASTNode = ASTNode::new(NodeType::BlockExpression);
+    let mut return_node: ASTNode = ASTNode::new(NodeType::Return);
+    let mut assigned_value_node: ASTNode = ASTNode::new(NodeType::AssignedValue);
 
-    let return_value_node: ASTNode = ASTNode::new(SyntaxElement::Identifier("x".to_string()));
+    let return_value_node: ASTNode = ASTNode::new(NodeType::Identifier("x".to_string()));
     assigned_value_node.add_child(return_value_node);
 
     return_node.add_child(assigned_value_node);
@@ -1488,7 +1488,7 @@ fn test_if_statement_parsing() {
     if_statement_node.add_child(condition_node);
     if_statement_node.add_child(then_branch_node);
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(if_statement_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -1522,18 +1522,18 @@ fn test_if_statement_parsing_with_else() {
 
     let ast: AST = Parser::parse(tokens).expect("Failed to parse");
 
-    let mut if_statement_node: ASTNode = ASTNode::new(SyntaxElement::IfStatement);
+    let mut if_statement_node: ASTNode = ASTNode::new(NodeType::IfStatement);
 
-    let mut condition_node: ASTNode = ASTNode::new(SyntaxElement::Condition);
-    let inner_condition_node = ASTNode::new(SyntaxElement::Identifier("x".to_string()));
+    let mut condition_node: ASTNode = ASTNode::new(NodeType::Condition);
+    let inner_condition_node = ASTNode::new(NodeType::Identifier("x".to_string()));
     condition_node.add_child(inner_condition_node);
 
 
-    let mut then_branch_node: ASTNode = ASTNode::new(SyntaxElement::BlockExpression);
-    let mut return_node: ASTNode = ASTNode::new(SyntaxElement::Return);
-    let mut assigned_value_node: ASTNode = ASTNode::new(SyntaxElement::AssignedValue);
+    let mut then_branch_node: ASTNode = ASTNode::new(NodeType::BlockExpression);
+    let mut return_node: ASTNode = ASTNode::new(NodeType::Return);
+    let mut assigned_value_node: ASTNode = ASTNode::new(NodeType::AssignedValue);
 
-    let return_value_node: ASTNode = ASTNode::new(SyntaxElement::Identifier("x".to_string()));
+    let return_value_node: ASTNode = ASTNode::new(NodeType::Identifier("x".to_string()));
     assigned_value_node.add_child(return_value_node);
 
     return_node.add_child(assigned_value_node);
@@ -1541,11 +1541,11 @@ fn test_if_statement_parsing_with_else() {
 
     if_statement_node.add_child(condition_node);
 
-    let mut else_branch_node: ASTNode = ASTNode::new(SyntaxElement::BlockExpression);
-    let mut return_node2: ASTNode = ASTNode::new(SyntaxElement::Return);
-    let mut assigned_value_node2: ASTNode = ASTNode::new(SyntaxElement::AssignedValue);
+    let mut else_branch_node: ASTNode = ASTNode::new(NodeType::BlockExpression);
+    let mut return_node2: ASTNode = ASTNode::new(NodeType::Return);
+    let mut assigned_value_node2: ASTNode = ASTNode::new(NodeType::AssignedValue);
 
-    let return_value_node2: ASTNode = ASTNode::new(SyntaxElement::Identifier("y".to_string()));
+    let return_value_node2: ASTNode = ASTNode::new(NodeType::Identifier("y".to_string()));
     assigned_value_node2.add_child(return_value_node2);
 
     return_node2.add_child(assigned_value_node2);
@@ -1555,7 +1555,7 @@ fn test_if_statement_parsing_with_else() {
 
     if_statement_node.add_child(else_branch_node);
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(if_statement_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -1625,78 +1625,78 @@ fn test_switch_statement_parsing() {
 
     // Case 1
 
-    let mut assignedval_node1 = ASTNode::new(SyntaxElement::AssignedValue);
-    assignedval_node1.add_child(ASTNode::new(SyntaxElement::Literal("6".to_string())));
+    let mut assignedval_node1 = ASTNode::new(NodeType::AssignedValue);
+    assignedval_node1.add_child(ASTNode::new(NodeType::Literal("6".to_string())));
 
-    let mut var_node1 = ASTNode::new(SyntaxElement::Variable);
-    var_node1.add_child(ASTNode::new(SyntaxElement::Identifier("x".to_string())));
-    var_node1.add_child(ASTNode::new(SyntaxElement::Type(DataType::Integer)));
+    let mut var_node1 = ASTNode::new(NodeType::Variable);
+    var_node1.add_child(ASTNode::new(NodeType::Identifier("x".to_string())));
+    var_node1.add_child(ASTNode::new(NodeType::Type(DataType::Integer)));
 
-    let mut initialization_node1 = ASTNode::new(SyntaxElement::Initialization);
+    let mut initialization_node1 = ASTNode::new(NodeType::Initialization);
     initialization_node1.add_child(var_node1);
     initialization_node1.add_child(assignedval_node1);
 
-    let mut case1_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut case1_block = ASTNode::new(NodeType::BlockExpression);
     case1_block.add_child(initialization_node1);
-    case1_block.add_child(ASTNode::new(SyntaxElement::Break));
+    case1_block.add_child(ASTNode::new(NodeType::Break));
 
-    let mut case1 = ASTNode::new(SyntaxElement::Case);
-    case1.add_child(ASTNode::new(SyntaxElement::Literal("1".to_string())));
+    let mut case1 = ASTNode::new(NodeType::Case);
+    case1.add_child(ASTNode::new(NodeType::Literal("1".to_string())));
     case1.add_child(case1_block);
     
     // Case 2
     
-    let mut assignedval_node2 = ASTNode::new(SyntaxElement::AssignedValue);
-    assignedval_node2.add_child(ASTNode::new(SyntaxElement::Literal("7".to_string())));
+    let mut assignedval_node2 = ASTNode::new(NodeType::AssignedValue);
+    assignedval_node2.add_child(ASTNode::new(NodeType::Literal("7".to_string())));
 
-    let mut var_node2 = ASTNode::new(SyntaxElement::Variable);
-    var_node2.add_child(ASTNode::new(SyntaxElement::Identifier("x".to_string())));
-    var_node2.add_child(ASTNode::new(SyntaxElement::Type(DataType::Integer)));
+    let mut var_node2 = ASTNode::new(NodeType::Variable);
+    var_node2.add_child(ASTNode::new(NodeType::Identifier("x".to_string())));
+    var_node2.add_child(ASTNode::new(NodeType::Type(DataType::Integer)));
 
-    let mut initialization_node2 = ASTNode::new(SyntaxElement::Initialization);
+    let mut initialization_node2 = ASTNode::new(NodeType::Initialization);
     initialization_node2.add_child(var_node2);
     initialization_node2.add_child(assignedval_node2);
 
-    let mut case2_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut case2_block = ASTNode::new(NodeType::BlockExpression);
     case2_block.add_child(initialization_node2);
-    case2_block.add_child(ASTNode::new(SyntaxElement::Break));
+    case2_block.add_child(ASTNode::new(NodeType::Break));
 
-    let mut case2 = ASTNode::new(SyntaxElement::Case);
-    case2.add_child(ASTNode::new(SyntaxElement::Literal("2".to_string())));
+    let mut case2 = ASTNode::new(NodeType::Case);
+    case2.add_child(ASTNode::new(NodeType::Literal("2".to_string())));
     case2.add_child(case2_block);
 
     // Default
     
-    let mut assignedval_node3 = ASTNode::new(SyntaxElement::AssignedValue);
-    assignedval_node3.add_child(ASTNode::new(SyntaxElement::Literal("8".to_string())));
+    let mut assignedval_node3 = ASTNode::new(NodeType::AssignedValue);
+    assignedval_node3.add_child(ASTNode::new(NodeType::Literal("8".to_string())));
  
-    let mut var_node3 = ASTNode::new(SyntaxElement::Variable);
-    var_node3.add_child(ASTNode::new(SyntaxElement::Identifier("x".to_string())));
-    var_node3.add_child(ASTNode::new(SyntaxElement::Type(DataType::Integer)));
+    let mut var_node3 = ASTNode::new(NodeType::Variable);
+    var_node3.add_child(ASTNode::new(NodeType::Identifier("x".to_string())));
+    var_node3.add_child(ASTNode::new(NodeType::Type(DataType::Integer)));
 
-    let mut initialization_node3 = ASTNode::new(SyntaxElement::Initialization);
+    let mut initialization_node3 = ASTNode::new(NodeType::Initialization);
     initialization_node3.add_child(var_node3);
     initialization_node3.add_child(assignedval_node3);
 
-    let mut case3_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut case3_block = ASTNode::new(NodeType::BlockExpression);
     case3_block.add_child(initialization_node3);
-    case3_block.add_child(ASTNode::new(SyntaxElement::Break));
+    case3_block.add_child(ASTNode::new(NodeType::Break));
 
-    let mut case3 = ASTNode::new(SyntaxElement::Default);
+    let mut case3 = ASTNode::new(NodeType::Default);
     case3.add_child(case3_block);
 
-    let mut cases_block_node = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut cases_block_node = ASTNode::new(NodeType::BlockExpression);
     cases_block_node.add_child(case1);
     cases_block_node.add_child(case2);
     cases_block_node.add_child(case3);
 
-    let identifier_node = ASTNode::new(SyntaxElement::Identifier("y".to_string()));
+    let identifier_node = ASTNode::new(NodeType::Identifier("y".to_string()));
 
-    let mut switch_statement_node = ASTNode::new(SyntaxElement::SwitchStatement);
+    let mut switch_statement_node = ASTNode::new(NodeType::SwitchStatement);
     switch_statement_node.add_child(identifier_node);
     switch_statement_node.add_child(cases_block_node);
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(switch_statement_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -1747,57 +1747,57 @@ fn test_switch_statement_parsing_without_break_statements() {
 
     // Case 1
 
-    let mut assignedval_node1 = ASTNode::new(SyntaxElement::AssignedValue);
-    assignedval_node1.add_child(ASTNode::new(SyntaxElement::Literal("1".to_string())));
+    let mut assignedval_node1 = ASTNode::new(NodeType::AssignedValue);
+    assignedval_node1.add_child(ASTNode::new(NodeType::Literal("1".to_string())));
 
-    let mut var_node1 = ASTNode::new(SyntaxElement::Variable);
-    var_node1.add_child(ASTNode::new(SyntaxElement::Identifier("x".to_string())));
-    var_node1.add_child(ASTNode::new(SyntaxElement::Type(DataType::Integer)));
+    let mut var_node1 = ASTNode::new(NodeType::Variable);
+    var_node1.add_child(ASTNode::new(NodeType::Identifier("x".to_string())));
+    var_node1.add_child(ASTNode::new(NodeType::Type(DataType::Integer)));
 
-    let mut initialization_node1 = ASTNode::new(SyntaxElement::Initialization);
+    let mut initialization_node1 = ASTNode::new(NodeType::Initialization);
     initialization_node1.add_child(var_node1);
     initialization_node1.add_child(assignedval_node1);
 
-    let mut case1_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut case1_block = ASTNode::new(NodeType::BlockExpression);
     case1_block.add_child(initialization_node1);
 
-    let mut case1 = ASTNode::new(SyntaxElement::Case);
-    case1.add_child(ASTNode::new(SyntaxElement::Literal("1".to_string())));
+    let mut case1 = ASTNode::new(NodeType::Case);
+    case1.add_child(ASTNode::new(NodeType::Literal("1".to_string())));
     case1.add_child(case1_block);
     
     // Case 2
     
-    let mut assignedval_node2 = ASTNode::new(SyntaxElement::AssignedValue);
-    assignedval_node2.add_child(ASTNode::new(SyntaxElement::Literal("2".to_string())));
+    let mut assignedval_node2 = ASTNode::new(NodeType::AssignedValue);
+    assignedval_node2.add_child(ASTNode::new(NodeType::Literal("2".to_string())));
 
     
-    let mut var_node2 = ASTNode::new(SyntaxElement::Variable);
-    var_node2.add_child(ASTNode::new(SyntaxElement::Identifier("x".to_string())));
-    var_node2.add_child(ASTNode::new(SyntaxElement::Type(DataType::Integer)));
+    let mut var_node2 = ASTNode::new(NodeType::Variable);
+    var_node2.add_child(ASTNode::new(NodeType::Identifier("x".to_string())));
+    var_node2.add_child(ASTNode::new(NodeType::Type(DataType::Integer)));
 
-    let mut initialization_node2 = ASTNode::new(SyntaxElement::Initialization);
+    let mut initialization_node2 = ASTNode::new(NodeType::Initialization);
     initialization_node2.add_child(var_node2);
     initialization_node2.add_child(assignedval_node2);
 
-    let mut case2_block = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut case2_block = ASTNode::new(NodeType::BlockExpression);
     case2_block.add_child(initialization_node2);
 
-    let mut case2 = ASTNode::new(SyntaxElement::Case);
-    case2.add_child(ASTNode::new(SyntaxElement::Literal("2".to_string())));
+    let mut case2 = ASTNode::new(NodeType::Case);
+    case2.add_child(ASTNode::new(NodeType::Literal("2".to_string())));
     case2.add_child(case2_block);
 
 
-    let mut cases_block_node = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut cases_block_node = ASTNode::new(NodeType::BlockExpression);
     cases_block_node.add_child(case1);
     cases_block_node.add_child(case2);
 
-    let identifier_node = ASTNode::new(SyntaxElement::Identifier("y".to_string()));
+    let identifier_node = ASTNode::new(NodeType::Identifier("y".to_string()));
 
-    let mut switch_statement_node = ASTNode::new(SyntaxElement::SwitchStatement);
+    let mut switch_statement_node = ASTNode::new(NodeType::SwitchStatement);
     switch_statement_node.add_child(identifier_node);
     switch_statement_node.add_child(cases_block_node);
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
     top_level_expr.add_child(switch_statement_node);
 
     let expected_ast: AST = AST::new(top_level_expr);
@@ -1820,11 +1820,11 @@ fn test_block_with_expression() {
 
     let ast = result.expect("Failed to parse");
 
-    let mut block_exp_node = ASTNode::new(SyntaxElement::BlockExpression);
+    let mut block_exp_node = ASTNode::new(NodeType::BlockExpression);
 
-    block_exp_node.add_child(ASTNode::new(SyntaxElement::Identifier("A".to_string())));
+    block_exp_node.add_child(ASTNode::new(NodeType::Identifier("A".to_string())));
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
 
     top_level_expr.add_child(block_exp_node);
 
@@ -1848,15 +1848,15 @@ fn test_return_expression() {
 
     let ast = result.expect("Failed to parse");
 
-    let mut return_node = ASTNode::new(SyntaxElement::Return);
+    let mut return_node = ASTNode::new(NodeType::Return);
 
-    let mut assigned_val = ASTNode::new(SyntaxElement::AssignedValue);
+    let mut assigned_val = ASTNode::new(NodeType::AssignedValue);
 
-    assigned_val.add_child(ASTNode::new(SyntaxElement::Identifier("A".to_string())));
+    assigned_val.add_child(ASTNode::new(NodeType::Identifier("A".to_string())));
 
     return_node.add_child(assigned_val);
 
-    let mut top_level_expr = ASTNode::new(SyntaxElement::TopLevelExpression);
+    let mut top_level_expr = ASTNode::new(NodeType::TopLevelExpression);
 
     top_level_expr.add_child(return_node);
 
