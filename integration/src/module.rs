@@ -1,7 +1,7 @@
 //! This file defines the core structures and functionalities associated with our `Module`.
 //! `Module` types are composite structures that aggregate multiple module elements, each containing an AST and a symbol table stack.
 use common::ast::{ast_struct::{ASTNode, AST}, syntax_element::SyntaxElement};
-use symbol_table::symbol_table_struct::SymbolTableStack;
+use sts::core::SymbolTableStack;
 
 /// Represents a module, which is a collection of `ModElement` instances.
 pub struct Module {

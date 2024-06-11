@@ -6,7 +6,7 @@
 
 use std::collections::HashMap;
 use common::error::ErrorType;
-use safe_llvm::memory_management::resource_pools::ValueTag;
+use safe_llvm::ir::core::ValueTag;
 
 pub struct Store {
     current_table_id: Option<usize>,

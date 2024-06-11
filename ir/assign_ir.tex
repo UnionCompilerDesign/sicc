@@ -107,7 +107,7 @@ If you're here from CSC-270, you might be a little nervous that you have to writ
 
 This step of code compilation will bridge the gap between code in C and code in LLVM IR, completing the transformation from a program string to usable code. This may seem like a daunting task, but you've been provided with a set of tools that will make writing this out much easier.\\
 \\
-In \textit{core.rs}, the IRGenerator struct is what will be used to generate IR code from a given AST, and it uses another struct called ResourcePools. ResourcePools is the link between your code and generating LLVM code. For example, if you need to create an integer, the \textit{create\_integer()} function of the resource pool will handle this for you.\\
+In \textit{core.rs}, the IRGenerator struct is what will be used to generate IR code from a given AST, and it uses another struct called IRManager. IRManager is the link between your code and generating LLVM code. For example, if you need to create an integer, the \textit{create\_integer()} function of the resource pool will handle this for you.\\
 \\
 At the heart of this is the tag system. When you call \textit{create\_integer()} for example, what it will give back is a ValueTag. Think of tags as unique names that are linked to the object you've created, so when you call \textit{create\_integer()} it creates the value, stores it, and then gives you a tag that represents it, sort of like a ticket you can use to get your dry cleaning.\\
 \\

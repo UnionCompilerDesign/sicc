@@ -23,6 +23,7 @@ impl Lexer {
     /// # Parameters
     /// * `input` - A vector of characters that represents the source code to be lexed. 
     fn new(input: Vec<char>) -> Self {
+        unimplemented!()
     }
 
     /// Lexically analyzes the given input string and returns a vector of tokens or a vector of errors.
@@ -37,4 +38,6 @@ impl Lexer {
     /// # Errors
     /// This function may return errors if it encounters characters that do not conform the expected token or character types.
     pub fn lex(input: &str) -> Result<Vec<Token>, Vec<ErrorType>> {
+        unimplemented!()
     }
+}

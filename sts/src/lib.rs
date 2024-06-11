@@ -5,7 +5,7 @@
 //! 
 //! ## Structure
 //!
-//! The `symbol_table` module is organized into submodules that handle different aspects of the symbol table stack:
+//! The `sts` module is organized into submodules that handle different aspects of the symbol table stack:
 //!
 //! * `core`: Defines the symbol table stack structure and drives the generation process.
 //! * `statement`: Handles stack generation for statements and operations within blocks.

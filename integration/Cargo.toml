@@ -8,5 +8,5 @@ name = "integration"
 path = "src/lib.rs"
 
 [dependencies]
-symbol_table = { path = "../symbol_table" }
+sts = { path = "../sts" }
 common = { path = "../common" }

@@ -1,7 +1,5 @@
 //! This file defines the errors that can occur during the compilation process.
 
-use std::fmt;
-
 /// Defines types of errors that can occur during compilation.
 ///
 /// Each error represents a different kind of issue that can be encountered during the lexing, parsing, analysis, 
@@ -28,6 +26,11 @@ pub enum ErrorType {
         operator: String,
         /// The type of the operand with which the operator is incompatible.
         operand_type: String,
+    },
+
+    /// Syntax Error, most commonly found in the parsing stage.
+    SyntaxError {
+        message: String,
     },
 
     /// Occurs due to an operation attempting to divide by zero.

@@ -11,7 +11,7 @@
 /// - 'token': Tokens are the base unit of our compiler. This module contains accepted tokens.
 
 /// Core of the Lexer
-pub mod lexer_core;
+pub mod core;
 
 /// Lists accepted tokens
 pub mod token;

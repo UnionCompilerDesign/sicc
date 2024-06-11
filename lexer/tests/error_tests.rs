@@ -1,6 +1,6 @@
 use common::error::ErrorType;
 use lexer::{
-    lexer_core::Lexer,
+    core::Lexer,
     token::Token,
 };
 

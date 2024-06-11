@@ -5,21 +5,15 @@
 
 use std::sync::{Arc, Mutex};
 use integration::module::{ModElement, Module};
-use safe_llvm::memory_management::resource_pools::{BasicBlockTag, BuilderTag, ContextTag, ModuleTag, ResourcePools, Tag, ValueTag};
-use common::{
-    ast::{
-        ast_struct::{ASTNode, AST},
-        syntax_element::SyntaxElement, 
-    },
-    error::ErrorType
-};
-use symbol_table::symbol_table_struct::SymbolTableStack;
+use common::{ast::ast_struct::ASTNode, error::ErrorType};
+use safe_llvm::ir::core::{BasicBlockTag, BuilderTag, ContextTag, IRManager, ModuleTag, Tag, ValueTag};
+use sts::core::SymbolTableStack;
 use crate::store::Store;
 
 /// A struct for generating LLVM Intermediate Representation (IR) from a module of abstract syntax trees (AST) and symbol table stacks (STS).
 pub struct IRGenerator {
     /// Resource pools for working with SafeLLVM's IR generation.
-    resource_pools: Arc<Mutex<ResourcePools>>,
+    resource_pools: Arc<Mutex<IRManager>>,
     /// Current context tag for IR generation, with the context itself stored in `resource_pools`. 
     context: Option<ContextTag>,
     /// Current module tag for IR generation, with the module itself stored in `resource_pools`. 
@@ -78,7 +72,7 @@ impl IRGenerator {
     /// to assign and reassign variables in IR while keeping track of their tags.
     /// 
     /// current_insert_block is set to None, this is a space to hold the "basic block" (labeled area of code)
-    /// that new blocks should be inserted after. ResourcePools contains a function that can create basic blocks
+    /// that new blocks should be inserted after. IRManager contains a function that can create basic blocks
     /// after a given basic block, and this helps support that. This will be necessary for inserting code blocks
     /// in the body of a while loop for example.
     ///
@@ -88,7 +82,7 @@ impl IRGenerator {
     /// previous steps.
     ///
     pub fn new() -> Self {
-        let resource_pools: Arc<Mutex<ResourcePools>> = Arc::new(Mutex::new(ResourcePools::new()));
+        let resource_pools: Arc<Mutex<IRManager>> = Arc::new(Mutex::new(IRManager::new()));
         let mut resource_pools_guard = resource_pools.lock().expect("Failed to lock mutex while creating new IR generator!");
 
         let context = resource_pools_guard.create_context().expect("Failed to create context");
@@ -118,7 +112,7 @@ impl IRGenerator {
     ///
     /// Returns a mutex protected reference to the resource pools.
     ///
-    pub fn get_resource_pools(&mut self) -> Arc<Mutex<ResourcePools>> {
+    pub fn get_resource_pools(&mut self) -> Arc<Mutex<IRManager>> {
         self.resource_pools.clone()
     }
 

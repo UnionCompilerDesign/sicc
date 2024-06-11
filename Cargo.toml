@@ -17,8 +17,7 @@ safe_llvm = { git = "https://github.com/UnionCompilerDesign/safe_llvm.git", bran
 
 lexer = { path = "./lexer" }
 parser = { path = "./parser" }
-sem_analysis = { path = "./semantic_analysis" }
-symbol_table = { path = "./symbol_table" }
+sts = { path = "./sts" }
 common = { path = "./common" }
 ir = { path = "./ir"}
 integration = { path = "./integration" }
@@ -30,8 +29,7 @@ members = [
     "./ir",
     "./lexer",
     "./parser",
-    "./semantic_analysis",
-    "./symbol_table",
+    "./sts",
 ]
 
 [profile.dev]

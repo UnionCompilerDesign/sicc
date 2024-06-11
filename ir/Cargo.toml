@@ -8,7 +8,7 @@ name = "ir"
 path = "src/lib.rs"
 
 [dependencies]
-symbol_table = { path = "../symbol_table" }
+sts = { path = "../sts" }
 safe_llvm = { git = "https://github.com/UnionCompilerDesign/safe_llvm.git", branch = "main" }
 common = { path = "../common" }
 integration = { path = "../integration" }

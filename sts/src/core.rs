@@ -1,6 +1,4 @@
-//! This file contains all of the definitions of a symbol table stack and symbol tables, 
-//! and provides the implementations of these to drive the symbol table stack
-//! generation process.
+//! This file contains the core definitions and functionalities of the SymbolTableStack (STS).
 
 use std::{collections::{HashMap, HashSet}, fmt};
 use common::{
@@ -12,38 +10,40 @@ use common::{
     error::ErrorType
 };
 
-/// Initialized values in a scope
+/// Initialized values in a scope.
 #[derive(Clone)]
 pub struct SymbolTable {
     values: HashMap<String, SymbolInfo>,
 }
 
-/// Types of symbol values in a symbol table
-#[derive(Clone, Debug, PartialEq, Eq)]
+/// Types of symbol values in a symbol table.
+#[derive(Clone, Debug, PartialEq, Eq, Default)]
 pub enum SymbolValue {
-    /// Simple values that can be represented as a string
-    StrValue(Box<str>),
+    /// No expression
+    #[default]
+    NoAssociatedValue,
 
-    /// A calculated symbol value
-    Node(ASTNode),
+    /// An enum's value (variants)
+    EnumValue { 
+        /// Variants of the enum
+        variants: Vec<String>,
+    },
 
-    /// Add additional SymbolValues below
-    unimplemented!(); 
+    /// A struct's value (fields)
+    StructValue { 
+        /// Fields of the struct
+        fields: Vec<(String, DataType)>,
+    },
+    
+    /// A function's value (params, return type)
+    FunctionValue { 
+        /// Parameters of the function
+        parameters: Vec<(String, DataType)>, 
+
+    },
 }
 
-impl SymbolValue{
-
-    pub fn to_string(&self) -> String {
-        match self {
-            SymbolValue::StrValue(val) => format!("StrValue(\"{}\")", val),
-            SymbolValue::Node(node) => format!("Node({:?})", node),
-            
-            /// Add a similar to_string as the provided examples for each SymbolValue 
-        }
-    }
-}
-
-/// Information on a symbol in a symboltable
+/// Information on a symbol in a symboltable.
 #[derive(Clone, Debug)]
 pub struct SymbolInfo {
     data_type: DataType,
@@ -66,7 +66,10 @@ impl SymbolInfo {
     ///
     /// Returns a new `SymbolInfo` instance incorporating the input parameters.
     pub fn new(data_type: DataType, value: SymbolValue) -> Self {
-        unimplemented!();
+        Self {
+            data_type,
+            value,
+        }
     }
 
     /// Returns a clone of this `SymbolInfo`'s value
@@ -74,9 +77,8 @@ impl SymbolInfo {
     /// # Returns
     ///
     /// - `SymbolValue` - The `SymbolInfo`'s value as a cloned value.
-    ///
     pub fn get_value(&self) -> SymbolValue {
-        unimplemented!();
+        self.value.clone()
     }
 
     /// Returns a clone of this `SymbolInfo`'s data type
@@ -84,13 +86,8 @@ impl SymbolInfo {
     /// # Returns
     ///
     /// - `DataType` - The `SymbolInfo`'s data type as a cloned value.
-    ///
     pub fn get_data_type(&self) -> DataType {
-        unimplemented!();
-    }
-
-    pub fn to_string(&self) -> String {
-        format!("{{ data_type: {:?}, value: {} }}", self.data_type, self.value.to_string())
+        self.data_type.clone()
     }
 }
 
@@ -105,7 +102,9 @@ impl SymbolTable {
     ///
     /// Returns a new `SymbolTable` instance with an empty table.
     pub fn new() -> Self {
-        unimplemented!();
+        SymbolTable {
+            values: HashMap::new(),
+        }
     }
 
     /// Adds a new symbol and its `SymbolInfo` to the table.
@@ -116,7 +115,7 @@ impl SymbolTable {
     /// - `info`: A `SymbolInfo` instance representing the info associated with this symbol.
     ///
     pub fn add(&mut self, name: String, info: SymbolInfo) {
-        unimplemented!();
+        self.values.insert(name, info);
     }
 
     /// Retrieves a value from the symbol table.
@@ -130,7 +129,7 @@ impl SymbolTable {
     /// - `Option<&SymbolInfo>` - The `SymbolInfo` of a symbol if it exists, else None.
     ///
     pub fn get(&self, name: &str) -> Option<&SymbolInfo> {
-        unimplemented!();
+        self.values.get(name)
     }
 
     /// Checks if the symbol table is empty
@@ -140,7 +139,7 @@ impl SymbolTable {
     /// - `bool` - true if this table is empty, false otherwise.
     ///
     pub fn is_empty(&self) -> bool {
-        unimplemented!();
+        self.values.is_empty()
     }
 }
 
@@ -154,7 +153,7 @@ impl fmt::Debug for SymbolTable {
     }
 }
 
-/// A stack of symbol tables, used to represent different levels of scope
+/// A stack of symbol tables, used to represent different levels of scopes for an AST's symbols.
 #[derive(Clone)]
 pub struct SymbolTableStack {
     elements: Vec<SymbolTable>,
@@ -171,24 +170,8 @@ impl SymbolTableStack {
     ///
     /// Returns a `Result` containing an `AST` and `SymbolTableStack` pair if Ok and a vector
     /// of errors if any errors were encountered.
-    ///
     pub fn gen_sym_table_stack(ast: AST) -> Result<(AST, SymbolTableStack), Vec<ErrorType>> {
-        unimplemented!();
-    }
-
-    /// Updates a symbol in the stack with a new value
-    /// 
-    /// # Parameters
-    ///
-    /// - `identifier`: The `&str` name of the symbol being modified.
-    /// - `new_value`: the `SymbolValue` value to set the symbol's value to
-    ///
-    /// # Returns
-    ///
-    /// Returns a `Result` with Ok indicating the process was successful and Err if there was
-    /// no symbol with that name in the table.
-    pub fn update_symbol(&mut self, identifier: &str, new_value: SymbolValue) -> Result<(), ErrorType> {
-        unimplemented!();
+        unimplemented!()
     }
 
     /// Routes the generation of the SymbolTableStack based on the type of node encountered.
@@ -204,10 +187,9 @@ impl SymbolTableStack {
     ///
     /// # Errors
     ///
-    /// - Returns a vector of errors if there was a problem during STS generation.
-    ///
+    /// Returns a vector of errors if there was a problem during STS generation.
     pub fn sym_table_stack_router(&mut self, node: &ASTNode) -> Result<(), Vec<ErrorType>> {
-        unimplemented!();
+        unimplemented!()
     }
 
 
@@ -220,77 +202,63 @@ impl SymbolTableStack {
     ///
     /// Returns a new empty `SymbolTableStack` instance.
     pub fn new() -> Self {
-        unimplemented!();
+        SymbolTableStack {
+            elements: Vec::new(),
+        }
     }
 
-    /// Pushes a new table onto the stack
+    /// Pushes a new table onto the stack.
     /// 
     /// # Parameters
     ///
     /// - `item`: A `SymbolTable` to be pushed onto the stack.
     ///
     pub fn push(&mut self, item: SymbolTable) {
-        unimplemented!();
+        self.elements.push(item);
     }
 
-    /// Pops the topmost table off the stack and returns it
-    /// 
-    /// # Returns
-    ///
-    /// Returns the topmost `SymbolTable` popped off the stack, or None if there was no
-    /// topmost table.
-    ///
-    pub fn pop(&mut self) -> Option<SymbolTable> {
-        unimplemented!();
-    }
-
-    /// Checks if there are no tables on the stack
-    ///
-    /// # Returns
-    ///
-    /// - `bool` - true if this STS is empty, false otherwise.
-    ///
-    pub fn is_empty(&self) -> bool {
-        unimplemented!();
-    }
-
-    /// Retrieves the size of the stack
+    /// Retrieves the size of the stack.
     /// 
     /// # Returns
     ///
     /// Returns a `usize` of how many `SymbolTable`s exist in the stack.
     ///
     pub fn size(&self) -> usize {
-        unimplemented!();
+        self.elements.len()
     }
 
-    /// Retreives a reference to all tables in the stack
+    /// Retreives a reference to all tables in the stack.
     /// 
     /// # Returns
     ///
     /// Returns an immutable reference to the current stack.
     ///
     pub fn get_elements(&self) -> &Vec<SymbolTable> {
-        unimplemented!();
+        &self.elements
     }
 
-    /// Adds an element to the symbol table at the specified index (or global scope by default)
+    /// Adds an element to the symbol table at the specified index (or global scope by default).
     /// 
     /// # Parameters
     ///
     /// - `name`: The `String` name of the symbol to be added.
     /// - `info`: The `SymbolInfo` to be attached to the name in the tables.
-    /// - `scope_index`: Optional, either a `usize` index into the stack, or None to modify the global scope.
     /// 
     /// # Returns
     ///
     /// Returns a `Result<(), Vec<ErrorType>>` with Ok indicating the process was successful or
     /// Err containing an error encountered if any were encountered.
-    pub fn add_element(&mut self, name: String, info: SymbolInfo, scope_index: Option<usize>) -> Result<(), ErrorType> {
-        unimplemented!();
+    pub fn add_element(&mut self, name: String, info: SymbolInfo) -> Result<(), ErrorType> {
+        let index = self.size() - 1;
+        if let Some(table) = self.elements.get_mut(index) {
+            table.add(name, info);
+            Ok(())
+        } else {
+            Err(ErrorType::DevError { message: "Scope index out of range".to_string() })
+        }
     }
 
-    /// Returns the `SymbolTable` in the symbol table stack at a given index
+    /// Returns the `SymbolTable` in the symbol table stack at a given index.
     /// 
     /// # Parameters
     ///
@@ -302,24 +270,17 @@ impl SymbolTableStack {
     /// `SymbolTable` if the process was successful or Err containing an error encountered if 
     /// any were encountered.
     pub fn get_element(&self, index: usize) -> Result<SymbolTable, ErrorType> {
-        unimplemented!();
-    }
-
-    pub fn to_string(&self) -> String {
-        let mut result = String::new();
-        
-        for (i, table) in self.elements.iter().enumerate() {
-            result.push_str(&format!("Table {}: {{\n", i + 1));
-            let mut entries: Vec<_> = table.values.iter().collect();
-            entries.sort_by_key(|(k, _)| *k); // Sort entries by key for consistent ordering
-            
-            for (key, value) in entries {
-                result.push_str(&format!("  \"{}\": {}\n", key, value.to_string()));
+        if index < self.elements.len() {
+            match self.elements.get(index) {
+                Some(sts) => {
+                    return Ok(sts.clone());
+                },
+                None => {
+                    return Err(ErrorType::DevError{ message: "No element found".to_string()});
+                }
             }
-            result.push_str("}\n");
-        }
-        
-        result
+        } 
+        panic!("Invalid index: {:} for size {:}", index, self.elements.len())
     }
 }
 

@@ -7,8 +7,8 @@ use common::{
     constants::DEFAULT_PRIORITY_MODELEMENT};
 use integration::module::{ast_stitch, ModElement, Module};
 use ir::core::IRGenerator;
-use safe_llvm::{memory_management::resource_pools::ResourcePools, utils::utils_struct::Utils};
-use symbol_table::symbol_table_struct::{SymbolInfo, SymbolTable, SymbolTableStack, SymbolValue};
+use safe_llvm::{common::io, ir::core::IRManager};
+use sts::core::{SymbolInfo, SymbolTable, SymbolTableStack, SymbolValue};
 
 fn wrap_in_tle(ast_node: ASTNode) -> AST {
     let mut tle: ASTNode = ASTNode::new(SyntaxElement::TopLevelExpression);
@@ -41,31 +41,31 @@ fn test_function_declaration() {
 
     let ast: AST = wrap_in_tle(function_ast);
 
-    let mut symbol_table_stack = SymbolTableStack::new();
-    let mut symbol_table_global = SymbolTable::new();
+    let mut sts_stack = SymbolTableStack::new();
+    let mut sts_global = SymbolTable::new();
     let fn_value = SymbolValue::FunctionValue{
         parameters: Vec::new(),
     };
     let fn_info = SymbolInfo::new(DataType::Integer, fn_value);
-    symbol_table_global.add("testFunction".to_string(), fn_info);
-    symbol_table_stack.push(symbol_table_global);
-    symbol_table_stack.push(SymbolTable::new());
+    sts_global.add("testFunction".to_string(), fn_info);
+    sts_stack.push(sts_global);
+    sts_stack.push(SymbolTable::new());
 
-    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, symbol_table_stack, DEFAULT_PRIORITY_MODELEMENT)]);
+    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, sts_stack, DEFAULT_PRIORITY_MODELEMENT)]);
 
     let mut ir_generator = IRGenerator::new();
     let module_tag = ir_generator.generate_ir(mod_ast);  
 
-    let pools: Arc<Mutex<ResourcePools>> = ir_generator.get_resource_pools();
+    let pools: Arc<Mutex<IRManager>> = ir_generator.get_resource_pools();
     let pools = pools.try_lock().expect("Failed to lock resource pool mutex in do while IR!");
 
     let module = pools.get_module(module_tag).expect("Failed to get module");
-    let write_result = Utils::write_to_file(module.clone(), "output_fn_declaration.ll");
+    let write_result = io::write_ir_to_file(module.clone(), "output_fn_declaration.ll");
     match write_result {
         Ok(_) => eprintln!("FN test file written correctly!"),
         Err(_) => panic!("FN test file failed to write!")
     }
-    let get_str = Utils::write_to_string(module);
+    let get_str = io::write_to_string(module);
     let test_str = match get_str {
         Ok(str) => str,
         Err(e) => panic!("{}", e)
@@ -158,33 +158,33 @@ fn test_function_with_if_else() {
 
     let ast: AST = wrap_in_tle(fn_declaration_node);
 
-    let mut symbol_table_stack = SymbolTableStack::new();
-    let mut symbol_table_global = SymbolTable::new();
+    let mut sts_stack = SymbolTableStack::new();
+    let mut sts_global = SymbolTable::new();
     let fn_value = SymbolValue::FunctionValue{
         parameters: Vec::new(),
     };
     let fn_info = SymbolInfo::new(DataType::Integer, fn_value);
-    symbol_table_global.add("testFunction".to_string(), fn_info);
-    symbol_table_stack.push(symbol_table_global);
-    symbol_table_stack.push(SymbolTable::new());
+    sts_global.add("testFunction".to_string(), fn_info);
+    sts_stack.push(sts_global);
+    sts_stack.push(SymbolTable::new());
 
 
-    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, symbol_table_stack, DEFAULT_PRIORITY_MODELEMENT)]);
+    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, sts_stack, DEFAULT_PRIORITY_MODELEMENT)]);
 
     let mut ir_generator = IRGenerator::new();
 
     let module_tag = ir_generator.generate_ir(mod_ast);  
 
-    let pools: Arc<Mutex<ResourcePools>> = ir_generator.get_resource_pools();
+    let pools: Arc<Mutex<IRManager>> = ir_generator.get_resource_pools();
     let pools = pools.try_lock().expect("Failed to lock resource pool mutex in do while IR!");
 
     let module = pools.get_module(module_tag).expect("Failed to get module");
-    let write_result = Utils::write_to_file(module.clone(), "output_if_else.ll");
+    let write_result = io::write_ir_to_file(module.clone(), "output_if_else.ll");
     match write_result {
         Ok(_) => eprintln!("If else test file written correctly!"),
         Err(_) => panic!("If else test file failed to write!")
     }
-    let get_str = Utils::write_to_string(module);
+    let get_str = io::write_to_string(module);
     let test_str = match get_str {
         Ok(str) => str,
         Err(e) => panic!("{}", e)
@@ -253,31 +253,31 @@ fn test_function_with_while_loop() {
 
     let ast = wrap_in_tle(fn_declaration_node);
 
-    let mut symbol_table_stack = SymbolTableStack::new();
-    let mut symbol_table_global = SymbolTable::new();
+    let mut sts_stack = SymbolTableStack::new();
+    let mut sts_global = SymbolTable::new();
     let fn_value = SymbolValue::FunctionValue{
         parameters: Vec::new(),
     };
     let fn_info = SymbolInfo::new(DataType::Integer, fn_value);
-    symbol_table_global.add("testFunctionWithWhileLoop".to_string(), fn_info);
-    symbol_table_stack.push(symbol_table_global);
-    symbol_table_stack.push(SymbolTable::new());
+    sts_global.add("testFunctionWithWhileLoop".to_string(), fn_info);
+    sts_stack.push(sts_global);
+    sts_stack.push(SymbolTable::new());
 
-    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, symbol_table_stack, DEFAULT_PRIORITY_MODELEMENT)]);
+    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, sts_stack, DEFAULT_PRIORITY_MODELEMENT)]);
 
     let mut ir_generator = IRGenerator::new();
     let module_tag = ir_generator.generate_ir(mod_ast);  
 
-    let pools: Arc<Mutex<ResourcePools>> = ir_generator.get_resource_pools();
+    let pools: Arc<Mutex<IRManager>> = ir_generator.get_resource_pools();
     let pools = pools.try_lock().expect("Failed to lock resource pool mutex in do while IR!");
 
     let module = pools.get_module(module_tag).expect("Failed to get module");
-    let write_result = Utils::write_to_file(module.clone(), "output_while_loop.ll");
+    let write_result = io::write_ir_to_file(module.clone(), "output_while_loop.ll");
     match write_result {
         Ok(_) => eprintln!("While test file written correctly!"),
         Err(_) => panic!("While test file failed to write!")
     }
-    let get_str = Utils::write_to_string(module);
+    let get_str = io::write_to_string(module);
     let test_str = match get_str {
         Ok(str) => str,
         Err(e) => panic!("{}", e)
@@ -332,31 +332,31 @@ fn test_function_with_while_no_body() {
 
     let ast = wrap_in_tle(fn_declaration_node);
 
-    let mut symbol_table_stack = SymbolTableStack::new();
-    let mut symbol_table_global = SymbolTable::new();
+    let mut sts_stack = SymbolTableStack::new();
+    let mut sts_global = SymbolTable::new();
     let fn_value = SymbolValue::FunctionValue{
         parameters: Vec::new(),
     };
     let fn_info = SymbolInfo::new(DataType::Integer, fn_value);
-    symbol_table_global.add("testFunctionWithWhileNoBody".to_string(), fn_info);
-    symbol_table_stack.push(symbol_table_global);
-    symbol_table_stack.push(SymbolTable::new());
+    sts_global.add("testFunctionWithWhileNoBody".to_string(), fn_info);
+    sts_stack.push(sts_global);
+    sts_stack.push(SymbolTable::new());
 
-    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, symbol_table_stack, DEFAULT_PRIORITY_MODELEMENT)]);
+    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, sts_stack, DEFAULT_PRIORITY_MODELEMENT)]);
 
     let mut ir_generator = IRGenerator::new();
     let module_tag = ir_generator.generate_ir(mod_ast);  
 
-    let pools: Arc<Mutex<ResourcePools>> = ir_generator.get_resource_pools();
+    let pools: Arc<Mutex<IRManager>> = ir_generator.get_resource_pools();
     let pools = pools.try_lock().expect("Failed to lock resource pool mutex in do while IR!");
 
     let module = pools.get_module(module_tag).expect("Failed to get module");
-    let write_result = Utils::write_to_file(module.clone(), "output_while_no_body.ll");
+    let write_result = io::write_ir_to_file(module.clone(), "output_while_no_body.ll");
     match write_result {
         Ok(_) => eprintln!("While NB test file written correctly!"),
         Err(_) => panic!("While NB test file failed to write!")
     }
-    let get_str = Utils::write_to_string(module);
+    let get_str = io::write_to_string(module);
     let test_str = match get_str {
         Ok(str) => str,
         Err(e) => panic!("{}", e)
@@ -425,31 +425,31 @@ fn test_function_with_do_while_loop() {
 
     let ast = wrap_in_tle(function_declaration_node);
 
-    let mut symbol_table_stack = SymbolTableStack::new();
-    let mut symbol_table_global = SymbolTable::new();
+    let mut sts_stack = SymbolTableStack::new();
+    let mut sts_global = SymbolTable::new();
     let fn_value = SymbolValue::FunctionValue{
         parameters: Vec::new(),
     };
     let fn_info = SymbolInfo::new(DataType::Integer, fn_value);
-    symbol_table_global.add("testFunctionWithDoWhileLoop".to_string(), fn_info);
-    symbol_table_stack.push(symbol_table_global);
-    symbol_table_stack.push(SymbolTable::new());
+    sts_global.add("testFunctionWithDoWhileLoop".to_string(), fn_info);
+    sts_stack.push(sts_global);
+    sts_stack.push(SymbolTable::new());
 
-    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, symbol_table_stack, DEFAULT_PRIORITY_MODELEMENT)]);
+    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, sts_stack, DEFAULT_PRIORITY_MODELEMENT)]);
 
     let mut ir_generator = IRGenerator::new();
     let module_tag = ir_generator.generate_ir(mod_ast);  
 
-    let pools: Arc<Mutex<ResourcePools>> = ir_generator.get_resource_pools();
+    let pools: Arc<Mutex<IRManager>> = ir_generator.get_resource_pools();
     let pools = pools.try_lock().expect("Failed to lock resource pool mutex in do while IR!");
 
     let module = pools.get_module(module_tag).expect("Failed to get module");
-    let write_result = Utils::write_to_file(module.clone(), "output_do_while.ll");
+    let write_result = io::write_ir_to_file(module.clone(), "output_do_while.ll");
     match write_result {
         Ok(_) => eprintln!("Do while test file written correctly!"),
         Err(_) => panic!("Do while test file failed to write!")
     }
-    let get_str = Utils::write_to_string(module);
+    let get_str = io::write_to_string(module);
     let test_str = match get_str {
         Ok(str) => str,
         Err(e) => panic!("{}", e)
@@ -519,17 +519,17 @@ fn test_function_with_assign() {
 
     let ast = wrap_in_tle(fn_declaration_node);
 
-    let mut symbol_table_stack = SymbolTableStack::new();
-    let mut symbol_table_global = SymbolTable::new();
+    let mut sts_stack = SymbolTableStack::new();
+    let mut sts_global = SymbolTable::new();
     let fn_value = SymbolValue::FunctionValue{
         parameters: Vec::new(),
     };
     let fn_info = SymbolInfo::new(DataType::Integer, fn_value);
-    symbol_table_global.add("testFunctionWithAssign".to_string(), fn_info);
-    symbol_table_stack.push(symbol_table_global);
-    symbol_table_stack.push(SymbolTable::new());
+    sts_global.add("testFunctionWithAssign".to_string(), fn_info);
+    sts_stack.push(sts_global);
+    sts_stack.push(SymbolTable::new());
 
-    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, symbol_table_stack, DEFAULT_PRIORITY_MODELEMENT)]);
+    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, sts_stack, DEFAULT_PRIORITY_MODELEMENT)]);
 
     let mut ir_generator = IRGenerator::new();
     let module_tag = ir_generator.generate_ir(mod_ast);  
@@ -537,12 +537,12 @@ fn test_function_with_assign() {
     let pools = ir_generator.get_resource_pools();
 
     let module = pools.lock().expect("coouldn't unlock pools mutex").get_module(module_tag).expect("No module found!");
-    let write_result = Utils::write_to_file(module.clone(), "output_assign.ll");
+    let write_result = io::write_ir_to_file(module.clone(), "output_assign.ll");
     match write_result {
         Ok(_) => eprintln!("Assign test file written correctly!"),
         Err(_) => panic!("Assign test file failed to write!")
     }
-    let get_str = Utils::write_to_string(module);
+    let get_str = io::write_to_string(module);
     let test_str = match get_str {
         Ok(str) => str,
         Err(e) => panic!("{}", e)
@@ -620,17 +620,17 @@ fn test_function_with_variable_retrieval() {
 
     let ast = wrap_in_tle(fn_declaration_node);
 
-    let mut symbol_table_stack = SymbolTableStack::new();
-    let mut symbol_table_global = SymbolTable::new();
+    let mut sts_stack = SymbolTableStack::new();
+    let mut sts_global = SymbolTable::new();
     let fn_value = SymbolValue::FunctionValue{
         parameters: Vec::new(),
     };
     let fn_info = SymbolInfo::new(DataType::Integer, fn_value);
-    symbol_table_global.add("testFunctionWithRetrieve".to_string(), fn_info);
-    symbol_table_stack.push(symbol_table_global);
-    symbol_table_stack.push(SymbolTable::new());
+    sts_global.add("testFunctionWithRetrieve".to_string(), fn_info);
+    sts_stack.push(sts_global);
+    sts_stack.push(SymbolTable::new());
 
-    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, symbol_table_stack, DEFAULT_PRIORITY_MODELEMENT)]);
+    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, sts_stack, DEFAULT_PRIORITY_MODELEMENT)]);
 
     let mut ir_generator = IRGenerator::new();
     let module_tag = ir_generator.generate_ir(mod_ast);  
@@ -638,12 +638,12 @@ fn test_function_with_variable_retrieval() {
     let pools = ir_generator.get_resource_pools();
 
     let module = pools.lock().expect("coouldn't unlock pools mutex").get_module(module_tag).expect("No module found!");
-    let write_result = Utils::write_to_file(module.clone(), "output_retrieve.ll");
+    let write_result = io::write_ir_to_file(module.clone(), "output_retrieve.ll");
     match write_result {
         Ok(_) => eprintln!("Retrieve test file written correctly!"),
         Err(_) => panic!("Retrieve test file failed to write!")
     }
-    let get_str = Utils::write_to_string(module);
+    let get_str = io::write_to_string(module);
     let test_str = match get_str {
         Ok(str) => str,
         Err(e) => panic!("{}", e)
@@ -713,17 +713,17 @@ fn test_function_with_reassign() {
 
     let ast = wrap_in_tle(fn_declaration_node);
 
-    let mut symbol_table_stack = SymbolTableStack::new();
-    let mut symbol_table_global = SymbolTable::new();
+    let mut sts_stack = SymbolTableStack::new();
+    let mut sts_global = SymbolTable::new();
     let fn_value = SymbolValue::FunctionValue{
         parameters: Vec::new(),
     };
     let fn_info = SymbolInfo::new(DataType::Integer, fn_value);
-    symbol_table_global.add("testFunctionWithReassign".to_string(), fn_info);
-    symbol_table_stack.push(symbol_table_global);
-    symbol_table_stack.push(SymbolTable::new());
+    sts_global.add("testFunctionWithReassign".to_string(), fn_info);
+    sts_stack.push(sts_global);
+    sts_stack.push(SymbolTable::new());
 
-    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, symbol_table_stack, DEFAULT_PRIORITY_MODELEMENT)]);
+    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, sts_stack, DEFAULT_PRIORITY_MODELEMENT)]);
 
     let mut ir_generator = IRGenerator::new();
     let module_tag = ir_generator.generate_ir(mod_ast);  
@@ -731,12 +731,12 @@ fn test_function_with_reassign() {
     let pools = ir_generator.get_resource_pools();
 
     let module = pools.lock().expect("coouldn't unlock pools mutex").get_module(module_tag).expect("No module found!");
-    let write_result = Utils::write_to_file(module.clone(), "output_reassign.ll");
+    let write_result = io::write_ir_to_file(module.clone(), "output_reassign.ll");
     match write_result {
         Ok(_) => eprintln!("Reassign test file written correctly!"),
         Err(_) => panic!("Reassign test file failed to write!")
     }
-    let get_str = Utils::write_to_string(module);
+    let get_str = io::write_to_string(module);
     let test_str = match get_str {
         Ok(str) => str,
         Err(e) => panic!("{}", e)
@@ -851,17 +851,17 @@ fn test_function_with_for_loop() {
 
     let ast = wrap_in_tle(fn_declaration_node);
 
-    let mut symbol_table_stack = SymbolTableStack::new();
-    let mut symbol_table_global = SymbolTable::new();
+    let mut sts_stack = SymbolTableStack::new();
+    let mut sts_global = SymbolTable::new();
     let fn_value = SymbolValue::FunctionValue{
         parameters: Vec::new(),
     };
     let fn_info = SymbolInfo::new(DataType::Integer, fn_value);
-    symbol_table_global.add("testForLoop".to_string(), fn_info);
-    symbol_table_stack.push(symbol_table_global);
-    symbol_table_stack.push(SymbolTable::new());
+    sts_global.add("testForLoop".to_string(), fn_info);
+    sts_stack.push(sts_global);
+    sts_stack.push(SymbolTable::new());
 
-    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, symbol_table_stack, DEFAULT_PRIORITY_MODELEMENT)]);
+    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, sts_stack, DEFAULT_PRIORITY_MODELEMENT)]);
 
     let mut ir_generator = IRGenerator::new();
     let module_tag = ir_generator.generate_ir(mod_ast);  
@@ -869,12 +869,12 @@ fn test_function_with_for_loop() {
     let pools = ir_generator.get_resource_pools();
 
     let module = pools.lock().expect("coouldn't unlock pools mutex").get_module(module_tag).expect("No module found!");
-    let write_result = Utils::write_to_file(module.clone(), "output_for_loop.ll");
+    let write_result = io::write_ir_to_file(module.clone(), "output_for_loop.ll");
     match write_result {
         Ok(_) => eprintln!("For loop test file written correctly!"),
         Err(_) => panic!("For loop test file failed to write!")
     }
-    let get_str = Utils::write_to_string(module);
+    let get_str = io::write_to_string(module);
     let test_str = match get_str {
         Ok(str) => str,
         Err(e) => panic!("{}", e)

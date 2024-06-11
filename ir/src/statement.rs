@@ -2,9 +2,8 @@
 //! for statements that do not evaluate to values such as break, 
 //! continue, and assignment.
 
-use std::sync::{Arc, Mutex};
-use safe_llvm::memory_management::resource_pools::{ ResourcePools, Tag, ValueTag};
-use common::{ast::{ast_struct::ASTNode, syntax_element::SyntaxElement}, constants::DEFAULT_VAR_CONTAINER_LABEL, error::ErrorType};
+use common::{ast::ast_struct::ASTNode, error::ErrorType};
+use safe_llvm::ir::core::Tag;
 use crate::core::IRGenerator;
 
 impl IRGenerator {

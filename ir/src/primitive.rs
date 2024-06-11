@@ -1,14 +1,8 @@
 //! This file hosts all of the functions necessary for generating LLVM IR
 //! for primitives such as basic data types and literal values.
 
-use std::sync::{Arc, Mutex};
-use safe_llvm::memory_management::resource_pools::{ResourcePools, Tag};
-use common::{
-    ast::{
-        ast_struct::ASTNode, data_type::DataType, syntax_element::SyntaxElement
-    },
-    error::ErrorType
-};
+use common::{ast::{ast_struct::ASTNode, data_type::DataType}, error::ErrorType};
+use safe_llvm::ir::core::Tag;
 use crate::core::IRGenerator;
 
 impl IRGenerator {

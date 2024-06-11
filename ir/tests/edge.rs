@@ -6,11 +6,11 @@ use ir::core::IRGenerator;
 use common::{
   ast::{ast_struct::{ASTNode, AST}, data_type::DataType, syntax_element::SyntaxElement},
   constants::DEFAULT_PRIORITY_MODELEMENT};
-use symbol_table::symbol_table_struct::{SymbolInfo, SymbolTable, SymbolTableStack, SymbolValue};
+use sts::core::{SymbolInfo, SymbolTable, SymbolTableStack, SymbolValue};
 use integration::module::{
     ModElement, Module, ast_stitch
 };
-use safe_llvm::{memory_management::resource_pools::ResourcePools, utils::utils_struct::Utils};
+use safe_llvm::{common::io, ir::core::IRManager};
 
 fn wrap_in_tle(ast_node: ASTNode) -> AST {
     let mut tle: ASTNode = ASTNode::new(SyntaxElement::TopLevelExpression);
@@ -206,26 +206,26 @@ fn test_deeply_nested_loops1() {
     function_ast.add_child(fn_block);
 
     let ast = wrap_in_tle(function_ast);
-    let mut symbol_table_stack = SymbolTableStack::new();
-    let mut symbol_table_global = SymbolTable::new();
+    let mut sts_stack = SymbolTableStack::new();
+    let mut sts_global = SymbolTable::new();
     let fn_value = SymbolValue::FunctionValue { parameters: Vec::new() };
     let fn_info = SymbolInfo::new(DataType::Integer, fn_value);
-    symbol_table_global.add("testDeeplyNestedLoops".to_string(), fn_info);
-    symbol_table_stack.push(symbol_table_global);
+    sts_global.add("testDeeplyNestedLoops".to_string(), fn_info);
+    sts_stack.push(sts_global);
 
-    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, symbol_table_stack, DEFAULT_PRIORITY_MODELEMENT)]);
+    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, sts_stack, DEFAULT_PRIORITY_MODELEMENT)]);
     let mut ir_generator = IRGenerator::new();
     let module_tag = ir_generator.generate_ir(mod_ast);
-    let pools: Arc<Mutex<ResourcePools>> = ir_generator.get_resource_pools();
+    let pools: Arc<Mutex<IRManager>> = ir_generator.get_resource_pools();
     let pools = pools.try_lock().expect("Failed to lock resource pool mutex in deeply nested loops IR!");
 
     let module = pools.get_module(module_tag).expect("Failed to get module");
-    let write_result = Utils::write_to_file(module.clone(), "output_deeply_nested_loops1.ll");
+    let write_result = io::write_ir_to_file(module.clone(), "output_deeply_nested_loops1.ll");
     match write_result {
         Ok(_) => println!("Deeply nested loops test file written correctly!"),
         Err(e) => panic!("Deeply nested loops test file failed to write! Error: {}", e)
     }
-    let get_str = Utils::write_to_string(module);
+    let get_str = io::write_to_string(module);
     let test_str = match get_str {
         Ok(str) => str,
         Err(e) => panic!("{}", e)
@@ -389,26 +389,26 @@ fn test_deeply_nested_loops2() {
     function_ast.add_child(fn_block);
 
     let ast = wrap_in_tle(function_ast);
-    let mut symbol_table_stack = SymbolTableStack::new();
-    let mut symbol_table_global = SymbolTable::new();
+    let mut sts_stack = SymbolTableStack::new();
+    let mut sts_global = SymbolTable::new();
     let fn_value = SymbolValue::FunctionValue { parameters: Vec::new() };
     let fn_info = SymbolInfo::new(DataType::Integer, fn_value);
-    symbol_table_global.add("testSwappedWhileForLoops".to_string(), fn_info);
-    symbol_table_stack.push(symbol_table_global);
+    sts_global.add("testSwappedWhileForLoops".to_string(), fn_info);
+    sts_stack.push(sts_global);
 
-    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, symbol_table_stack, DEFAULT_PRIORITY_MODELEMENT)]);
+    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, sts_stack, DEFAULT_PRIORITY_MODELEMENT)]);
     let mut ir_generator = IRGenerator::new();
     let module_tag = ir_generator.generate_ir(mod_ast);
-    let pools: Arc<Mutex<ResourcePools>> = ir_generator.get_resource_pools();
+    let pools: Arc<Mutex<IRManager>> = ir_generator.get_resource_pools();
     let pools = pools.try_lock().expect("Failed to lock resource pool mutex in deeply nested loops IR!");
 
     let module = pools.get_module(module_tag).expect("Failed to get module");
-    let write_result = Utils::write_to_file(module.clone(), "output_deeply_nested_loops2.ll");
+    let write_result = io::write_ir_to_file(module.clone(), "output_deeply_nested_loops2.ll");
     match write_result {
         Ok(_) => println!("Swapped while-for loops test file written correctly!"),
         Err(e) => panic!("Swapped while-for loops test file failed to write! Error: {}", e)
     }
-    let get_str = Utils::write_to_string(module);
+    let get_str = io::write_to_string(module);
     let test_str = match get_str {
         Ok(str) => str,
         Err(e) => panic!("{}", e)
@@ -563,26 +563,26 @@ fn test_deply_nested_loops3() {
     function_ast.add_child(fn_block);
 
     let ast = wrap_in_tle(function_ast);
-    let mut symbol_table_stack = SymbolTableStack::new();
-    let mut symbol_table_global = SymbolTable::new();
+    let mut sts_stack = SymbolTableStack::new();
+    let mut sts_global = SymbolTable::new();
     let fn_value = SymbolValue::FunctionValue { parameters: Vec::new() };
     let fn_info = SymbolInfo::new(DataType::Integer, fn_value);
-    symbol_table_global.add("testMultipleDoWhileLoops3".to_string(), fn_info);
-    symbol_table_stack.push(symbol_table_global);
+    sts_global.add("testMultipleDoWhileLoops3".to_string(), fn_info);
+    sts_stack.push(sts_global);
 
-    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, symbol_table_stack, DEFAULT_PRIORITY_MODELEMENT)]);
+    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, sts_stack, DEFAULT_PRIORITY_MODELEMENT)]);
     let mut ir_generator = IRGenerator::new();
     let module_tag = ir_generator.generate_ir(mod_ast);
-    let pools: Arc<Mutex<ResourcePools>> = ir_generator.get_resource_pools();
+    let pools: Arc<Mutex<IRManager>> = ir_generator.get_resource_pools();
     let pools = pools.try_lock().expect("Failed to lock resource pool mutex in multiple do while loops IR!");
 
     let module = pools.get_module(module_tag).expect("Failed to get module");
-    let write_result = Utils::write_to_file(module.clone(), "output_deeply_nested_loops3.ll");
+    let write_result = io::write_ir_to_file(module.clone(), "output_deeply_nested_loops3.ll");
     match write_result {
         Ok(_) => println!("Multiple do-while loops test file written correctly!"),
         Err(e) => panic!("Multiple do-while loops test file failed to write! Error: {}", e)
     }
-    let get_str = Utils::write_to_string(module);
+    let get_str = io::write_to_string(module);
     let test_str = match get_str {
         Ok(str) => str,
         Err(e) => panic!("{}", e)
@@ -684,33 +684,33 @@ fn test_function_with_while_if_else_break_continue() {
 
     let ast: AST = wrap_in_tle(fn_declaration_node);
 
-    let mut symbol_table_stack = SymbolTableStack::new();
-    let mut symbol_table_global = SymbolTable::new();
+    let mut sts_stack = SymbolTableStack::new();
+    let mut sts_global = SymbolTable::new();
     let fn_value = SymbolValue::FunctionValue{
         parameters: Vec::new(),
     };
     let fn_info = SymbolInfo::new(DataType::Integer, fn_value);
-    symbol_table_global.add("testFunction".to_string(), fn_info);
-    symbol_table_stack.push(symbol_table_global);
-    symbol_table_stack.push(SymbolTable::new());
+    sts_global.add("testFunction".to_string(), fn_info);
+    sts_stack.push(sts_global);
+    sts_stack.push(SymbolTable::new());
 
 
-    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, symbol_table_stack, DEFAULT_PRIORITY_MODELEMENT)]);
+    let mod_ast: Module = ast_stitch(vec![ModElement::new(ast, sts_stack, DEFAULT_PRIORITY_MODELEMENT)]);
 
     let mut ir_generator = IRGenerator::new();
 
     let module_tag = ir_generator.generate_ir(mod_ast);  
 
-    let pools: Arc<Mutex<ResourcePools>> = ir_generator.get_resource_pools();
+    let pools: Arc<Mutex<IRManager>> = ir_generator.get_resource_pools();
     let pools = pools.try_lock().expect("Failed to lock resource pool mutex in test IR!");
 
     let module = pools.get_module(module_tag).expect("Failed to get module");
-    let write_result = Utils::write_to_file(module.clone(), "output_while_if_else_br_cont.ll");
+    let write_result = io::write_ir_to_file(module.clone(), "output_while_if_else_br_cont.ll");
     match write_result {
         Ok(_) => eprintln!("Break continue breaktest file written correctly!"),
         Err(_) => panic!("Break continue test file failed to write!")
     }
-    let get_str = Utils::write_to_string(module);
+    let get_str = io::write_to_string(module);
     let test_str = match get_str {
         Ok(str) => str,
         Err(e) => panic!("{}", e)

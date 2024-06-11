@@ -14,6 +14,3 @@ pub mod entry_points;
 /// Defines error types.
 pub mod error;
 
-/// Provides concurrent execution using a thread pool.
-pub mod thread_pool_executor;
-

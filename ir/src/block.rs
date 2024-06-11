@@ -1,14 +1,8 @@
 //! This file hosts all of the functions necessary for generating LLVM IR
 //! for "block" nodes, nodes that generate and manipulate basic blocks.
 
-use std::sync::{Arc, Mutex};
-use common::{
-    ast::{
-        ast_struct::ASTNode, data_type::DataType, syntax_element::SyntaxElement
-    }, constants::{DEFAULT_DO_BODY_LABEL, DEFAULT_DO_CONDITION_LABEL, DEFAULT_DO_WHILE_END_LABEL, DEFAULT_ELSE_LABEL, DEFAULT_ENTRY_LABEL, DEFAULT_FOR_BODY_LABEL, DEFAULT_FOR_COND_LABEL, DEFAULT_FOR_END_LABEL, DEFAULT_FOR_INCREMENT_LABEL, DEFAULT_MERGE_LABEL, DEFAULT_THEN_LABEL, DEFAULT_WHILE_BODY_LABEL, DEFAULT_WHILE_COND_LABEL, DEFAULT_WHILE_END_LABEL}, error::ErrorType
-};
-use safe_llvm::memory_management::resource_pools::{BasicBlockTag, ResourcePools, Tag, TypeTag, ValueTag};
-use symbol_table::symbol_table_struct::{SymbolTable, SymbolValue};
+use common::{ast::ast_struct::ASTNode, error::ErrorType};
+use safe_llvm::ir::core::Tag;
 use crate::core::IRGenerator;
 
 impl IRGenerator {
