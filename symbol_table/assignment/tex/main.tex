@@ -69,8 +69,7 @@
 	\begin{itemize}
 	    \item Deepen your understanding of the Rust programming language
         \item Learn how to construct and manage symbol tables in a compiler
-        \item Pass all tests given in \textit{symbol\_table\_tests.rs}
-        
+        \item Thoroughly test the Symbol Table Stack to assure functionality
 	\end{itemize}
 \end{problem}
 
@@ -100,22 +99,24 @@ In compiler design, a symbol table is a data structure used by a compiler to kee
     numberstyle=\tiny, % Line numbers styling
 ]
 
-\section*{mod.rs:}
+\section*{lib.rs:}
 This file defines the modules related to the symbol table stack and makes them available for other modules to see. It can be found in the \textit{frontend/} folder. All modules each have documentation in this file to show what the module is used for. The symbol table stack involves several submodules: the symbol table, symbol info, and the stack itself.\\
 \\
 You don't have to do anything to this file.
 
-\section*{symbol\_table\_core.rs:}
-This file contains the core logic for generating the symbol table stack and routing AST nodes to appropriate handlers. You will need to implement the following functions:
+\section*{core.rs:}
+This file contains the core logic for generating the symbol table stack and routing AST nodes to appropriate handlers. While the structure for \textbf{SymbolValue, SymbolInfo, SymbolTable, and SymbolTableStack} are given, additional functions for utilizing these struct's and enum's will need to be implemented. You will also need to implement the following core functions:
 \begin{itemize}
     \item \textbf{gen\_sym\_table\_stack}: Drives the symbol table stack generation process and returns the original AST and the generated symbol table stack, or errors if any.
     \item \textbf{sym\_table\_stack\_router}: Routes the proper top-level expression for an ASTNode.
 \end{itemize}
 
-\section*{symbol\_table\_statement.rs:}
-This file contains the implementation for handling various statements (e.g., initialization, loops) within the symbol table stack. You will need to implement the following functions:
+\section*{block.rs:}
+This file contains the implementation of block statements (e.g., functions, loops) within the symbol table stack. You will need to implement the following functions:
 \begin{itemize}
-    \item \textbf{sym\_table\_init}: Adds a new variable into the current scope.
+    \item \textbf{sym\_table\_fn}: Adds a function type to the current scope.
+    \item \textbf{sym\_table\_struct}: Adds a struct type to the current scope.
+    \item \textbf{sym\_table\_enum}: Adds an enum type to the current scope.
     \item \textbf{sym\_table\_while}: Adds a while loop to the current scope.
     \item \textbf{sym\_table\_do\_while}: Adds a do-while loop to the current scope.
     \item \textbf{sym\_table\_for}: Adds a for loop to the current scope.
@@ -123,20 +124,24 @@ This file contains the implementation for handling various statements (e.g., ini
     \item \textbf{sym\_table\_switch}: Adds a switch statement to the current scope.
 \end{itemize}
 \pagebreak
-\section*{symbol\_table\_struct.rs:}
-This file contains the definition and implementation of the \textbf{SymbolTable} struct and the \textbf{SymbolInfo} struct. These structures house symbols and their information within the current scope. You will need to ensure the correct implementation of these data structures, including:
+\section*{statement.rs:}
+This file contains functions that define statements and variables within blocks. The following functions need to be implemented:
 \begin{itemize}
-    \item \textbf{SymbolTable} struct: Methods to manipulate and query the symbol table.
-    \item \textbf{SymbolInfo} struct: Holds data type and value information for symbols.
+    \item \textbf{sym\_table\_init}: Adds a new variable into the current scope.
+    \item \textbf{sym\_table\_assign}: Assigns a new value to a variable in the current scope.
 \end{itemize}
 
-\section*{symbol\_table\_top\_level.rs:}
-This file handles top-level constructs such as functions, structs, and enums. You will need to implement the following functions:
-\begin{itemize}
-    \item \textbf{sym\_table\_fn}: Adds a function type to the current scope.
-    \item \textbf{sym\_table\_struct}: Adds a struct type to the current scope.
-    \item \textbf{sym\_table\_enum}: Adds an enum type to the current scope.
-\end{itemize}
+\section*{base\_tests.rs:}
+This file contains test definitions for base case tests. Your job is to implement and expand upon these tests to assure proper scope management. 
+
+\section*{combination\_tests.rs:}
+This file should be used as a test suite for combination tests of elements tested in \textbf{base\_tests.rs}. Make sure to comprehensively test these combinations. 
+
+\section*{edge\_tests.rs:}
+This file should be used as a test suite for boundary cases. This suite should comprehensively test the addition and functionality of SyntaxElements within the Symbol Table Stack. 
+
+\section*{error\_tests.rs:}
+This file should be used as a test suite for error handling. Comprehensively test that every instance that may raise an error is handled properly. 
 
 \pagebreak
 
