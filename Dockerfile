@@ -27,13 +27,15 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 
 WORKDIR /usr/starter_code
 
-VOLUME ["/usr/starter_code/ir", "/usr/starter_code/common", "/usr/starter_code/integration"]
+COPY . . 
 
-CMD if [ "$(ls -A /usr/starter_code/ir)" ]; then \
+VOLUME ["/usr/starter_code"]
+
+CMD if [ "$(ls -A /usr/starter_code)" ]; then \
         /bin/bash; \
     else \
-        echo "Error: /usr/starter_code/ir does not exist or is empty" && exit 1; \
+        echo "Error: /usr/starter_code does not exist or is empty" && exit 1; \
     fi
 
-# To build this, use: `docker build -t ir-env .`
-# To run this, use: `docker run -it --rm -v $(pwd):/usr/starter_code/ir -v $(pwd)/../common:/usr/starter_code/common -v $(pwd)/../integration:/usr/starter_code/integration ir-env`
+# To build this, use: `docker build -t sicc-env .`
+# To run this, use: `docker run -it --rm -v $(pwd):/usr/starter_code sicc-env`

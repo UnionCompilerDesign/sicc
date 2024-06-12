@@ -7,8 +7,6 @@ edition = "2021"
 name = "starter_code"
 path = "src/lib.rs"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 llvm-sys = "170"
 threadpool = "1.0"

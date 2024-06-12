@@ -28,8 +28,33 @@ git clone git@github.com:UnionCompilerDesign/starter_code.git
 mv starter_code new_directory_name
 cd new_directory_name
 ```
-Build and test the project using Cargo:
-```rust
+To install the Docker CLI and the Docker Daemon, follow the instructions for your operating system:
+#### macOS
+    1. Download Docker Desktop for macOS from https://hub.docker.com/.
+    2. Open the downloaded .dmg file and drag the Docker icon to your Applications folder.
+    3. Run Docker from your Applications folder. 
+
+### Ubuntu
+```bash
+sudo apt update
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt update
+sudo apt install docker-ce
+```
+
+### Usage
+1. See the `docs` repository for an overview of the project and the assignment documents.
+2. Change all instances of `starter_code` in the project to your `new_directory_name`.
+3. You can then build each part of the project using the `Dockerfile` found at the root of each directory. The bottom of each `Dockerfile` has a build and run command. After running the build and run commands:
+```bash
+cd <directory_name>
+cargo build
+cargo test
+```
+4. You can also build the entire project using the `Dockerfile` found at the root. After running the build and run commands:
+```bash
 cargo build --all
 cargo test --all
 ```
