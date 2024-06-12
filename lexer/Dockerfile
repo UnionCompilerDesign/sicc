@@ -13,15 +13,15 @@ RUN apt-get update && apt-get install -y \
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
 
-WORKDIR /usr/starter_code
+WORKDIR /usr/sicc
 
-VOLUME ["/usr/starter_code/lexer", "/user/starter_code/common"]
+VOLUME ["/usr/sicc/lexer", "/user/sicc/common"]
 
-CMD if [ "$(ls -A /usr/starter_code/lexer)" ]; then \
+CMD if [ "$(ls -A /usr/sicc/lexer)" ]; then \
         /bin/bash; \
     else \
-        echo "Error: /usr/starter_code/lexer does not exist or is empty" && exit 1; \
+        echo "Error: /usr/sicc/lexer does not exist or is empty" && exit 1; \
     fi
 
 # To build this Dockerfile, use: `docker build -t lexer-env .`
-# To run this, use: `docker run -it --rm -v $(pwd):/usr/starter_code/lexer -v $(pwd)/../common:/usr/starter_code/common lexer-env`
+# To run this, use: `docker run -it --rm -v $(pwd):/usr/sicc/lexer -v $(pwd)/../common:/usr/sicc/common lexer-env`

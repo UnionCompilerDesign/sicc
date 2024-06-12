@@ -25,17 +25,17 @@ ENV PATH="/usr/lib/llvm-17/bin:$PATH"
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
 
-WORKDIR /usr/starter_code
+WORKDIR /usr/sicc
 
 COPY . . 
 
-VOLUME ["/usr/starter_code"]
+VOLUME ["/usr/sicc"]
 
-CMD if [ "$(ls -A /usr/starter_code)" ]; then \
+CMD if [ "$(ls -A /usr/sicc)" ]; then \
         /bin/bash; \
     else \
-        echo "Error: /usr/starter_code does not exist or is empty" && exit 1; \
+        echo "Error: /usr/sicc does not exist or is empty" && exit 1; \
     fi
 
 # To build this, use: `docker build -t sicc-env .`
-# To run this, use: `docker run -it --rm -v $(pwd):/usr/starter_code sicc-env`
+# To run this, use: `docker run -it --rm -v $(pwd):/usr/sicc sicc-env`

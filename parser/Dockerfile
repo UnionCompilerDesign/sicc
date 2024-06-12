@@ -13,15 +13,15 @@ RUN apt-get update && apt-get install -y \
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
 
-WORKDIR /usr/starter_code
+WORKDIR /usr/sicc
 
-VOLUME ["/usr/starter_code/parser", "/usr/starter_code/lexer", "/user/starter_code/common"]
+VOLUME ["/usr/sicc/parser", "/usr/sicc/lexer", "/user/sicc/common"]
 
-CMD if [ "$(ls -A /usr/starter_code/parser)" ]; then \
+CMD if [ "$(ls -A /usr/sicc/parser)" ]; then \
         /bin/bash; \
     else \
-        echo "Error: /usr/starter_code/parser does not exist or is empty" && exit 1; \
+        echo "Error: /usr/sicc/parser does not exist or is empty" && exit 1; \
     fi
 
 # To build this Dockerfile, use: `docker build -t parser-env .`
-# To run this, use: `docker run -it --rm -v $(pwd):/usr/starter_code/parser -v $(pwd)/../common:/usr/starter_code/common -v $(pwd)/../lexer:/usr/starter_code/lexer parser-env`
+# To run this, use: `docker run -it --rm -v $(pwd):/usr/sicc/parser -v $(pwd)/../common:/usr/sicc/common -v $(pwd)/../lexer:/usr/sicc/lexer parser-env`

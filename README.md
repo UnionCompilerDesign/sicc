@@ -1,7 +1,7 @@
-# SICC Starter Code
+# sicc Starter Code
 
 ## Overview
-The SICC Starter Code repository hosts the initial codebase for the Simple Instructional C99 Compiler (SICC), designed for undergraduate-level courses in compiler design. This repository provides the foundational structure and configurations to complete the assignments found in the `docs` folder. 
+The sicc Starter Code repository hosts the initial codebase for the Simple Instructional C99 Compiler (sicc), designed for undergraduate-level courses in compiler design. This repository provides the foundational structure and configurations to complete the assignments found in the `docs` folder. 
 
 ## Project Structure
 - `common/`: Contains definitions for Abstract Syntax Trees (`AST`) and shared modules.
@@ -24,9 +24,8 @@ Alternatively:
 ### Installation
 To clone the repository and set up the starter code, run:
 ```rust
-git clone git@github.com:UnionCompilerDesign/starter_code.git
-mv starter_code new_directory_name
-cd new_directory_name
+git clone git@github.com:UnionCompilerDesign/sicc.git
+cd sicc
 ```
 To install the Docker CLI and the Docker Daemon, follow the instructions for your operating system:
 #### macOS
@@ -46,15 +45,15 @@ sudo apt install docker-ce
 
 ### Usage
 1. See the `docs` repository for an overview of the project and the assignment documents.
-2. Change all instances of `starter_code` in the project to your `new_directory_name`.
-3. You can then build each part of the project using the `Dockerfile` found at the root of each directory. The bottom of each `Dockerfile` has a build and run command. After running the build and run commands:
+2. You can then build each part of the project using the `Dockerfile` found at the root of each directory. The bottom of each `Dockerfile` has a build and run command. After running the build and run commands:
 ```bash
-cd <directory_name>
+cd sicc/<directory_name>
 cargo build
 cargo test
 ```
-4. You can also build the entire project using the `Dockerfile` found at the root. After running the build and run commands:
+3. You can also build the entire project using the `Dockerfile` found at the root. After running the build and run commands:
 ```bash
+cd sicc
 cargo build --all
 cargo test --all
 ```

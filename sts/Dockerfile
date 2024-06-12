@@ -13,15 +13,15 @@ RUN apt-get update && apt-get install -y \
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
 
-WORKDIR /usr/starter_code
+WORKDIR /usr/sicc
 
-VOLUME ["/usr/starter_code/sts", "/user/starter_code/common"]
+VOLUME ["/usr/sicc/sts", "/user/sicc/common"]
 
-CMD if [ "$(ls -A /usr/starter_code/sts)" ]; then \
+CMD if [ "$(ls -A /usr/sicc/sts)" ]; then \
         /bin/bash; \
     else \
-        echo "Error: /usr/starter_code/sts does not exist or is empty" && exit 1; \
+        echo "Error: /usr/sicc/sts does not exist or is empty" && exit 1; \
     fi
 
 # To build this Dockerfile, use: `docker build -t sts-env .`
-# To run this, use: `docker run -it --rm -v $(pwd):/usr/starter_code/sts -v $(pwd)/../common:/usr/starter_code/common sts-env`
+# To run this, use: `docker run -it --rm -v $(pwd):/usr/sicc/sts -v $(pwd)/../common:/usr/sicc/common sts-env`

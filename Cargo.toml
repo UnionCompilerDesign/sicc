@@ -1,10 +1,10 @@
 [package]
-name = "starter_code"
+name = "sicc"
 version = "0.1.0"
 edition = "2021"
 
 [lib]
-name = "starter_code"
+name = "sicc"
 path = "src/lib.rs"
 
 [dependencies]
