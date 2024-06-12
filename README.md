@@ -1,7 +1,7 @@
 # SICC Starter Code
 
 ## Overview
-The sicc Starter Code repository hosts the initial codebase for the Simple Instructional C99 Compiler (sicc), designed for undergraduate-level courses in compiler design. This repository provides the foundational structure and configurations to complete the assignments found in the `docs` folder. 
+The SICC Starter Code repository hosts the initial codebase for the Simple Instructional C99 Compiler (SICC), designed for undergraduate-level courses in compiler design. This repository provides the foundational structure and configurations to complete the assignments found in the `docs` folder. 
 
 ## Project Structure
 - `common/`: Contains definitions for Abstract Syntax Trees (`AST`) and shared modules.
