@@ -47,7 +47,7 @@ sudo apt install docker-ce
 1. See the `docs` repository for an overview of the project and the assignment documents.
 2. You can then build each part of the project using the `Dockerfile` found at the root of each directory. The bottom of each `Dockerfile` has a build and run command. After running the build and run commands:
 ```bash
-cd sicc/<directory_name>
+cd sicc/{directory_name}
 cargo build
 cargo test
 ```
