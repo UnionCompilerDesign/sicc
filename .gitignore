@@ -5,3 +5,7 @@
 /ir/Cargo.lock
 /lexer/target/
 /lexer/Cargo.lock
+/parser/target/
+/parser/Cargo.lock
+/sts/target/
+/sts/Cargo.lock
